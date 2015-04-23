@@ -12,7 +12,6 @@
 //
 //= require smartrent/jquery.min
 //= require smartrent/jquery-ui
-// require twitter/bootstrap
 //= require smartrent/bootstrap.min
 //= require smartrent/slides.min.jquery
 //= require smartrent/home
