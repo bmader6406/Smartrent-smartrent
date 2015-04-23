@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "devise"
   s.add_dependency 'omniauth'
   s.add_dependency "jquery-rails"
-  #s.add_dependency "therubyracer"
-  #s.add_dependency "less-rails"
-  #s.add_dependency "bootstrap-rails-engine"
+  s.add_dependency "therubyracer"
+  s.add_dependency "less-rails"
+  s.add_dependency "twitter-bootstrap-rails"
 end

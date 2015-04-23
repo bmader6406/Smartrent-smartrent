@@ -11,6 +11,7 @@
  * file per style scope.
  *
  *= require_self
+ *= require bootstrap_and_overrides
  *= require smartrent/bootstrap
  *= require smartrent/bootstrap-theme
  *= require smartrent/layout
