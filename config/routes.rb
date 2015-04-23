@@ -8,7 +8,7 @@ Smartrent::Engine.routes.draw do
 
 
   devise_for :users, {
-                       class_name:		'Smartrent::User',
+                       class_name: 'Smartrent::User',
                        module: :devise,
   :controllers => { :sessions => "smartrent/sessions" }
                    }
@@ -20,6 +20,10 @@ Smartrent::Engine.routes.draw do
 
   # resource :users
 
-  root :to => "articles#index"
+  root :to => "pages#home"
+  get "/faq", :to => "pages#faq", :as => "faq"
+  get "/find-a-smartrent-apartment", :to => "pages#apartments", :as => "apartments"
+  get "/find-a-new-home", :to => "pages#new_home", :as => "new_home"
+  get "/smartrent-quick-program-rules", :to => "pages#program_rules", :as => "program_rules"
 
 end

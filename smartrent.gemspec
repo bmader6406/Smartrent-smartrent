@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.version     = Smartrent::VERSION
   s.authors     = ["Chon Doan"]
   s.email       = ["domich.dt@gmail.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Smartrent."
-  s.description = "TODO: Description of Smartrent."
+  s.homepage    = "http://mygem.com"
+  s.summary     = "Summary of Smartrent."
+  s.description = "Description of Smartrent."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
@@ -19,7 +19,11 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 3.2.13"
 
-  s.add_dependency "mysql2"
+  s.add_dependency "pg"
   s.add_dependency "devise"
   s.add_dependency 'omniauth'
+  s.add_dependency "jquery-rails"
+  #s.add_dependency "therubyracer"
+  #s.add_dependency "less-rails"
+  #s.add_dependency "bootstrap-rails-engine"
 end

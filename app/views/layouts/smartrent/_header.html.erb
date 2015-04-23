@@ -1,0 +1,89 @@
+<header class="header">
+  <div class="fixedWidth">
+    <div class="logo">
+      <%= link_to root_path do %>
+        <%= image_tag "BozzutoSmartRent-logo-web1.gif", :alt => "SmartRent" %>
+      <% end %>
+    </div>
+    <nav class="menu">
+      <ul id="menu-main-menu">
+        <li>
+          <%= link_to "Why SmartRent?", faq_path %>
+        </li>
+
+        <li>
+          <%= link_to "Apartments", apartments_path %>
+        </li>
+
+        <li>
+          <%= link_to "New Homes", new_home_path %>
+        </li>
+
+        <li>
+          <%= link_to "Program Rules", program_rules_path%>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="searchOptions clearfix">
+      <div class="contactLink">
+        <a href="http://nagalskiy-evgeniy.com/contact">Learn More</a>
+      </div>
+
+      <div class="memberInfo">
+        <div id="loginLink">
+          <a href="http://nagalskiy-evgeniy.com/member-login/">Member
+          Login</a><br>
+          <a href="http://nagalskiy-evgeniy.com/activation">Activate
+          Account</a>
+        </div>
+
+        <div id="loginFields">
+          <div class="title">
+            Resident Log-In
+          </div>
+
+          <div class="loginForm">
+            <form action="http://nagalskiy-evgeniy.com/member-login" id=
+            "loginForm" method="post" name="loginForm">
+              <div class="form-group">
+                <input class="form-control" id="username2" name="username"
+                placeholder="Email" type="text" value="">
+              </div>
+
+              <div class="form-group">
+                <input class="form-control" id="password2" name="password"
+                placeholder="Password" type="password" value="">
+              </div>
+
+              <div>
+                <input class="btn btn-primary btn-xs" name="login" type=
+                "submit" value="GO">
+              </div>
+
+              <div class="links">
+                <a href="http://nagalskiy-evgeniy.com/forgot-password">Forgot
+                Your Password?</a> <a href=
+                "http://nagalskiy-evgeniy.com/activation">Activate Your
+                Account.</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <ul id="special-nav">
+        <li class="arrow">
+          <a href=
+          "http://nagalskiy-evgeniy.com/find-a-smartrent-apartment">Lease an
+          Apartment</a>
+        </li>
+
+        <li class="arrow">
+          <a href="http://nagalskiy-evgeniy.com/find-a-new-home">Buy a
+          Home</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

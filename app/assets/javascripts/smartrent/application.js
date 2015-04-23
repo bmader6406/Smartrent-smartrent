@@ -10,4 +10,10 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require smartrent/jquery.min
+//= require smartrent/jquery-ui
+// require bootstrap/bootstrap
+//= require smartrent/bootstrap.min
+//= require smartrent/slides.min.jquery
+//= require smartrent/home
 //= require_tree .

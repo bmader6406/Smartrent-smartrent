@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Smartrent</title>
-  <%= stylesheet_link_tag    "smartrent/application", media: "all" %>
-  <%= javascript_include_tag "smartrent/application" %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-<%= yield %>
-
-</body>
+  <head>
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= stylesheet_link_tag    "smartrent/application", media: "all" %>
+    <%= javascript_include_tag "smartrent/application" %>
+    <%= csrf_meta_tags %>
+    <link rel="canonical" href="http://www.bozzutosmartrent.com/">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="http://nagalskiy-evgeniy.com/favicon.png" type="image/png">
+    <link rel="icon" href="http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/assets/images/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/assets/images/favicon.ico">
+    <title>Welcome to SmartRent | Bozzuto's SmartRent Program | SmartRent Bozzuto</title>
+    <meta name="description" content="Earn credits towards a new Bozzuto Home when you live in a Bozzuto SmartRent apartment community. Here&#39;s what you need to know.">
+    <meta property="og:title" content="Welcome to SmartRent | Bozzuto&#39;s SmartRent Program | SmartRent Bozzuto">
+    <meta property="og:description" content="Earn credits towards a new Bozzuto Home when you live in a Bozzuto SmartRent apartment community. Here&#39;s what you need to know.">
+    <meta property="og:url" content="http://www.bozzutosmartrent.com/">
+    <meta property="og:site_name" content="Smartrent">
+  </head>
+  <body>
+    <%= render partial: "layouts/smartrent/header" %>
+    <%= yield %>
+    <%= render partial: "layouts/smartrent/footer" %>
+  </body>
 </html>
