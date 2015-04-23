@@ -17,94 +17,68 @@
     <div id="homeContent">
       When you rent from a Bozzuto SmartRent apartment community, you earn a
       $350 credit every month - up to a total of $10,000 - to help you
-      purchase a new <a href=
-      "http://nagalskiy-evgeniy.com/find-a-new-home/">condominium</a>,
-      <a href="http://nagalskiy-evgeniy.com/find-a-new-home/">townhome</a> or
-      <a href="http://nagalskiy-evgeniy.com/find-a-new-home/">single-family
-      home</a> from <a href=
-      "http://bozzutosmartrent.com/find-a-new-home/">Bozzuto Homes</a>.
+      purchase a new <%= link_to "condominium" ,new_home_path  %>,
+      <%= link_to "townhome", new_home_path %> or
+      <%= link_to "single-family home", new_home_path %>
+       from <%= link_to "Bozzuto Homes", new_home_path %>
       Simple as that. No gimmicks. Best of all, no cost to you, whether you
-      choose to participate in SmartRent or not. <a href=
-      "http://nagalskiy-evgeniy.com/faq/">Click here to learn more.</a>
+      choose to participate in SmartRent or not.
+      <%= link_to "Click here to learn more.", faq_path  %>
     </div>
-
     <div id="slides">
-      <div class="slides_container" style=
-      "overflow: hidden; position: relative; display: block;">
-        <div class="slides_control" style=
-        "position: relative; width: 1830px; height: 0px; left: -610px;">
-          <div class="threeWide" style=
-          "position: absolute; top: 0px; left: 610px; z-index: 0;">
-            <div class="propertySlide">
-              <a href=
-                "http://www.bozzutosmartrent.com/bozzuto-maple-lawn/">
-                <%= image_tag "bozzuto_maple_lawn.jpg" %>
+      <div class="slides_container">
+        <div class="threeWide">
+          <div class="propertySlide">
+            <a href="http://www.bozzutosmartrent.com/bozzuto-maple-lawn/">
+              <%= image_tag "bozzuto_maple_lawn.jpg" %>
               <div class="caption">
-                <strong>Bozzuto Maple Lawn</strong> Maintenance-Free Living
-                in a One of the Kind Community.
-              </div></a>
-            </div>
-
-            <div class="propertySlide">
-              <a href=
-                "http://www.bozzutosmartrent.com/shipleys-grant/">
-                <%= image_tag "shipleys_grant.jpg" %>
-              <div class="caption">
-                <strong>Shipley’s Grant</strong> The Art of the Village.
-                Ellicott City, MD
-              </div></a>
-            </div>
-
-            <div class="propertySlide">
-              <a href=
-                "http://www.bozzutosmartrent.com/towson-green/">
-                <%= image_tag "towson_green.jpg" %>
-              <div class="caption">
-                <strong>Towson Green</strong> New Urban Townhomes in the
-                heart of Towson
-              </div></a>
-            </div>
+                <strong>Bozzuto Maple Lawn</strong> Maintenance-Free Living in a One
+                of the Kind Community.
+              </div>
+            </a>
           </div>
 
-          <div class="threeWide" style=
-          "position: absolute; top: 0px; left: 610px; z-index: 0; display: none;">
           <div class="propertySlide">
-            <a href="http://www.bozzutosmartrent.com/uplands/">
-                <%= image_tag "uplands_md.jpg" %>
-              <div class="caption">
-                <strong>Uplands</strong> Suburban Charm. In Charm City.
-              </div></a>
-            </div>
+            <a href="http://www.bozzutosmartrent.com/shipleys-grant/">
+              <%= image_tag "shipleys_grant.jpg" %>
+            <div class="caption">
+              <strong>Shipley&#8217;s Grant</strong> The Art of the Village.
+              Ellicott City, MD
+            </div></a>
+          </div>
 
-            <div class="propertySlide">
-              <a href=
-                "http://www.bozzutosmartrent.com/460-new-york-avenue/">
-                <%= image_tag "460NewYorkAvenue.jpg" %>
-              <div class="caption">
-                <strong>460 New York Avenue</strong> In every way, 460 New
-                York Avenue is truly the place to be.
-              </div></a>
-            </div>
+          <div class="propertySlide">
+            <a href="http://www.bozzutosmartrent.com/towson-green/">
+              <%= image_tag "towson_green.jpg" %>
+            <div class="caption">
+              <strong>Towson Green</strong> New Urban Townhomes in the heart of
+              Towson
+            </div></a>
           </div>
         </div>
-      </div><a class="prev" href=
-      "http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/home.html#">Prev</a><a class="next"
-      href=
-      "http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/home.html#">Next</a>
 
-      <ul class="pagination">
-        <li class="current">
-          <a href=
-          "http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/home.html#0">
-          1</a>
-        </li>
+        <div class="threeWide">
+          <div class="propertySlide">
+            <a href="http://www.bozzutosmartrent.com/uplands/">
+              <%= image_tag "uplands_md.jpg" %>
 
-        <li>
-          <a href=
-          "http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/home.html#1">
-          2</a>
-        </li>
-      </ul>
+            <div class="caption">
+              <strong>Uplands</strong> Suburban Charm. In Charm City.
+            </div></a>
+          </div>
+
+          <div class="propertySlide">
+            <a href=
+              "http://www.bozzutosmartrent.com/460-new-york-avenue/">
+              <%= image_tag "460NewYorkAvenue.jpg" %>
+
+            <div class="caption">
+              <strong>460 New York Avenue</strong> In every way, 460 New York
+              Avenue is truly the place to be.
+            </div></a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

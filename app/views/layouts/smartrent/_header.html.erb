@@ -1,7 +1,7 @@
 <header class="header">
   <div class="fixedWidth">
     <div class="logo">
-      <%= link_to root_path do %>
+      <%= link_to root_url do %>
         <%= image_tag "BozzutoSmartRent-logo-web1.gif", :alt => "SmartRent" %>
       <% end %>
     </div>
@@ -27,7 +27,7 @@
 
     <div class="searchOptions clearfix">
       <div class="contactLink">
-        <a href="http://nagalskiy-evgeniy.com/contact">Learn More</a>
+        <%= link_to "Learn More", contact_path %>
       </div>
 
       <div class="memberInfo">
@@ -74,14 +74,11 @@
 
       <ul id="special-nav">
         <li class="arrow">
-          <a href=
-          "http://nagalskiy-evgeniy.com/find-a-smartrent-apartment">Lease an
-          Apartment</a>
+          <%= link_to "Lease an Apartment", apartments_path %>
         </li>
 
         <li class="arrow">
-          <a href="http://nagalskiy-evgeniy.com/find-a-new-home">Buy a
-          Home</a>
+          <%= link_to "Buy a Home", new_home_path %>
         </li>
       </ul>
     </div>

@@ -27,5 +27,20 @@ module Smartrent
         format.html
       end
     end
+    def privacy_policy
+      respond_to do |format|
+        format.html
+      end
+    end
+    def website_disclaimer
+      respond_to do |format|
+        format.html
+      end
+    end
+    def contact
+      respond_to do |format|
+        format.html
+      end
+    end
   end
 end

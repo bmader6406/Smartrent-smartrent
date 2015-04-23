@@ -1,20 +1,17 @@
 <footer class="footer clearfix">
   <div class="fixedWidth">
     <div class="copyright">
-      &copy; 2012 <a href="http://www.bozzuto.com/" target="_blank">Bozzuto</a>
+      &copy; 2012 <%= link_to "Bozzuto", root_url, :target => "_blank"%>
     </div>
 
     <div class="menu">
       <ul id="menu-footer-menu">
         <li>
-          <a href="http://www.bozzutosmartrent.com/privacy-policy/">Privacy
-          Policy</a>
+          <%= link_to "Privacy Policy", privacy_policy_path %>
         </li>
 
         <li>
-          <a href=
-          "http://www.bozzutosmartrent.com/website-disclaimer/">Website
-          Disclaimer</a>
+          <%= link_to "Website Disclaimer", website_disclaimer_path %>
         </li>
       </ul>
     </div>
@@ -26,8 +23,9 @@
 </footer>
 
 <div id="window-resizer-tooltip">
+  <%= link_to "Website Disclaimer", website_disclaimer_path %>
   <a href=
-  "http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/home.html#"
+  "#"
   title="Edit settings"></a><span class="tooltipTitle">Window size:</span>
   <span class="tooltipWidth" id="winWidth"></span> x <span class=
   "tooltipHeight" id="winHeight"></span><br>
