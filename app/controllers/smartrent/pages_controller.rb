@@ -27,6 +27,11 @@ module Smartrent
         format.html
       end
     end
+    def official_rules
+      respond_to do |format|
+        format.html
+      end
+    end
     def privacy_policy
       respond_to do |format|
         format.html

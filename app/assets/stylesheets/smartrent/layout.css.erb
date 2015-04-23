@@ -3,7 +3,7 @@
   src:url(<%= asset_path "fonts/FontSiteSans-LightCd-webfont.eot" %>);
   src:local('?'),url(<%= asset_path "fonts/FontSiteSans-LightCd-webfont.woff" %>) format('woff'),
       url(<%= asset_path "fonts/FontSiteSans-LightCd-webfont.ttf" %>) format('truetype'),
-      url('fonts/FontSiteSans-LightCd-webfont.svg#webfont2X6HCJ0U') format('svg');
+      url('<%= asset_path "fonts/FontSiteSans-LightCd-webfont.svg#webfont2X6HCJ0U" %>') format('svg');
       font-weight:normal;font-style:normal}
 
 img{
@@ -138,14 +138,14 @@ label{
 
 .header .fixedWidth .searchOptions #special-nav a,
 .header .fixedWidth .searchOptions #special-nav a:visited{
-  background:#dde0e3 url(<%= asset_path "/assets/bg-special-nav.gif"%>) no-repeat top right;
+  background:#dde0e3 url(<%= asset_path "bg-special-nav.gif"%>) no-repeat top right;
   font-size:15px;
   line-height:26px;
   color:#000;
   text-decoration:none;
 }
 .header .fixedWidth .searchOptions #special-nav .arrow a{
-  background-image:url(<%= asset_path "/assets/bg-special-nav-arrow.png"%>)
+  background-image:url(<%= asset_path "bg-special-nav-arrow.png"%>)
 }
 .header .fixedWidth .searchOptions #special-nav a:hover,#special-nav li:hover a{
   background-color:#c2c6ca;
@@ -169,7 +169,7 @@ label{
 }
 
 .dropshadow{
-  background:url("<%= asset_path "/assets/bannerGradient.gif"%>") bottom left repeat-x;
+  background:url("<%= asset_path "bannerGradient.gif"%>") bottom left repeat-x;
   padding-bottom:3px;
 }
 
@@ -262,7 +262,7 @@ label{
   position:absolute;
   bottom:-55px;
   color:#000;
-  background:url(<%= asset_path "/assets/carousel-caption-bg.png"%>);
+  background:url(<%= asset_path "carousel-caption-bg.png"%>);
   height:70px;
   padding: 10px 12px;
   font-size:0.8125em;
@@ -288,7 +288,7 @@ label{
   position:absolute;
   bottom:0px;
   right:0px;
-  background:url(<%= asset_path "/assets/slide_next.jpg"%>) no-repeat;
+  background:url(<%= asset_path "slide_next.jpg"%>) no-repeat;
   width:36px;
   height:30px;
   font-size: 0;
@@ -299,7 +299,7 @@ label{
   position:absolute;
   bottom:0px;
   left:0px;
-  background:url(<%= asset_path "/assets/slide_prev.jpg"%>) no-repeat;
+  background:url(<%= asset_path "slide_prev.jpg"%>) no-repeat;
   width:36px;
   height:30px;
   font-size: 0;
@@ -310,7 +310,7 @@ label{
 #slides .pagination{
   height:30px;
   list-style:none;
-  background:url(<%= asset_path "/assets/pagination_background.jpg"%>) repeat-x;
+  background:url(<%= asset_path "pagination_background.jpg"%>) repeat-x;
   text-align:center;
 }
 
@@ -556,7 +556,7 @@ label{
   max-width:966px;
 }
 #seconderyNav {
-  background-image:url(<%= asset_path "/assets/findAptsBG.gif"%>);
+  background-image:url(<%= asset_path "findAptsBG.gif"%>);
   background-repeat:repeat-x;
   height:78px;
 }
@@ -672,7 +672,7 @@ label{
 .locations .location .stateBox{
   width:100%;
   cursor:pointer;
-  background:url("<%= asset_path "/assets/gradient.png"%>") top left repeat-x #f3f5f5;
+  background:url("<%= asset_path "gradient.png"%>") top left repeat-x #f3f5f5;
 }
 
 .locations .location .stateBox .state{
@@ -708,7 +708,7 @@ label{
   line-height:54px;
   text-align:center;
   color:#797a7b;
-  background:url("<%= asset_path "/assets/gradient.png"%>") top left repeat-x #f5f7f7;
+  background:url("<%= asset_path "gradient.png"%>") top left repeat-x #f5f7f7;
 }
 
 .locations .location .cities{
@@ -723,7 +723,7 @@ label{
   font-size:.9em;
   text-transform:uppercase;
   cursor:pointer;
-  background:url("<%= asset_path "/assets/gradient.png"%>") top left repeat-x #f3f4f5;
+  background:url("<%= asset_path "gradient.png"%>") top left repeat-x #f3f4f5;
 }
 
 .locations .location .cities .title:hover{
@@ -777,7 +777,7 @@ label{
 .locations .location .counties .title{
   color:#000000;
   width:100%;
-  background:url("<%= asset_path "/assets/gradient.png"%>") top left repeat-x #f3f4f5;
+  background:url("<%= asset_path "gradient.png"%>") top left repeat-x #f3f4f5;
   font-size:.9em;
   text-transform:uppercase;
   cursor:pointer;
@@ -801,7 +801,7 @@ label{
   line-height:29px;
   text-align:center;
   color:#797a7b;
-  background:url("<%= asset_path "/assets/gradient.png"%>") top left repeat-x #f5f7f7;
+  background:url("<%= asset_path "gradient.png"%>") top left repeat-x #f5f7f7;
 }
 
 .locations .location .counties ul{
@@ -951,7 +951,7 @@ label{
 .locations .results .propertyListing .info .learn a{
   color:#4c4c4c;
   text-decoration:none;
-  background:url("<%= asset_path "/assets/smallLeftArrow.png"%>") center left no-repeat;
+  background:url("<%= asset_path "smallLeftArrow.png"%>") center left no-repeat;
   padding-left:7px;
 }
 
@@ -1263,7 +1263,7 @@ label{
 
 .toggle{
   width:100%;
-  background:url("<%= asset_path "/assets/toggleGradient.png"%>") bottom left repeat-x;
+  background:url("<%= asset_path "toggleGradient.png"%>") bottom left repeat-x;
   margin-bottom:10px;
 }
 
@@ -1276,19 +1276,19 @@ label{
 }
 
 .toggle .listOn{
-  background:url("<%= asset_path "/assets/listBackOn.gif"%>") top left no-repeat;
+  background:url("<%= asset_path "listBackOn.gif"%>") top left no-repeat;
 }
 
 .toggle .listOff{
-  background:url("<%= asset_path "/assets/listBackOff.gif"%>") top left no-repeat;
+  background:url("<%= asset_path "listBackOff.gif"%>") top left no-repeat;
 }
 
 .toggle .mapOn{
-  background:url("<%= asset_path "/assets/mapBackOn.gif"%>") top left no-repeat;
+  background:url("<%= asset_path "mapBackOn.gif"%>") top left no-repeat;
 }
 
 .toggle .mapOff{
-  background:url("<%= asset_path "/assets/mapBackOff.gif"%>") top left no-repeat;
+  background:url("<%= asset_path "mapBackOff.gif"%>") top left no-repeat;
 }
 
 .toggle .item .text{
@@ -1819,7 +1819,7 @@ label{
 }
 .modern-checkbox li label:after {
   content:"";
-  background: url(<%= asset_path "/assets/checkbox-large-dark.png"%>) no-repeat;
+  background: url(<%= asset_path "checkbox-large-dark.png"%>) no-repeat;
   background-size: contain;
   opacity: 0;
   transition: 0.2s;

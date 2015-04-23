@@ -25,6 +25,7 @@ Smartrent::Engine.routes.draw do
   get "/find-a-smartrent-apartment", :to => "pages#apartments", :as => "apartments"
   get "/find-a-new-home", :to => "pages#new_home", :as => "new_home"
   get "/smartrent-quick-program-rules", :to => "pages#program_rules", :as => "program_rules"
+  get "/official-rules", :to => "pages#official_rules", :as => "official_rules"
   get "/privacy-policy", :to => "pages#privacy_policy", :as => "privacy_policy"
   get "/website-disclaimer", :to => "pages#website_disclaimer", :as => "website_disclaimer"
   get "/contact", :to => "pages#contact", :as => "contact"
