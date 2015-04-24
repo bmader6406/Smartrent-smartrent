@@ -1,0 +1,27 @@
+<%= render layout: "layout" do %>
+<p id="notice"><%= notice %></p>
+  <div class="propDetails clearfix">
+    <div class="propPhoto">
+      <%= image_tag @property.left_image %>
+      <div>
+        <%= @property.left_image_description %>
+      </div>
+    </div>
+
+    <div class="details">
+      <h1><%= @property.title %></h1>
+
+      <div class="address">
+        <%= @property.address %>
+      </div>
+
+      <div class="links">
+        <%= link_to "Visit the Website", @property.website, :target => "_blank" %>
+      </div>
+
+      <div class="desc">
+        <%= @property.description.html_safe %>
+      </div>
+    </div>
+  </div>
+<% end%>

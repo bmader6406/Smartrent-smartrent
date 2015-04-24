@@ -1,0 +1,49 @@
+<%= form_for(@property) do |f| %>
+  <% if @property.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@property.errors.count, "error") %> prohibited this property from being saved:</h2>
+
+      <ul>
+      <% @property.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :address %><br />
+    <%= f.text_area :address %>
+  </div>
+  <div class="field">
+    <%= f.label :website %><br />
+    <%= f.text_field :website %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br />
+    <%= f.text_area :description %>
+  </div>
+  <div class="field">
+    <%= f.label :lat %><br />
+    <%= f.text_field :lat %>
+  </div>
+  <div class="field">
+    <%= f.label :lng %><br />
+    <%= f.text_field :lng %>
+  </div>
+  <div class="field">
+    <%= f.label :left_image %><br />
+    <%= f.file_field :left_image %>
+  </div>
+  <div class="field">
+    <%= f.label :left_image_description %><br />
+    <%= f.text_field :left_image_description %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

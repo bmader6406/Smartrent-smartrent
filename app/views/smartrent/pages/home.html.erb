@@ -68,14 +68,13 @@
           </div>
 
           <div class="propertySlide">
-            <a href=
-              "http://www.bozzutosmartrent.com/460-new-york-avenue/">
+            <%= link_to ny_avenue_path do %>
               <%= image_tag "460NewYorkAvenue.jpg" %>
-
-            <div class="caption">
-              <strong>460 New York Avenue</strong> In every way, 460 New York
-              Avenue is truly the place to be.
-            </div></a>
+              <div class="caption">
+                <strong>460 New York Avenue</strong> In every way, 460 New York
+                Avenue is truly the place to be.
+              </div>
+            <% end %>
           </div>
         </div>
       </div>

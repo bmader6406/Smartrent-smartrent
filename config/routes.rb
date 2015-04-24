@@ -1,5 +1,8 @@
 Smartrent::Engine.routes.draw do
 
+  resources :properties
+
+
   resources :articles
 
 
@@ -32,6 +35,7 @@ Smartrent::Engine.routes.draw do
   get "/website-disclaimer", :to => "pages#website_disclaimer", :as => "website_disclaimer"
   get "/contact", :to => "contacts#new", :as => "new_contact"
   post "/contact", :to => "contacts#create", :as => "submit_contact"
+  get "/460-new-york-avenue", :to => "pages#ny_avenue", :as => "ny_avenue"
 
 
 end
