@@ -20,6 +20,8 @@ Smartrent::Engine.routes.draw do
 
   # resource :users
 
+  resource :contacts
+
   root :to => "pages#home"
   get "/faq", :to => "pages#faq", :as => "faq"
   get "/find-a-smartrent-apartment", :to => "pages#apartments", :as => "apartments"
@@ -28,6 +30,8 @@ Smartrent::Engine.routes.draw do
   get "/official-rules", :to => "pages#official_rules", :as => "official_rules"
   get "/privacy-policy", :to => "pages#privacy_policy", :as => "privacy_policy"
   get "/website-disclaimer", :to => "pages#website_disclaimer", :as => "website_disclaimer"
-  get "/contact", :to => "pages#contact", :as => "contact"
+  get "/contact", :to => "contacts#new", :as => "new_contact"
+  post "/contact", :to => "contacts#create", :as => "submit_contact"
+
 
 end

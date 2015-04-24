@@ -47,5 +47,10 @@ module Smartrent
         format.html
       end
     end
+    def contact_submit
+      respond_to do |format|
+        format.html{render html: "contact"}
+      end
+    end
   end
 end
