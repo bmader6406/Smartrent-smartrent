@@ -27,56 +27,24 @@
     </div>
     <div id="slides">
       <div class="slides_container">
-        <div class="threeWide">
-          <div class="propertySlide">
-            <a href="http://www.bozzutosmartrent.com/bozzuto-maple-lawn/">
-              <%= image_tag "bozzuto_maple_lawn.jpg" %>
-              <div class="caption">
-                <strong>Bozzuto Maple Lawn</strong> Maintenance-Free Living in a One
-                of the Kind Community.
-              </div>
-            </a>
+          <% i = 0 %>
+        <% Smartrent::Property.all.each do |property|%>
+          <% if i%2 == 0 %>
+          <div class="threeWide">
+          <% end %>
+            <div class="propertySlide">
+              <%= link_to properties_path(property) do %>
+                <%= image_tag property.left_image %>
+                <div class="caption">
+                  <strong><%= property.title %></strong> In every way, <%= property.title %> is truly the place to be.
+                </div>
+              <% end %>
+            </div>
+          <% i+=1 %>
+          <% if i%2 == 0 %>
           </div>
-
-          <div class="propertySlide">
-            <a href="http://www.bozzutosmartrent.com/shipleys-grant/">
-              <%= image_tag "shipleys_grant.jpg" %>
-            <div class="caption">
-              <strong>Shipley&#8217;s Grant</strong> The Art of the Village.
-              Ellicott City, MD
-            </div></a>
-          </div>
-
-          <div class="propertySlide">
-            <a href="http://www.bozzutosmartrent.com/towson-green/">
-              <%= image_tag "towson_green.jpg" %>
-            <div class="caption">
-              <strong>Towson Green</strong> New Urban Townhomes in the heart of
-              Towson
-            </div></a>
-          </div>
-        </div>
-
-        <div class="threeWide">
-          <div class="propertySlide">
-            <a href="http://www.bozzutosmartrent.com/uplands/">
-              <%= image_tag "uplands_md.jpg" %>
-
-            <div class="caption">
-              <strong>Uplands</strong> Suburban Charm. In Charm City.
-            </div></a>
-          </div>
-
-          <div class="propertySlide">
-            <%= link_to ny_avenue_path do %>
-              <%= image_tag "460NewYorkAvenue.jpg" %>
-              <div class="caption">
-                <strong>460 New York Avenue</strong> In every way, 460 New York
-                Avenue is truly the place to be.
-              </div>
-            <% end %>
-          </div>
-        </div>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>
