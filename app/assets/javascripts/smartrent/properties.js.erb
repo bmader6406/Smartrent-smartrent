@@ -1,0 +1,48 @@
+// Place all the behaviors and hooks related to the matching controller here.
+// All this logic will automatically be available in application.js.
+var pois = {};
+var categories = [];
+var cat_counter = 1;
+categories.push('all');
+pois['all'] = {'show':true,'points':[]};
+$(function(){
+$(".search-item").click(function(){
+  if (this.id == 'listResults' && $(this).hasClass('listOff')) {
+    $(this).removeClass('listOff').addClass('listOn')
+    $(this).removeClass('mapOn').addClass('mapOff')
+    $('.map-results').hide(function(){
+      $('.listing-results').show();
+    });
+  }
+  else if (this.id == 'mapResults' && $(this).hasClass('mapOff')) {
+    $(this).removeClass('mapOff').addClass('mapOn')
+    $(this).removeClass('listOn').addClass('listOff')
+    $('.listing-results').hide(function(){
+      $('.map-results').show();
+      var map_results_html = $('.map-results').html();
+      map_results_html = map_results_html.replace(/\n/g, "").replace(/ /g, "")
+      if (map_results_html == '')
+      {
+        properties_path = Routes.smartrent_properties_path({format: "json"})
+        $.get(properties_path, function(data){
+          properties = data;
+          pois['all'] = {'show':true,'points':[]};
+          for(var property in properties) {
+            pois['all']['points'].push({
+                title: property.title,
+                description: property.description,
+                address: property.address + ',' + property.city + ',' + property.state + ' ' + property.postal_code,
+                lat: property.lat,
+                lon: property.lng,
+                image: property.left_image,
+                image_link: property.left_image
+            });
+          }
+          mapStart();
+        });
+      }
+    });
+
+  }
+})
+})

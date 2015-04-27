@@ -28,4 +28,5 @@ Gem::Specification.new do |s|
   s.add_dependency "twitter-bootstrap-rails"
   s.add_dependency "paperclip"
   s.add_dependency "will_paginate"
+  s.add_dependency "js-routes"
 end

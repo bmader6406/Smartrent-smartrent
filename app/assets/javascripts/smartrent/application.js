@@ -11,8 +11,11 @@
 // about supported directives.
 //
 //= require smartrent/jquery.min
+//= require js-routes
 //= require smartrent/jquery-ui
 //= require smartrent/bootstrap.min
 //= require smartrent/slides.min.jquery
-//= require smartrent/home
+//= require smartrent/smartRentMarkers
+//= require smartrent/map
+//= require smartrent/google_map_apis
 //= require_tree .

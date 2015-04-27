@@ -3,21 +3,21 @@
   <div id="contactRight" class="fl-r">
     <p>SmartRent dollars earned while leasing one of our Bozzuto-managed apartments may be used to purchase any of these great homes.</p>
     <div class="toggle clearfix">
-      <div id="listResults" class="item listOn" onClick="getListResults()">
+      <div id="listResults" class="item search-item listOn">
         <div class="text">
           View as List
         </div>
       </div>
-      <div id="mapResults" class="item mapOff" onClick="getMapResults()">
+      <div id="mapResults" class="item search-item mapOff">
         <div class="text">
           View on Map
         </div>
       </div>
     </div>
     <div class="locations" id="locationsBox">
-      <div class="results" style="display:block;">
+      <div class="results listing-results">
         <% @properties.each do |property| %>
-          <div class="propertyListing clearfix" style="display:block;">
+          <div class="propertyListing clearfix">
             <div class="photo">
               <%= image_tag property.left_image(:search_page) %>
             </div>
@@ -56,7 +56,9 @@
             </div>
           </div>
         <% end %>
-        </div>
+      </div>
+      <div id="map" class="results map-results hidden">
+      </div>
     </div>
   </div>
 </section>
