@@ -11,6 +11,7 @@ PATH
       rails (~> 3.2.13)
       therubyracer
       twitter-bootstrap-rails
+      will_paginate
 
 GEM
   remote: https://rubygems.org/
@@ -139,6 +140,7 @@ GEM
     tzinfo (0.3.43)
     warden (1.2.3)
       rack (>= 1.0)
+    will_paginate (3.0.7)
 
 PLATFORMS
   ruby

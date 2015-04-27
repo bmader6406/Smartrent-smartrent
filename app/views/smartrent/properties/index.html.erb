@@ -1,37 +1,63 @@
-<h1>Listing properties</h1>
-
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Address</th>
-    <th>Website</th>
-    <th>Description</th>
-    <th>Lat</th>
-    <th>Lng</th>
-    <th>Left image</th>
-    <th>Left image description</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @properties.each do |property| %>
-  <tr>
-    <td><%= property.title %></td>
-    <td><%= property.address %></td>
-    <td><%= property.website %></td>
-    <td><%= property.description %></td>
-    <td><%= property.lat %></td>
-    <td><%= property.lng %></td>
-    <td><%= property.left_image %></td>
-    <td><%= property.left_image_description %></td>
-    <td><%= link_to 'Show', property %></td>
-    <td><%= link_to 'Edit', edit_property_path(property) %></td>
-    <td><%= link_to 'Destroy', property, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
+<%= render layout: "layout" do %>
+<section class="wrapper clearfix">
+  <div id="contactRight" class="fl-r">
+    <p>SmartRent dollars earned while leasing one of our Bozzuto-managed apartments may be used to purchase any of these great homes.</p>
+    <div class="toggle clearfix">
+      <div id="listResults" class="item listOn" onClick="getListResults()">
+        <div class="text">
+          View as List
+        </div>
+      </div>
+      <div id="mapResults" class="item mapOff" onClick="getMapResults()">
+        <div class="text">
+          View on Map
+        </div>
+      </div>
+    </div>
+    <div class="locations" id="locationsBox">
+      <div class="results" style="display:block;">
+        <% @properties.each do |property| %>
+          <div class="propertyListing clearfix" style="display:block;">
+            <div class="photo">
+              <%= image_tag property.left_image(:search_page) %>
+            </div>
+            <div class="info">
+              <h1><%= link_to property.title, property_path(property) %></h1>
+              <div class="descHomes">
+                <% if property.search_page_sub_title.present? %>
+                  <h2><%= property.search_page_sub_title %></h2>
+                <% end %>
+                <%= property.description.html_safe %>
+              </div>
+              <div class="learn"><%= link_to "Learn More", property_path(property) %></div>
+            </div>
+            <div class="learnMoreHomes">
+              <h3>
+                <%= link_to "Learn More", property_path(property) %>
+                <div class="arrow">
+                  <%= link_to property_path(property) do %>
+                    <%= image_tag "learnMoreButton.png" %>
+                  <% end %>
+                </div>
+              </h3>
+              <div class="video">
+                <% if property.video_url %>
+                  <%= link_to property.video_url, property.video_url, :target => "blank" %>
+                <% end %>
+              </div>
+              <div class="address">
+                <div class="address1"><%= property.address %></div>
+                <div class="cityState"><%= property.city %>, <%= property.state %></div>
+              </div>
+              <div class="phone"><%= property.phone_number %></div>
+              <div class="website">
+                  <%= link_to "Visit the Website", property.website, :target => "blank" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        </div>
+    </div>
+  </div>
+</section>
 <% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Property', new_property_path %>
