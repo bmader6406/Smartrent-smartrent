@@ -1,0 +1,55 @@
+<div class="member clearfix">
+  <div class="memberLeft profileLeft">
+    <%= image_tag "profileLeft.jpg" %>
+  </div>
+
+  <div class="memberRight profile">
+    <div class="info">
+      <h2>Member Profile</h2>
+      <div class="label">
+        Name
+      </div>
+      <div class="value">
+        <%= current_user.name %>
+      </div>
+      <div class="label">
+        Address
+      </div>
+      <div class="value">
+        <%= current_user.address %>
+      </div>
+      <div class="label">
+        City
+      </div>
+      <div class="value">
+        <%= current_user.city %>
+      </div>
+      <div class="label">
+        State
+      </div>
+      <div class="value">
+        <%= current_user.state %>
+      </div>
+      <div class="label">
+        Zip
+      </div>
+      <div class="value">
+        <%= current_user.zip %>
+      </div>
+      <div class="label">
+        Email
+      </div>
+      <div class="value">
+        <%= current_user.email %>
+      </div>
+    </div>
+
+    <div class="community">
+      <h3>Current Community</h3>
+
+      <div class="property">
+        <%= current_user.current_community %>
+      </div>
+    </div>
+  </div>
+</div>
