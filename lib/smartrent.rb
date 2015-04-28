@@ -1,5 +1,6 @@
 require "devise"
 require "smartrent/engine"
+require "aws-sdk"
 require "js-routes"
 
 module Smartrent
