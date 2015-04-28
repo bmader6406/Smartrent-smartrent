@@ -1,0 +1,39 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  title: MyString
+  phone_number: MyString
+  detail_url: MyString
+  short_description: MyString
+  state: MyString
+  county: MyString
+  city: MyString
+  address: MyString
+  lat: 1.5
+  lng: 1.5
+  one_bedroom_price: 1.5
+  two_bedroom_price: 1.5
+  three_bedroom_price: 1.5
+  four_bedroom_price: 1.5
+  studio_price: 1.5
+  pent_house_price: 1.5
+  special_promotion: false
+
+two:
+  title: MyString
+  phone_number: MyString
+  detail_url: MyString
+  short_description: MyString
+  state: MyString
+  county: MyString
+  city: MyString
+  address: MyString
+  lat: 1.5
+  lng: 1.5
+  one_bedroom_price: 1.5
+  two_bedroom_price: 1.5
+  three_bedroom_price: 1.5
+  four_bedroom_price: 1.5
+  studio_price: 1.5
+  pent_house_price: 1.5
+  special_promotion: false

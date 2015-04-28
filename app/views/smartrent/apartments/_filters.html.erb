@@ -1,0 +1,207 @@
+<div id="contactLeft">
+  <div id="search">
+    <form id="propform" method="get" name="propform">
+      <div class="searchTitle">
+        <h1>Search By</h1>
+      </div>
+
+      <div class="searchBedrooms modern-checkbox">
+        <div class="searchCategory">
+          Bedrooms
+        </div>
+
+        <ul>
+          <li><input id="studios" name="bedrooms[]" onclick="selectResults();" type="checkbox" value="0"><label for="studios">Studios</label></li>
+
+          <li><input id="onebed" name="bedrooms[]" onclick="selectResults();" type="checkbox" value="1"><label for="onebed">1 Bedrooms</label></li>
+
+          <li><input id="twobed" name="bedrooms[]" onclick="selectResults();" type="checkbox" value="2"><label for="twobed">2 Bedrooms</label></li>
+
+          <li><input id="threebed" name="bedrooms[]" onclick="selectResults();" type="checkbox" value="3"><label for="threebed">3 or more Bedrooms</label></li>
+
+          <li><input id="fourbed" name="penthouse" onclick="selectResults();" type="checkbox" value="true"><label for="fourbed">Penthouses</label></li>
+        </ul>
+      </div>
+
+      <div class="searchPrice">
+        <label for="fourbed"></label>
+
+        <div class="searchCategory">
+          <label for="fourbed">Price</label>
+        </div><label for="fourbed"></label>
+
+        <ul>
+          <li><label for="fourbed"><select class="selectpicker" id="min_price" name="min_price" onchange="selectResults();">
+            <option value="">
+              Choose Minimum...
+            </option>
+
+            <option value="750">
+              $750
+            </option>
+
+            <option value="1000">
+              $1,000
+            </option>
+
+            <option value="1250">
+              $1,250
+            </option>
+
+            <option value="1500">
+              $1,500
+            </option>
+
+            <option value="1750">
+              $1,750
+            </option>
+
+            <option value="2000">
+              $2,000
+            </option>
+
+            <option value="2500">
+              $2,500
+            </option>
+
+            <option value="3000">
+              $3,000
+            </option>
+
+            <option value="4000">
+              $4,000
+            </option>
+
+            <option value="5000">
+              $5,000
+            </option>
+
+            <option value="6000">
+              $6,000
+            </option>
+
+            <option value="7000">
+              $7,000
+            </option>
+
+            <option value="8000">
+              $8,000
+            </option>
+
+            <option value="9000">
+              $9,000
+            </option>
+
+            <option value="10000">
+              $10,000
+            </option>
+          </select></label></li>
+
+          <li style="list-style: none"><label for="fourbed"></label></li>
+
+          <li><label for="fourbed"><select class="selectpicker" id="max_price" name="max_price" onchange="selectResults();">
+            <option value="">
+              Choose Maximum...
+            </option>
+
+            <option value="750">
+              $750
+            </option>
+
+            <option value="1000">
+              $1,000
+            </option>
+
+            <option value="1250">
+              $1,250
+            </option>
+
+            <option value="1500">
+              $1,500
+            </option>
+
+            <option value="1750">
+              $1,750
+            </option>
+
+            <option value="2000">
+              $2,000
+            </option>
+
+            <option value="2500">
+              $2,500
+            </option>
+
+            <option value="3000">
+              $3,000
+            </option>
+
+            <option value="4000">
+              $4,000
+            </option>
+
+            <option value="5000">
+              $5,000
+            </option>
+
+            <option value="6000">
+              $6,000
+            </option>
+
+            <option value="7000">
+              $7,000
+            </option>
+
+            <option value="8000">
+              $8,000
+            </option>
+
+            <option value="9000">
+              $9,000
+            </option>
+
+            <option value="10000">
+              $10,000
+            </option>
+          </select></label></li>
+
+          <li style="list-style: none"><label for="fourbed"></label></li>
+        </ul>
+      </div>
+
+      <div class="searchFeatures modern-checkbox">
+        <label for="fourbed"></label>
+
+        <div class="searchCategory">
+          <label for="fourbed">Most Searched Features &amp; Amenities</label>
+        </div><label for="fourbed"></label>
+
+        <ul>
+          <li><label for="fourbed"><input id="concierge" name="features[]" onclick="selectResults();" type="checkbox" value="Concierge"><label for="concierge">Concierge</label></label></li>
+
+          <li><input id="green" name="features[]" onclick="selectResults();" type="checkbox" value="Green"><label for="green">Green</label></li>
+
+          <li><input id="military" name="features[]" onclick="selectResults();" type="checkbox" value="Military"><label for="military">Military</label></li>
+
+          <li><input id="nonsmoking" name="features[]" onclick="selectResults();" type="checkbox" value="Non Smoking"><label for="nonsmoking">Non Smoking</label></li>
+
+          <li><input id="pet-friendly" name="features[]" onclick="selectResults();" type="checkbox" value="Pet Friendly"><label for="pet-friendly">Pet Friendly</label></li>
+
+          <li><input id="rapid-transit" name="features[]" onclick="selectResults();" type="checkbox" value="Rapid Transit"><label for="rapid-transit">Rapid Transit</label></li>
+
+          <li><input id="zipcar" name="features[]" onclick="selectResults();" type="checkbox" value="Zipcar"><label for="zipcar">Zipcar</label></li>
+        </ul>
+      </div>
+
+      <div class="searchMore modern-checkbox">
+        <div class="searchCategory">
+          More Filters
+        </div>
+
+        <ul>
+          <li><input id="special" name="promotion" onclick="selectResults();" type="checkbox" value="true"><label for="special">Special Promotions</label></li>
+        </ul><input name="state" type="hidden" value=""> <input name="county" type="hidden" value=""> <input name="city" type="hidden" value="">
+      </div>
+    </form>
+  </div>
+</div>

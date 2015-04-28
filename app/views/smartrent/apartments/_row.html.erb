@@ -1,0 +1,112 @@
+<div class="location">
+  <div class="stateBox" id="stateDC" onclick="showState('DC')" style="background: url(http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/apartment.html) 0% 0% repeat-x rgb(215, 218, 221);">
+    <div class="state">
+      <%= state %>
+    </div>
+
+    <div class="resultTotal">
+      <%= apartment["count"] %>
+    </div>
+
+    <div class="plusMinus" id="plusMinusDC" style="font-size: 2em; background: url(http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/apartment.html) 0% 0% repeat-x rgb(223, 225, 228);">
+      -
+    </div>
+
+    <div class="clear"></div>
+  </div>
+
+  <div class="cities" id="cities<%= state %>" style="display: block;">
+    <div class="title" onclick="toggleCities('DC');">
+      <div class="text">
+        Cities
+      </div>
+
+      <div class="cPlusMinus" id="citiesPlusMinus<%= state %>" style="font-size: 2em;">
+        -
+      </div>
+      <div class="clear"></div>
+    </div>
+    <ul id="citiesList<%= state %>" style="display: table;">
+      <% apartment["cities"].each do |city, count| %>
+        <li>
+          <a href="javascript:cities('<%= state %>','<%= city %>')"><%= city %></a>
+          <div class="count">
+            <%= count %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="counties" id="countiesDC" style="display: block;">
+    <div class="title" onclick="toggleCounties('DC');">
+      <div class="text">
+        Counties
+      </div>
+
+      <div class="cPlusMinus" id="countiesPlusMinusDC" style="font-size: 2em;">
+        -
+      </div>
+
+      <div class="clear"></div>
+    </div>
+
+    <ul id="countiesListDC" style="display: table;">
+      <% apartment["counties"].each do |county, count| %>
+        <li>
+          <a href="javascript:counties('DC','District%20of%20Columbia');"><%= county %></a>
+          <div class="count">
+            <%= count %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<div class="results">
+  <% apartment["apartments"].each do |apartment_| %>
+  <div class="propertyListing">
+    <div class="photo">
+      <img border="0" src="http://bozzuto.com/system/apartment_communities/328/square.jpg" width="150">
+    </div>
+    <div class="info">
+      <h3>
+        <%= link_to apartment_.title, apartment_.detail_url, :target => "_blank" %>
+      </h3>
+
+      <p><%= apartment_.address %>, <%= apartment_.city %>, <%= apartment_.state %><br>
+      <%= apartment_.phone_number %></p>
+
+      <ul class="fp">
+        <% if apartment_.studio_price > 0 %>
+          <li><span class="bold">Studio</span> from <%= number_to_currency apartment_.studio_price %></li>
+        <% end %>
+
+        <% if apartment_.one_bedroom_price > 0 %>
+          <li><span class="bold">1 Bedroom</span> from <%= number_to_currency apartment_.one_bedroom_price %></li>
+        <% end%>
+
+        <% if apartment_.two_bedroom_price > 0 %>
+          <li><span class="bold">2 Bedrooms</span> from <%= number_to_currency apartment_.two_bedroom_price %></li>
+        <% end%>
+        <% if apartment_.three_bedroom_price > 0 %>
+          <li><span class="bold">3 Bedrooms</span> from <%= number_to_currency apartment_.three_bedroom_price %></li>
+        <% end%>
+        <% if apartment_.four_bedroom_price > 0 %>
+          <li><span class="bold">4 Bedrooms or more</span> from <%= number_to_currency apartment_.four_bedroom_price %></li>
+        <% end %>
+      </ul>
+
+      <ul class="desc">
+        <li><%= apartment_.short_description %></li>
+      </ul>
+    </div>
+
+    <div class="learnMore">
+      <h3><%= link_to "Learn More",  apartment_.detail_url, :target => "_blank" %></h3>
+    </div>
+
+    <div class="clear"></div>
+  </div>
+  <% end %>
+</div>

@@ -1,0 +1,27 @@
+<%= render layout: "layout" do %>
+<section class="wrapper clearfix">
+  <%= render partial: "filters"%>
+  <div id="contactRight">
+    <p>Earn SmartRent dollars while leasing one of these apartments.</p>
+
+    <div class="toggle clearfix">
+      <div class="item listOn" id="listResults" onclick="getListResults()">
+        <div class="text">
+          View as List
+        </div>
+      </div>
+
+      <div class="item mapOff" id="mapResults" onclick="getMapResults()">
+        <div class="text">
+          View on Map
+        </div>
+      </div>
+    </div>
+    <div class="locations" id="locationsBox">
+      <% @apartments_grouped_by_states.each do |state,apartment|%>
+        <%= render partial: "row", locals: {apartment: apartment, state: state}%>
+      <% end%>
+    </div>
+  </div>
+</section>
+<% end %>
