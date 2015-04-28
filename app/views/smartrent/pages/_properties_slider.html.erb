@@ -1,0 +1,22 @@
+<div id="slides">
+  <div class="slides_container">
+      <% i = 0 %>
+    <% Smartrent::Property.all.each do |property|%>
+      <% if i%2 == 0 %>
+      <div class="threeWide">
+      <% end %>
+        <div class="propertySlide">
+          <%= link_to property_path(property) do %>
+            <%= image_tag property.left_image(:home_page) %>
+            <div class="caption">
+              <strong><%= property.title %></strong> In every way, <%= property.title %> is truly the place to be.
+            </div>
+          <% end %>
+        </div>
+      <% i+=1 %>
+      <% if i%2 == 0 %>
+      </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

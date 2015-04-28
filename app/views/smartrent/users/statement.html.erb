@@ -1,0 +1,73 @@
+<div class="member clearfix">
+  <div class="memberStatementLeft">
+    <div class="saveTitle">
+      <span class="lightBlue"><%= current_user.name %>,</span> You have <span class="lightBlue"><%= number_to_currency current_user.total_saved %></span> Saved.
+    </div>
+
+    <div class="saveSubTitle">
+      Wow, that's pretty good. Here's what you can do with it.
+    </div>
+
+    <div class="video">
+      <%= image_tag "moviePlaceHolder.jpg" %>
+    </div>
+
+    <div id="contentWrapper">
+      <div class="fixedWidth">
+        <%#= render partial: "pages/properties_slider" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="memberStatementRight">
+    <h2>Member Profile</h2>
+
+    <div class="name">
+      <%= current_user.name %>
+    </div>
+
+    <div class="movein">
+      <span class="label">Move-In Date:</span> <%= current_user.move_in_date %>
+    </div>
+
+    <h2>Earned Rewards</h2>
+
+    <h3>Current Community</h3>
+
+    <div class="community">
+      <%= current_user.current_community %><br>
+      <br>
+      ,<br>
+    </div>
+
+    <h3>Monthly Awards Amount</h3>
+
+    <div class="v">
+      <%= current_user.monthly_awards_amount %>
+    </div>
+
+    <h3>Months Earned</h3>
+
+    <div class="v">
+      <%= current_user.months_earned %>
+    </div>
+
+    <h3>Total Earned</h3>
+
+    <div class="v">
+      <%= current_user.total_earned %>
+    </div>
+
+    <h3>Sign-Up Bonus</h3>
+
+    <div class="v">
+      <%= number_to_currency current_user.sign_up_bonus %>
+    </div>
+
+    <h3>Combined Total</h3>
+
+    <div class="v total">
+      <%= number_to_currency current_user.total_saved %>
+    </div>
+  </div>
+</div>

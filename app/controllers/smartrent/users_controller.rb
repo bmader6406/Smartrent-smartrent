@@ -8,5 +8,10 @@ module Smartrent
         format.html {}
       end
     end
+    def statement
+      respond_to do |format|
+        format.html {}
+      end
+    end
   end
 end

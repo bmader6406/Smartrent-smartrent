@@ -10,5 +10,12 @@ module Smartrent
     attr_accessible :email, :password, :password_confirmation, :remember_me
     # attr_accessible :title, :body
 
+    before_create do
+      self.move_in_date = Time.now
+    end
+
+    def total_saved
+      self.monthly_awards_amount + self.months_earned + self.total_earned + self.sign_up_bonus
+    end
   end
 end

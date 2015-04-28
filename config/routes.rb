@@ -35,6 +35,7 @@ Smartrent::Engine.routes.draw do
   post "/contact", :to => "contacts#create", :as => "submit_contact"
   get "/460-new-york-avenue", :to => "pages#ny_avenue", :as => "ny_avenue"
   get "/member-profile", :to => "users#profile", :as => "member_profile"
+  get "/member-statement", :to => "users#statement", :as => "member_statement"
   devise_for :users, {
                        class_name: 'Smartrent::User',
                        module: :devise,
