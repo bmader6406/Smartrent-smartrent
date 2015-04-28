@@ -14,7 +14,7 @@
 
     <div id="contentWrapper">
       <div class="fixedWidth">
-        <%#= render partial: "pages/properties_slider" %>
+        <%= render partial: "smartrent/pages/properties_slider" %>
       </div>
     </div>
   </div>
@@ -27,7 +27,7 @@
     </div>
 
     <div class="movein">
-      <span class="label">Move-In Date:</span> <%= current_user.move_in_date %>
+      <span class="label">Move-In Date:</span> <%= current_user.move_in_date.to_s(:year_month_day) %>
     </div>
 
     <h2>Earned Rewards</h2>
