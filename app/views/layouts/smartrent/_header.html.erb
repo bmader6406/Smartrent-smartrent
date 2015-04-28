@@ -1,84 +1,72 @@
 <header class="header">
   <div class="fixedWidth">
     <div class="logo">
-      <%= link_to root_url do %>
+      <%= link_to smartrent.root_url do %>
         <%= image_tag "BozzutoSmartRent-logo-web1.gif", :alt => "SmartRent" %>
       <% end %>
     </div>
     <nav class="menu">
       <ul id="menu-main-menu">
         <li>
-          <%= link_to "Why SmartRent?", faq_path %>
+          <%= link_to "Why SmartRent?", smartrent.faq_path %>
         </li>
 
         <li>
-          <%= link_to "Apartments", apartments_path %>
+          <%= link_to "Apartments", smartrent.apartments_path %>
         </li>
 
         <li>
-          <%= link_to "New Homes", new_home_path %>
+          <%= link_to "New Homes", smartrent.new_home_path %>
         </li>
 
         <li>
-          <%= link_to "Program Rules", program_rules_path%>
+          <%= link_to "Program Rules", smartrent.program_rules_path%>
         </li>
       </ul>
     </nav>
 
     <div class="searchOptions clearfix">
       <div class="contactLink">
-        <%= link_to "Learn More", new_contact_path %>
+        <%= link_to "Learn More", smartrent.new_contact_path %>
       </div>
 
-      <div class="memberInfo">
-        <div id="loginLink">
-          <a href="http://nagalskiy-evgeniy.com/member-login/">Member
-          Login</a><br>
-          <a href="http://nagalskiy-evgeniy.com/activation">Activate
-          Account</a>
-        </div>
+      <% if !request.fullpath.include? "sign_in" %>
+        <div class="memberInfo">
+          <% if !user_signed_in? %>
+          <div id="loginFields">
+            <div class="title">
+              Resident Log-In
+            </div>
+            <div class="loginForm">
+              <%= form_for(:user, url: session_path(:user)) do |f| %>
+                <div class="form-group">
+                  <%= f.email_field :email, autofocus: false , :class => "form-control"%>
+                </div>
+                <div class="form-group">
+                  <%= f.password_field :password, autocomplete: "off", :class => "form-control"  %>
+                </div>
 
-        <div id="loginFields">
-          <div class="title">
-            Resident Log-In
-          </div>
-
-          <div class="loginForm">
-            <form action="http://nagalskiy-evgeniy.com/member-login" id=
-            "loginForm" method="post" name="loginForm">
-              <div class="form-group">
-                <input class="form-control" id="username2" name="username"
-                placeholder="Email" type="text" value="">
+                <div class="actions">
+                  <%= f.submit "Go", {:class => "btn btn-primary btn-sm"} %>
+                </div>
+              <% end %>
+              <%= link_to "Forgot your password?", new_password_path(:user) %><br />
+              <%= link_to "Activate Your Account", new_unlock_path(:user) %><br />
               </div>
-
-              <div class="form-group">
-                <input class="form-control" id="password2" name="password"
-                placeholder="Password" type="password" value="">
-              </div>
-
-              <div>
-                <input class="btn btn-primary btn-xs" name="login" type=
-                "submit" value="GO">
-              </div>
-
-              <div class="links">
-                <a href="http://nagalskiy-evgeniy.com/forgot-password">Forgot
-                Your Password?</a> <a href=
-                "http://nagalskiy-evgeniy.com/activation">Activate Your
-                Account.</a>
-              </div>
-            </form>
           </div>
         </div>
-      </div>
+        <% else %>
+          <%= link_to "Logout", destroy_user_session_path  %>
+        <% end %>
+      <% end %>
 
       <ul id="special-nav">
         <li class="arrow">
-          <%= link_to "Lease an Apartment", apartments_path %>
+          <%= link_to "Lease an Apartment", smartrent.apartments_path %>
         </li>
 
         <li class="arrow">
-          <%= link_to "Buy a Home", new_home_path %>
+          <%= link_to "Buy a Home", smartrent.new_home_path %>
         </li>
       </ul>
     </div>

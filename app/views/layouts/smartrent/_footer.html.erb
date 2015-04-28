@@ -1,17 +1,17 @@
 <footer class="footer clearfix">
   <div class="fixedWidth">
     <div class="copyright">
-      &copy; 2012 <%= link_to "Bozzuto", root_url, :target => "_blank"%>
+      &copy; 2012 <%= link_to "Bozzuto", smartrent.root_url, :target => "_blank"%>
     </div>
 
     <div class="menu">
       <ul id="menu-footer-menu">
         <li>
-          <%= link_to "Privacy Policy", privacy_policy_path %>
+          <%= link_to "Privacy Policy", smartrent.privacy_policy_path %>
         </li>
 
         <li>
-          <%= link_to "Website Disclaimer", website_disclaimer_path %>
+          <%= link_to "Website Disclaimer", smartrent.website_disclaimer_path %>
         </li>
       </ul>
     </div>
@@ -21,14 +21,3 @@
     </div>
   </div>
 </footer>
-
-<div id="window-resizer-tooltip">
-  <%= link_to "Website Disclaimer", website_disclaimer_path %>
-  <a href=
-  "#"
-  title="Edit settings"></a><span class="tooltipTitle">Window size:</span>
-  <span class="tooltipWidth" id="winWidth"></span> x <span class=
-  "tooltipHeight" id="winHeight"></span><br>
-  <span class="tooltipTitle">Viewport size:</span> <span class="tooltipWidth"
-  id="vpWidth"></span> x <span class="tooltipHeight" id="vpHeight"></span>
-</div>

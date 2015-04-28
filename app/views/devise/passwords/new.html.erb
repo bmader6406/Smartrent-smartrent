@@ -1,16 +1,36 @@
-<h2>Forgot your password?</h2>
-
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= devise_error_messages! %>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
+<div class="member clearfix">
+  <div class="memberLeft">
+    <%= image_tag "login.jpg" %>
   </div>
 
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
+  <div class="memberRight">
+    <div class="forgotForm clearfix">
+      <div class="title">
+        Request Password Reset
+      </div>
 
-<%= render "devise/shared/links" %>
+
+      <div class="formInputs">
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+          <div class="message"><%= devise_error_messages! %></div>
+          <div class="labelText">
+            <%= f.label :email, "Email Address" %>
+          </div>
+
+          <div class="form-group">
+            <%= f.email_field :email, autofocus: true, :class => "form-control" %>
+          </div>
+          <div class="submitButton">
+            <%= f.submit "Request Password Reset", :class => "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="formInstructions">
+        <p>If you have forgotten your password, please enter your email address. If your email is on file, a link will be sent to you allowing you to create a new password.</p>
+
+        <p>For security reasons, this request will be canceled 24 hours after it is submitted. You may re-request your password be reset if that happens.</p>
+      </div>
+    </div>
+  </div>
+</div>

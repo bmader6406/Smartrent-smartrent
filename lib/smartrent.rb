@@ -1,5 +1,5 @@
-require "smartrent/engine"
 require "devise"
+require "smartrent/engine"
 require "js-routes"
 
 module Smartrent
