@@ -14,7 +14,7 @@
           <% end %>
         </div>
       <% i+=1 %>
-      <% if i%2 == 0 %>
+      <% if i%2 == 0 || Smartrent::Property.all.count == 1 %>
       </div>
       <% end %>
     <% end %>
