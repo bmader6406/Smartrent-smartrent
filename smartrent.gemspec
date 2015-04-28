@@ -29,4 +29,5 @@ Gem::Specification.new do |s|
   s.add_dependency "paperclip"
   s.add_dependency "will_paginate"
   s.add_dependency "js-routes"
+  s.add_dependency "aws-sdk"
 end
