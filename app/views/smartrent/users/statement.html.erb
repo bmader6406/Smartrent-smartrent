@@ -1,22 +1,5 @@
 <div class="member clearfix">
   <div class="memberStatementLeft">
-    <div class="saveTitle">
-      <span class="lightBlue"><%= current_user.name %>,</span> You have <span class="lightBlue"><%= number_to_currency current_user.total_saved %></span> Saved.
-    </div>
-
-    <div class="saveSubTitle">
-      Wow, that's pretty good. Here's what you can do with it.
-    </div>
-
-    <div class="video">
-      <%= image_tag "moviePlaceHolder.jpg" %>
-    </div>
-
-    <div id="contentWrapper">
-      <div class="fixedWidth">
-        <%= render partial: "smartrent/pages/properties_slider" %>
-      </div>
-    </div>
   </div>
 
   <div class="memberStatementRight">
