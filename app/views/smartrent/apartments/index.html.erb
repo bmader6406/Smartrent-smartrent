@@ -5,21 +5,24 @@
     <p>Earn SmartRent dollars while leasing one of these apartments.</p>
 
     <div class="toggle clearfix">
-      <div class="item listOn" id="listResults" onclick="getListResults()">
+      <div class="item search-apartment-item listOn" id="listResults">
         <div class="text">
           View as List
         </div>
       </div>
 
-      <div class="item mapOff" id="mapResults" onclick="getMapResults()">
+      <div class="item search-apartment-item mapOff" id="mapResults">
         <div class="text">
           View on Map
         </div>
       </div>
     </div>
     <div class="locations" id="locationsBox">
+      <div class="listing-results">
         <%= render partial: "search_results" %>
+      </div>
     </div>
+    <div id="map" class="results map-results"></div>
   </div>
 </section>
 <% end %>

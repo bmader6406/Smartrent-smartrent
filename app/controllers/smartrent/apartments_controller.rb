@@ -11,7 +11,7 @@ module Smartrent
   
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @apartments_grouped_by_states }
+        format.json { render json: @q.result.uniq }
       end
     end
   

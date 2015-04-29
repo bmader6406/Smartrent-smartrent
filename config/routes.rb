@@ -25,7 +25,7 @@ Smartrent::Engine.routes.draw do
 
   root :to => "pages#home"
   get "/faq", :to => "pages#faq", :as => "faq"
-  #get "/find-a-smartrent-apartment", :to => "pages#apartments", :as => "apartments"
+  get "/find-a-smartrent-apartment", :to => "apartments#index", :as => "apartments"
   get "/find-a-new-home", :to => "properties#index", :as => "new_home"
   get "/smartrent-quick-program-rules", :to => "pages#program_rules", :as => "program_rules"
   get "/official-rules", :to => "pages#official_rules", :as => "official_rules"

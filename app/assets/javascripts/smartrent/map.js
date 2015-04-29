@@ -1,4 +1,4 @@
-var IMAGE_PATH = '/smartrent/assets/';
+var IMAGE_PATH = '/assets/';
 var MAP_LATITUDE = 39.078375; // Where to center map
 var MAP_LONGITUDE = -76.862526;
 var ZOOM_LEVEL = 10; //15 is the current useable value when limiting is turned on use 13 - 15
