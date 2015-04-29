@@ -13,26 +13,22 @@
         <ul>
           <li>
             <%= f.check_box :studio_true %>
-            <label for="q_studio_true">Studios</label>
+            <%= f.label :studio_true, "Studios" %>
           </li>
           <li>
             <%= f.check_box :one_bedroom_true %>
-            <label for="q_one_bedroom_true">1 Bedroom</label>
+            <%= f.label :one_bedroom_true, "1 Bedrooms" %>
           </li>
           <li>
             <%= f.check_box :two_bedroom_true %>
-            <label for="q_two_bedroom_true">2 Bedrooms</label>
+            <%= f.label :two_bedroom_true, "2 Bedrooms" %>
           <li>
-            <%= f.check_box :three_bedroom_true %>
-            <label for="q_three_bedroom_true">3 or more Bedrooms</label>
-          </li>
-          <li>
-            <%= f.check_box :four_bedroom_true %>
-            <label for="q_four_bedroom_true">Penthouses</label>
+            <%= f.check_box :three_bedroom_or_four_bedroom_true %>
+            <%= f.label :three_bedroom_or_four_bedroom_true, "3 or more Bedrooms" %>
           </li>
           <li>
             <%= f.check_box :penthouse_true %>
-            <label for="q_penthouse_true">Penthouses</label>
+            <%= f.label :penthouse_true, "Penthouses" %>
           </li>
         </ul>
       </div>
@@ -47,14 +43,16 @@
         <ul>
           <li>
           <label for="fourbed">
-            <%= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq, options_for_select(Smartrent::Apartment.prices("Choose Minimum..."))%>
+            <% minimum_price = f.object.one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq %>
+            <%= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq, options_for_select(Smartrent::Apartment.prices("Choose Minimum..."), minimum_price.to_i)%>
           </label></li>
 
           <li style="list-style: none"><label for="fourbed"></label></li>
 
           <li>
             <label for="fourbed">
-              <%= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq, options_for_select(Smartrent::Apartment.prices("Choose Minimum..."))%>
+              <% maximum_price = f.object.one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq %>
+              <%= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq, options_for_select(Smartrent::Apartment.prices("Choose Maximum..."), maximum_price.to_i)%>
             </label>
           </li>
 
@@ -70,19 +68,10 @@
         </div><label for="fourbed"></label>
 
         <ul>
-          <li><label for="fourbed"><input id="concierge" name="features[]" onclick="selectResults();" type="checkbox" value="Concierge"><label for="concierge">Concierge</label></label></li>
-
-          <li><input id="green" name="features[]" onclick="selectResults();" type="checkbox" value="Green"><label for="green">Green</label></li>
-
-          <li><input id="military" name="features[]" onclick="selectResults();" type="checkbox" value="Military"><label for="military">Military</label></li>
-
-          <li><input id="nonsmoking" name="features[]" onclick="selectResults();" type="checkbox" value="Non Smoking"><label for="nonsmoking">Non Smoking</label></li>
-
-          <li><input id="pet-friendly" name="features[]" onclick="selectResults();" type="checkbox" value="Pet Friendly"><label for="pet-friendly">Pet Friendly</label></li>
-
-          <li><input id="rapid-transit" name="features[]" onclick="selectResults();" type="checkbox" value="Rapid Transit"><label for="rapid-transit">Rapid Transit</label></li>
-
-          <li><input id="zipcar" name="features[]" onclick="selectResults();" type="checkbox" value="Zipcar"><label for="zipcar">Zipcar</label></li>
+          <% Smartrent::Feature.all.each do |feature| %>
+            <li>
+            <%= f.check_box :features_id_in, {:multiple => true}, feature.id, nil %><label for="q_features_id_in_<%=feature.id %>"><%= feature.name %></label>
+          <% end %>
         </ul>
       </div>
 
@@ -92,10 +81,16 @@
         </div>
 
         <ul>
-          <li><input id="special" name="promotion" onclick="selectResults();" type="checkbox" value="true"><label for="special">Special Promotions</label></li>
-        </ul><input name="state" type="hidden" value=""> <input name="county" type="hidden" value=""> <input name="city" type="hidden" value="">
+          <li>
+          <%= f.check_box :special_promotion_true %>
+          <%= f.label :special_promotion_true, "Special Promotions" %>
+          </li>
+        </ul>
+        <%= f.hidden_field :state_eq %>
+        <%= f.hidden_field :county_eq %>
+        <%= f.hidden_field :city_eq %>
       </div>
-      <%= f.submit %>
+      <%= f.submit "Filter", :class => "hidden" %>
     <% end %>
   </div>
 </div>

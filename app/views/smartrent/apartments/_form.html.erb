@@ -104,6 +104,10 @@
     <%= f.check_box :special_promotion %>
   </div>
   <div class="field">
+    <%= f.label :features %><br />
+    <%= f.select :feature_ids, Smartrent::Feature.all.collect {|x| [x.name, x.id]}, {}, {:multiple => true} %>
+  </div>
+  <div class="field">
     <%= f.label :image %><br />
     <%= f.file_field :image %>
   </div>

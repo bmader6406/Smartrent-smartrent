@@ -2,24 +2,30 @@ module Smartrent
   class Apartment < ActiveRecord::Base
     has_many :apartment_features, :dependent => :destroy
     has_many :features, :through => :apartment_features
-    attr_accessible :address, :city, :county, :detail_url, :four_bedroom_price, :lat, :lng, :one_bedroom_price, :pent_house_price, :phone_number, :short_description, :special_promotion, :state, :studio_price, :three_bedroom_price, :title, :two_bedroom_price, :one_bedroom, :two_bedroom, :three_bedroom, :four_bedroom, :studio, :penthouse, :image
+    attr_accessible :address, :city, :county, :detail_url, :four_bedroom_price, :lat, :lng, :one_bedroom_price, :pent_house_price, :phone_number, :short_description, :special_promotion, :state, :studio_price, :three_bedroom_price, :title, :two_bedroom_price, :one_bedroom, :two_bedroom, :three_bedroom, :four_bedroom, :studio, :penthouse, :image, :feature_ids
     has_attached_file :image, :styles => {:search_page => "150x150>"}
     validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
     def self.grouped_by_states(q)
       states = {}
-      q.result.each do |apartment|
-        states[apartment.state] = {} if states[apartment.state].nil?
-        states[apartment.state]["cities"] = {}  if states[apartment.state]["cities"].nil?
-        states[apartment.state]["cities"][apartment.city] = 0 if states[apartment.state]["cities"][apartment.city].nil?
-        states[apartment.state]["cities"][apartment.city] +=1
-        states[apartment.state]["counties"] = {}  if states[apartment.state]["counties"].nil?
-        states[apartment.state]["counties"][apartment.county] = 0 if states[apartment.state]["counties"][apartment.county].nil?
-        states[apartment.state]["counties"][apartment.county] +=1
-        states[apartment.state]["apartments"] = []  if states[apartment.state]["apartments"].nil?
-        states[apartment.state]["apartments"].push apartment
-        states[apartment.state]["total"] = 0  if states[apartment.state]["total"].nil?
-        states[apartment.state]["total"] +=1
+      apartments = q.result.uniq#.includes(:features)
+      #apartment_ids = []
+      apartments.each do |apartment|
+        #if !apartment_ids.include?(apartment.id)
+          #apartment_ids.push apartment.id
+          states[apartment.state] = {} if states[apartment.state].nil?
+          states[apartment.state]["cities"] = {}  if states[apartment.state]["cities"].nil?
+          states[apartment.state]["cities"][apartment.city] = 0 if states[apartment.state]["cities"][apartment.city].nil?
+          states[apartment.state]["cities"][apartment.city] +=1
+          states[apartment.state]["counties"] = {}  if states[apartment.state]["counties"].nil?
+          states[apartment.state]["counties"][apartment.county] = 0 if states[apartment.state]["counties"][apartment.county].nil?
+          states[apartment.state]["counties"][apartment.county] +=1
+          states[apartment.state]["apartments"] = []  if states[apartment.state]["apartments"].nil?
+          states[apartment.state]["apartments"].push apartment
+          states[apartment.state]["total"] = 0  if states[apartment.state]["total"].nil?
+          states[apartment.state]["total"] +=1
+        #end
       end
+      puts states
       states
     end
     def self.ransack(q)
