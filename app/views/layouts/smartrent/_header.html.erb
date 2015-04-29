@@ -7,19 +7,19 @@
     </div>
     <nav class="menu">
       <ul id="menu-main-menu">
-        <li>
+        <li<% if @current_page == 'faq'%> class="current_page_item"<% end %>>
           <%= link_to "Why SmartRent?", smartrent.faq_path %>
         </li>
 
-        <li>
+        <li<% if @current_page == 'apartments'%> class="current_page_item"<% end %>>
           <%= link_to "Apartments", smartrent.apartments_path %>
         </li>
 
-        <li>
+        <li<% if @current_page == 'homes'%> class="current_page_item"<% end %>>
           <%= link_to "New Homes", smartrent.new_home_path %>
         </li>
 
-        <li>
+        <li<% if @current_page == 'program_rules'%> class="current_page_item"<% end %>>
           <%= link_to "Program Rules", smartrent.program_rules_path%>
         </li>
       </ul>

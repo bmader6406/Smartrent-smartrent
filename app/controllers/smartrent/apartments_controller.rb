@@ -6,6 +6,7 @@ module Smartrent
     # GET /apartments.json
     def index
       #@apartments = Apartment.all
+      @current_page = "apartments"
       @q = Apartment.ransack(params[:q])
       @apartments_grouped_by_states = Apartment.grouped_by_states(@q)
   

@@ -5,6 +5,7 @@ module Smartrent
     # GET /properties
     # GET /properties.json
     def index
+      @current_page = "homes"
       @properties = Property.all
   
       respond_to do |format|

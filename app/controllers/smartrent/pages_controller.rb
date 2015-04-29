@@ -8,11 +8,7 @@ module Smartrent
       end
     end
     def faq
-      respond_to do |format|
-        format.html
-      end
-    end
-    def apartments
+      @current_page = "faq"
       respond_to do |format|
         format.html
       end
@@ -23,6 +19,7 @@ module Smartrent
       end
     end
     def program_rules
+      @current_page = "program_rules"
       respond_to do |format|
         format.html
       end
