@@ -1,7 +1,8 @@
 <div id="slides">
   <div class="slides_container">
       <% i = 0 %>
-    <% Smartrent::Property.all.each do |property|%>
+      <% properties = Smartrent::Property.all %>
+    <% properties.each do |property|%>
       <% if i%2 == 0 %>
       <div class="threeWide">
       <% end %>
@@ -14,9 +15,9 @@
           <% end %>
         </div>
       <% i+=1 %>
-      <% if i%2 == 0 || Smartrent::Property.all.count == 1 %>
+    <% if i%2 == 0 || all_properties.count % 2 == 1 %>
       </div>
-      <% end %>
+    <% end %>
     <% end %>
   </div>
 </div>
