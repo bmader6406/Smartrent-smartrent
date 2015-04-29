@@ -8,10 +8,7 @@ module Smartrent
     def self.grouped_by_states(q)
       states = {}
       apartments = q.result.uniq#.includes(:features)
-      #apartment_ids = []
       apartments.each do |apartment|
-        #if !apartment_ids.include?(apartment.id)
-          #apartment_ids.push apartment.id
           states[apartment.state] = {} if states[apartment.state].nil?
           states[apartment.state]["cities"] = {}  if states[apartment.state]["cities"].nil?
           states[apartment.state]["cities"][apartment.city] = 0 if states[apartment.state]["cities"][apartment.city].nil?
@@ -23,7 +20,6 @@ module Smartrent
           states[apartment.state]["apartments"].push apartment
           states[apartment.state]["total"] = 0  if states[apartment.state]["total"].nil?
           states[apartment.state]["total"] +=1
-        #end
       end
       puts states
       states
