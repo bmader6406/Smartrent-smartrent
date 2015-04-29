@@ -5,3 +5,16 @@ $(function(){
     $('.apartment_listing').submit();
   });
 });
+
+Apartment = {
+  cities: function(state, city){
+    $('#q_state_eq').val(state)
+    $('#q_city_eq').val(city)
+    $('.apartment_listing').submit();
+  },
+  counties: function(state, county){
+    $('#q_state_eq').val(state)
+    $('#q_county_eq').val(county)
+    $('.apartment_listing').submit();
+  }
+}

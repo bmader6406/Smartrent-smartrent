@@ -29,7 +29,7 @@
     <ul id="citiesList<%= state %>" style="display: table;">
       <% apartment["cities"].each do |city, count| %>
         <li>
-          <a href="javascript:cities('<%= state %>','<%= city %>')"><%= city %></a>
+          <a href="javascript:Apartment.cities('<%= state %>','<%= city %>')"><%= city %></a>
           <div class="count">
             <%= count %>
           </div>
@@ -54,7 +54,7 @@
     <ul id="countiesList<%= state %>" style="display: table;">
       <% apartment["counties"].each do |county, count| %>
         <li>
-        <a href="javascript:counties('<%= state %>','<%= county %>');"><%= county %></a>
+        <a href="javascript:Apartment.counties('<%= state %>','<%= county %>');"><%= county %></a>
           <div class="count">
             <%= count %>
           </div>
