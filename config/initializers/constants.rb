@@ -1,0 +1,3 @@
+MANDRILL_APIKEY = "VRygy7fVVDPqwAi-bR_fMg"
+MANDRILL_USERNAME = "app36168057@heroku.com"
+DEFAULT_EMAIL = "mg@hy.ly"

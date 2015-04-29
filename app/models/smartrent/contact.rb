@@ -5,6 +5,7 @@ module Smartrent
     validates_presence_of :message, :name
     after_create do
       #send email
+      Smartrent::UserMailer.contact_email(self).deliver
     end
   end
 end
