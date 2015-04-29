@@ -1,8 +1,6 @@
 <div id="contactLeft">
   <div id="search">
     <%= search_form_for @q do |f|%>
-    <% end %>
-    <form id="propform" method="get" name="propform">
       <div class="searchTitle">
         <h1>Search By</h1>
       </div>
@@ -13,15 +11,23 @@
         </div>
 
         <ul>
-          <li><input id="studios" name="studio_price_present" onclick="selectResults();" type="checkbox" value="0"><label for="studios">Studios</label></li>
+          <li>
+            <%= f.check_box :studio_present %>
+            <label for="q_studio_present">Studios</label>
+          </li>
+          <li>
+          <%= f.check_box :one_bedroom_present %>
+            <label for="q_one_bedroom_present">1 Bedroom</label>
+          </li>
 
-          <li><input id="onebed" name="one_bedroom_price_present" onclick="selectResults();" type="checkbox" value="1"><label for="onebed">1 Bedrooms</label></li>
-
-          <li><input id="twobed" name="two_bedroom_price_present" onclick="selectResults();" type="checkbox" value="2"><label for="twobed">2 Bedrooms</label></li>
+          <li>
+          <%= f.check_box :two_bedroom_present %>
+            <label for="q_two_bedroom_present">2 Bedrooms</label>
+          </li>
 
           <li><input id="threebed" name="three_bedroom_price_present" onclick="selectResults();" type="checkbox" value="3"><label for="threebed">3 or more Bedrooms</label></li>
 
-          <li><input id="fourbed" name="four_bedroom_price_present"" onclick="selectResults();" type="checkbox" value="true"><label for="fourbed">Penthouses</label></li>
+          <li><input id="fourbed" name="four_bedroom_price_present" onclick="selectResults();" type="checkbox" value="true"><label for="fourbed">Penthouses</label></li>
         </ul>
       </div>
 
@@ -204,6 +210,6 @@
           <li><input id="special" name="promotion" onclick="selectResults();" type="checkbox" value="true"><label for="special">Special Promotions</label></li>
         </ul><input name="state" type="hidden" value=""> <input name="county" type="hidden" value=""> <input name="city" type="hidden" value="">
       </div>
-    </form>
+    <% end %>
   </div>
 </div>
