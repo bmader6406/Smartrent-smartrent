@@ -5,6 +5,11 @@ module Smartrent
     attr_accessible :address, :city, :county, :detail_url, :four_bedroom_price, :lat, :lng, :one_bedroom_price, :pent_house_price, :phone_number, :short_description, :special_promotion, :state, :studio_price, :three_bedroom_price, :title, :two_bedroom_price, :one_bedroom, :two_bedroom, :three_bedroom, :four_bedroom, :studio, :penthouse, :image, :feature_ids
     has_attached_file :image, :styles => {:search_page => "150x150>"}
     validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
+    before_save do
+      self.state = self.state.downcase
+      self.city = self.city.downcase
+      self.county = self.county.downcase
+    end
     def self.grouped_by_states(q)
       states = {}
       apartments = q.result.uniq#.includes(:features)
