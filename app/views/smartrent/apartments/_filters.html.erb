@@ -1,6 +1,6 @@
 <div id="contactLeft">
   <div id="search">
-    <%= search_form_for @q do |f|%>
+    <%= search_form_for @q, {:remote => true, :class => "apartment_listing"} do |f|%>
       <div class="searchTitle">
         <h1>Search By</h1>
       </div>
@@ -12,22 +12,28 @@
 
         <ul>
           <li>
-            <%= f.check_box :studio_present %>
-            <label for="q_studio_present">Studios</label>
+            <%= f.check_box :studio_true %>
+            <label for="q_studio_true">Studios</label>
           </li>
           <li>
-          <%= f.check_box :one_bedroom_present %>
-            <label for="q_one_bedroom_present">1 Bedroom</label>
+            <%= f.check_box :one_bedroom_true %>
+            <label for="q_one_bedroom_true">1 Bedroom</label>
           </li>
-
           <li>
-          <%= f.check_box :two_bedroom_present %>
-            <label for="q_two_bedroom_present">2 Bedrooms</label>
+            <%= f.check_box :two_bedroom_true %>
+            <label for="q_two_bedroom_true">2 Bedrooms</label>
+          <li>
+            <%= f.check_box :three_bedroom_true %>
+            <label for="q_three_bedroom_true">3 or more Bedrooms</label>
           </li>
-
-          <li><input id="threebed" name="three_bedroom_price_present" onclick="selectResults();" type="checkbox" value="3"><label for="threebed">3 or more Bedrooms</label></li>
-
-          <li><input id="fourbed" name="four_bedroom_price_present" onclick="selectResults();" type="checkbox" value="true"><label for="fourbed">Penthouses</label></li>
+          <li>
+            <%= f.check_box :four_bedroom_true %>
+            <label for="q_four_bedroom_true">Penthouses</label>
+          </li>
+          <li>
+            <%= f.check_box :penthouse_true %>
+            <label for="q_penthouse_true">Penthouses</label>
+          </li>
         </ul>
       </div>
 
@@ -39,139 +45,18 @@
         </div><label for="fourbed"></label>
 
         <ul>
-          <li><label for="fourbed"><select class="selectpicker" id="min_price" name="min_price" onchange="selectResults();">
-            <option value="">
-              Choose Minimum...
-            </option>
-
-            <option value="750">
-              $750
-            </option>
-
-            <option value="1000">
-              $1,000
-            </option>
-
-            <option value="1250">
-              $1,250
-            </option>
-
-            <option value="1500">
-              $1,500
-            </option>
-
-            <option value="1750">
-              $1,750
-            </option>
-
-            <option value="2000">
-              $2,000
-            </option>
-
-            <option value="2500">
-              $2,500
-            </option>
-
-            <option value="3000">
-              $3,000
-            </option>
-
-            <option value="4000">
-              $4,000
-            </option>
-
-            <option value="5000">
-              $5,000
-            </option>
-
-            <option value="6000">
-              $6,000
-            </option>
-
-            <option value="7000">
-              $7,000
-            </option>
-
-            <option value="8000">
-              $8,000
-            </option>
-
-            <option value="9000">
-              $9,000
-            </option>
-
-            <option value="10000">
-              $10,000
-            </option>
-          </select></label></li>
+          <li>
+          <label for="fourbed">
+            <%= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq, options_for_select(Smartrent::Apartment.prices("Choose Minimum..."))%>
+          </label></li>
 
           <li style="list-style: none"><label for="fourbed"></label></li>
 
-          <li><label for="fourbed"><select class="selectpicker" id="max_price" name="max_price" onchange="selectResults();">
-            <option value="">
-              Choose Maximum...
-            </option>
-
-            <option value="750">
-              $750
-            </option>
-
-            <option value="1000">
-              $1,000
-            </option>
-
-            <option value="1250">
-              $1,250
-            </option>
-
-            <option value="1500">
-              $1,500
-            </option>
-
-            <option value="1750">
-              $1,750
-            </option>
-
-            <option value="2000">
-              $2,000
-            </option>
-
-            <option value="2500">
-              $2,500
-            </option>
-
-            <option value="3000">
-              $3,000
-            </option>
-
-            <option value="4000">
-              $4,000
-            </option>
-
-            <option value="5000">
-              $5,000
-            </option>
-
-            <option value="6000">
-              $6,000
-            </option>
-
-            <option value="7000">
-              $7,000
-            </option>
-
-            <option value="8000">
-              $8,000
-            </option>
-
-            <option value="9000">
-              $9,000
-            </option>
-
-            <option value="10000">
-              $10,000
-            </option>
-          </select></label></li>
+          <li>
+            <label for="fourbed">
+              <%= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq, options_for_select(Smartrent::Apartment.prices("Choose Minimum..."))%>
+            </label>
+          </li>
 
           <li style="list-style: none"><label for="fourbed"></label></li>
         </ul>
@@ -210,6 +95,7 @@
           <li><input id="special" name="promotion" onclick="selectResults();" type="checkbox" value="true"><label for="special">Special Promotions</label></li>
         </ul><input name="state" type="hidden" value=""> <input name="county" type="hidden" value=""> <input name="city" type="hidden" value="">
       </div>
+      <%= f.submit %>
     <% end %>
   </div>
 </div>

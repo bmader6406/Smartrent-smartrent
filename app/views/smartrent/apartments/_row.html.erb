@@ -1,5 +1,5 @@
 <div class="location">
-  <div class="stateBox" id="stateDC" onclick="showState('DC')" style="background: url(http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/apartment.html) 0% 0% repeat-x rgb(215, 218, 221);">
+  <div class="stateBox" id="state<%= state %>" onclick="showState('<%= state %>')" style="background: url() 0% 0% repeat-x rgb(215, 218, 221);">
     <div class="state">
       <%= state %>
     </div>
@@ -8,7 +8,7 @@
       <%= apartment["count"] %>
     </div>
 
-    <div class="plusMinus" id="plusMinusDC" style="font-size: 2em; background: url(http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/apartment.html) 0% 0% repeat-x rgb(223, 225, 228);">
+    <div class="plusMinus" id="plusMinus<%= state %>" style="font-size: 2em; background: url() 0% 0% repeat-x rgb(223, 225, 228);">
       -
     </div>
 
@@ -16,7 +16,7 @@
   </div>
 
   <div class="cities" id="cities<%= state %>" style="display: block;">
-    <div class="title" onclick="toggleCities('DC');">
+    <div class="title" onclick="toggleCities('<%= state %>');">
       <div class="text">
         Cities
       </div>
@@ -38,23 +38,23 @@
     </ul>
   </div>
 
-  <div class="counties" id="countiesDC" style="display: block;">
+  <div class="counties" id="counties<%= state %>" style="display: block;">
     <div class="title" onclick="toggleCounties('DC');">
       <div class="text">
         Counties
       </div>
 
-      <div class="cPlusMinus" id="countiesPlusMinusDC" style="font-size: 2em;">
+      <div class="cPlusMinus" id="countiesPlusMinus<%= state %>" style="font-size: 2em;">
         -
       </div>
 
       <div class="clear"></div>
     </div>
 
-    <ul id="countiesListDC" style="display: table;">
+    <ul id="countiesList<%= state %>" style="display: table;">
       <% apartment["counties"].each do |county, count| %>
         <li>
-          <a href="javascript:counties('DC','District%20of%20Columbia');"><%= county %></a>
+        <a href="javascript:counties('<%= state %>','<%= county %>');"><%= county %></a>
           <div class="count">
             <%= count %>
           </div>
@@ -67,7 +67,7 @@
   <% apartment["apartments"].each do |apartment_| %>
   <div class="propertyListing">
     <div class="photo">
-      <img border="0" src="http://bozzuto.com/system/apartment_communities/328/square.jpg" width="150">
+      <%= image_tag apartment_.image(:search_page) %>
     </div>
     <div class="info">
       <h3>
@@ -78,22 +78,25 @@
       <%= apartment_.phone_number %></p>
 
       <ul class="fp">
-        <% if apartment_.studio_price > 0 %>
+        <% if apartment_.studio %>
           <li><span class="bold">Studio</span> from <%= number_to_currency apartment_.studio_price %></li>
         <% end %>
 
-        <% if apartment_.one_bedroom_price > 0 %>
+        <% if apartment_.one_bedroom %>
           <li><span class="bold">1 Bedroom</span> from <%= number_to_currency apartment_.one_bedroom_price %></li>
         <% end%>
 
-        <% if apartment_.two_bedroom_price > 0 %>
+        <% if apartment_.two_bedroom %>
           <li><span class="bold">2 Bedrooms</span> from <%= number_to_currency apartment_.two_bedroom_price %></li>
         <% end%>
-        <% if apartment_.three_bedroom_price > 0 %>
+        <% if apartment_.three_bedroom %>
           <li><span class="bold">3 Bedrooms</span> from <%= number_to_currency apartment_.three_bedroom_price %></li>
         <% end%>
-        <% if apartment_.four_bedroom_price > 0 %>
+        <% if apartment_.four_bedroom %>
           <li><span class="bold">4 Bedrooms or more</span> from <%= number_to_currency apartment_.four_bedroom_price %></li>
+        <% end %>
+        <% if apartment_.penthouse %>
+          <li><span class="bold">Penthouses</span> from <%= number_to_currency apartment_.pent_house_price %></li>
         <% end %>
       </ul>
 

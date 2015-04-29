@@ -52,24 +52,48 @@
     <%= f.text_field :lng %>
   </div>
   <div class="field">
+    <%= f.label :one_bedroom %><br />
+    <%= f.check_box :one_bedroom %>
+  </div>
+  <div class="field">
     <%= f.label :one_bedroom_price %><br />
     <%= f.text_field :one_bedroom_price %>
+  </div>
+  <div class="field">
+    <%= f.label :two_bedroom %><br />
+    <%= f.check_box :two_bedroom %>
   </div>
   <div class="field">
     <%= f.label :two_bedroom_price %><br />
     <%= f.text_field :two_bedroom_price %>
   </div>
   <div class="field">
+    <%= f.label :three_bedroom %><br />
+    <%= f.check_box :three_bedroom %>
+  </div>
+  <div class="field">
     <%= f.label :three_bedroom_price %><br />
     <%= f.text_field :three_bedroom_price %>
+  </div>
+  <div class="field">
+    <%= f.label :four_bedroom %><br />
+    <%= f.check_box :four_bedroom %>
   </div>
   <div class="field">
     <%= f.label :four_bedroom_price %><br />
     <%= f.text_field :four_bedroom_price %>
   </div>
   <div class="field">
+    <%= f.label :studio %><br />
+    <%= f.check_box :studio %>
+  </div>
+  <div class="field">
     <%= f.label :studio_price %><br />
     <%= f.text_field :studio_price %>
+  </div>
+  <div class="field">
+    <%= f.label :penthouse %><br />
+    <%= f.check_box :penthouse %>
   </div>
   <div class="field">
     <%= f.label :pent_house_price %><br />
@@ -78,6 +102,10 @@
   <div class="field">
     <%= f.label :special_promotion %><br />
     <%= f.check_box :special_promotion %>
+  </div>
+  <div class="field">
+    <%= f.label :image %><br />
+    <%= f.file_field :image %>
   </div>
   <div class="actions">
     <%= f.submit %>
