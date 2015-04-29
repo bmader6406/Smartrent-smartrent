@@ -1,5 +1,6 @@
 <div class="location">
-  <div class="stateBox" id="state<%= state %>" onclick="showState('<%= state %>')" style="background: url() 0% 0% repeat-x rgb(215, 218, 221);">
+  <% state_formatted = state.gsub(" ", "_") %>
+  <div class="stateBox" id="state<%= state_formatted %>" onclick="Apartment.showState('<%= state %>')" style="background: url() 0% 0% repeat-x rgb(215, 218, 221);">
     <div class="state">
       <%= state %>
     </div>
@@ -8,25 +9,25 @@
       <%= apartment["count"] %>
     </div>
 
-    <div class="plusMinus" id="plusMinus<%= state %>" style="font-size: 2em; background: url() 0% 0% repeat-x rgb(223, 225, 228);">
-      -
+    <div class="plusMinus" id="plusMinus<%= state_formatted %>" style="font-size: 2em; background: url() 0% 0% repeat-x rgb(223, 225, 228);">
+      +
     </div>
 
     <div class="clear"></div>
   </div>
 
-  <div class="cities" id="cities<%= state %>" style="display: block;">
-    <div class="title" onclick="toggleCities('<%= state %>');">
+  <div class="cities" id="cities<%= state_formatted %>">
+    <div class="title" onclick="Apartment.toggleCities('<%= state %>');">
       <div class="text">
         Cities
       </div>
 
-      <div class="cPlusMinus" id="citiesPlusMinus<%= state %>" style="font-size: 2em;">
+      <div class="cPlusMinus" id="citiesPlusMinus<%= state_formatted %>" style="font-size: 2em;">
         -
       </div>
       <div class="clear"></div>
     </div>
-    <ul id="citiesList<%= state %>" style="display: table;">
+    <ul id="citiesList<%= state_formatted %>" style="display: table;">
       <% apartment["cities"].each do |city, count| %>
         <li>
           <a href="javascript:Apartment.cities('<%= state %>','<%= city %>')"><%= city %></a>
@@ -38,23 +39,23 @@
     </ul>
   </div>
 
-  <div class="counties" id="counties<%= state %>" style="display: block;">
-    <div class="title" onclick="toggleCounties('DC');">
+  <div class="counties" id="counties<%= state_formatted %>">
+    <div class="title" onclick="Apartment.toggleCounties('<%= state %>');">
       <div class="text">
         Counties
       </div>
 
-      <div class="cPlusMinus" id="countiesPlusMinus<%= state %>" style="font-size: 2em;">
+      <div class="cPlusMinus" id="countiesPlusMinus<%= state_formatted %>" style="font-size: 2em;">
         -
       </div>
 
       <div class="clear"></div>
     </div>
 
-    <ul id="countiesList<%= state %>" style="display: table;">
+    <ul id="countiesList<%= state_formatted %>" style="display: table;">
       <% apartment["counties"].each do |county, count| %>
         <li>
-        <a href="javascript:Apartment.counties('<%= state %>','<%= county %>');"><%= county %></a>
+        <a href="javascript:Apartment.counties('<%= state_formatted %>','<%= county %>');"><%= county %></a>
           <div class="count">
             <%= count %>
           </div>
@@ -63,7 +64,7 @@
     </ul>
   </div>
 </div>
-<div class="results">
+<div class="results hidden" id="results-<%= state %>">
   <% apartment["apartments"].each do |apartment_| %>
   <div class="propertyListing">
     <div class="photo">
