@@ -3,19 +3,19 @@
       <% i = 0 %>
       <% properties = Smartrent::Property.all %>
     <% properties.each do |property|%>
-      <% if i%2 == 0 %>
+      <% if i%3 == 0 %>
       <div class="threeWide">
       <% end %>
         <div class="propertySlide">
           <%= link_to property_path(property) do %>
-            <%= image_tag property.left_image(:home_page) %>
+            <%= image_tag property.image(:home_page) %>
             <div class="caption">
-              <strong><%= property.title %></strong> In every way, <%= property.title %> is truly the place to be.
+              <strong><%= property.title %></strong><%= property.home_page_desc %>
             </div>
           <% end %>
         </div>
       <% i+=1 %>
-    <% if i%2 == 0 || properties.count % 2 == 1 %>
+    <% if i%3 == 0 || (i == (properties.count - 1) && properties.count % 3 == 1) %>
       </div>
     <% end %>
     <% end %>
