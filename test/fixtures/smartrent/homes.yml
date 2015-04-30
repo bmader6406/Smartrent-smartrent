@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  beds: 1
+  baths: 1.5
+  sq_ft: 1.5
+  featured: false
+  property_id: 1
+
+two:
+  name: MyString
+  beds: 1
+  baths: 1.5
+  sq_ft: 1.5
+  featured: false
+  property_id: 1

@@ -32,4 +32,5 @@ Gem::Specification.new do |s|
   s.add_dependency "aws-sdk", "< 2.0"
   s.add_dependency "ransack"
   s.add_dependency "mandrill-api"
+  s.add_dependency "smarter_csv"
 end

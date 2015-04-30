@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Image:</b>
+  <%= @floor_plan_image.image %>
+</p>
+
+<p>
+  <b>Caption:</b>
+  <%= @floor_plan_image.caption %>
+</p>
+
+<p>
+  <b>Home:</b>
+  <%= @floor_plan_image.home_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_floor_plan_image_path(@floor_plan_image) %> |
+<%= link_to 'Back', floor_plan_images_path %>

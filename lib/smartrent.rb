@@ -5,6 +5,7 @@ require "js-routes"
 require "jquery-rails"
 require "ransack"
 require 'mandrill'
+require 'smarter_csv'
 
 module Smartrent
   class Engine < ::Rails::Engine

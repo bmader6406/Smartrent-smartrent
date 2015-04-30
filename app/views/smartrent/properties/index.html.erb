@@ -19,15 +19,12 @@
         <% @properties.each do |property| %>
           <div class="propertyListing clearfix">
             <div class="photo">
-              <%= image_tag property.left_image(:search_page) %>
+              <%= image_tag property.image(:search_page) %>
             </div>
             <div class="info">
               <h1><%= link_to property.title, property_path(property) %></h1>
               <div class="descHomes">
-                <% if property.search_page_sub_title.present? %>
-                  <h2><%= property.search_page_sub_title %></h2>
-                <% end %>
-                <%= property.description.html_safe %>
+                <%= property.search_page_description.to_s.html_safe %>
               </div>
               <div class="learn"><%= link_to "Learn More", property_path(property) %></div>
             </div>
@@ -42,7 +39,7 @@
               </h3>
               <div class="video">
                 <% if property.video_url %>
-                  <%= link_to property.video_url, property.video_url, :target => "blank" %>
+                  <%= link_to "Watch Video", property.video_url, :target => "blank" %>
                 <% end %>
               </div>
               <div class="address">

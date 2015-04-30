@@ -85,5 +85,14 @@ module Smartrent
         format.json { head :no_content }
       end
     end
+
+    def import_page
+      render "import"
+    end
+
+    def import
+      Property.import(params[:file])
+      redirect_to properties_path, notice: "Properties imported."
+    end
   end
 end

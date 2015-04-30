@@ -12,11 +12,11 @@
         </li>
 
         <li<% if @current_page == 'apartments'%> class="current_page_item"<% end %>>
-          <%= link_to "Apartments", smartrent.apartments_path %>
+          <%= link_to "Apartments", smartrent.find_apartments_path %>
         </li>
 
         <li<% if @current_page == 'homes'%> class="current_page_item"<% end %>>
-          <%= link_to "New Homes", smartrent.new_home_path %>
+          <%= link_to "New Homes", smartrent.find_a_new_home_path %>
         </li>
 
         <li<% if @current_page == 'program_rules'%> class="current_page_item"<% end %>>
@@ -84,11 +84,11 @@
 
       <ul id="special-nav">
         <li class="arrow">
-          <%= link_to "Lease an Apartment", smartrent.apartments_path %>
+          <%= link_to "Lease an Apartment", smartrent.find_apartments_path %>
         </li>
 
         <li class="arrow">
-          <%= link_to "Buy a Home", smartrent.new_home_path %>
+          <%= link_to "Buy a Home", smartrent.find_a_new_home_path %>
         </li>
       </ul>
     </div>
