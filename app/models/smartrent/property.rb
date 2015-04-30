@@ -18,7 +18,6 @@ module Smartrent
       f = File.open(file.path, "r:bom|utf-8")
       properties = SmarterCSV.process(f)
       properties.each do |property_hash|
-        property_hash.delete(:wp_id)
         property_hash.delete(:wp_post_date)
         create! property_hash
       end
