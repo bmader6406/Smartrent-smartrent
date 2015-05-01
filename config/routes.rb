@@ -1,9 +1,19 @@
 Smartrent::Engine.routes.draw do
 
-  resources :homes
+  resources :homes do
+    collection do
+      get "import", :to => "homes#import_page"
+      post "import", :to => "homes#import"
+    end
+  end
 
 
-  resources :floor_plan_images
+  resources :floor_plan_images do
+    collection do
+      get "import", :to => "floor_plan_images#import_page"
+      post "import", :to => "floor_plan_images#import"
+    end
+  end
 
 
   resources :apartments
@@ -37,6 +47,7 @@ Smartrent::Engine.routes.draw do
   root :to => "pages#home"
   get "/faq", :to => "pages#faq", :as => "faq"
   get "/find-a-smartrent-apartment", :to => "apartments#index", :as => "find_apartments"
+  post "/find-a-smartrent-apartment", :to => "apartments#index"
   get "/find-a-new-home", :to => "properties#index", :as => "find_a_new_home"
   get "/smartrent-quick-program-rules", :to => "pages#program_rules", :as => "program_rules"
   get "/official-rules", :to => "pages#official_rules", :as => "official_rules"

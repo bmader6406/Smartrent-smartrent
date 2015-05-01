@@ -83,5 +83,12 @@ module Smartrent
         format.json { head :no_content }
       end
     end
+    def import_page
+      render "import"
+    end
+    def import
+      FloorPlanImage.import(params[:file])
+      redirect_to floor_plan_images_path, notice: "Floor Plan Images imported."
+    end
   end
 end

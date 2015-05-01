@@ -48,3 +48,9 @@ $(function(){
     }
   })
 })
+var Home = {
+  "showFloorPlan": function(floor_id){
+    $('.fpImageHolder .homeFPImages').hide();
+    $('#' + floor_id).show();
+  }
+}

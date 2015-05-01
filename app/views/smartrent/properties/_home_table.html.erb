@@ -1,0 +1,11 @@
+<table class="homesTable">
+  <% homes.each do |home| %>
+    <tr>
+      <td class="name"><%= home.name %></td>
+      <td class="info"><%= home.beds %> Bedrooms / <%= home.baths %> Baths / <%= home.sq_ft %> sq. ft.</td>
+      <td class="floorPlanLink">
+        <a href="javascript:Home.showFloorPlan('floor-plan-<%= home.id %>')">View Floor Plan</a>
+      </td>
+    </tr>
+  <% end %>
+</table>

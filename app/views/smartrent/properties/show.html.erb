@@ -27,39 +27,24 @@
         <%= @property.description.html_safe %>
       </div>
       <% if @property.homes.present? %>
+        <% homes = @property.homes  %>
         <div class="homes">
         <div class="title">Homes</div>
-          <table class="homesTable">
-            <% @property.homes.where(:featured => false).each do |home| %>
-              <tr>
-                <td class="name"><%= home.name %></td>
-                <td class="info"><%= home.beds %> Bedrooms / <%= home.baths %> Baths / <%= home.sq_ft %> sq. ft.</td>
-                <td class="floorPlanLink">
-                  <a href="javascript:Home.showFloorPlan('floor-plan-<%= home.id %>')">View Floor Plan</a>
-                </td>
-              </tr>
-            <% end %>
-          </table>
+          <%= render partial: "homes_table", :locals => {:homes => homes} %>
         </div>
         <div class="fpImageHolder">
-          <% @property.homes.where(:featured => false).each do |home| %>
-            <div class="homeFPImages" id="floor-plan-<%= home.id %>">
-              <% home.floor_plan_images.each do |floor_plan_image| %>
-                <div class="fpImage">
-                  <div class="caption">
-                    <%= floor_plan_image.caption %>
-                  </div>
-                  <div class="image">
-                    <%= link_to floor_plan_image.image.url do %>
-                      <%= image_tag floor_plan_image.url, :width => 124 %>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
+          <%= render partial: "home_floor_plan_images", :collection => homes, :as => :home  %>
           <div class="clear"></div>
         </div>
+        <% featured_home = homes.where(:featured => true).first %>
+        <% if featured_home %>
+          <div class="featuredHome">
+            <div class="title">
+              Featured Home
+            </div>
+            <%= render partial: "featured_home_table", :locals => {:home => featured_home} %>
+          </div>
+        <% end %>
       <% end %>
     </div>
   </div>

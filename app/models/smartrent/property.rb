@@ -6,7 +6,7 @@ module Smartrent
     validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
     validates_presence_of :title, :website, :description, :address, :phone_number, :city, :state
     validates_uniqueness_of :title, :case_sensitive => false
-    has_many :homes
+    has_many :homes, :dependent => :destroy
 
     before_save do
       self.url = self.to_param
