@@ -10,37 +10,37 @@
         Name
       </div>
       <div class="value">
-        <%= current_user.name %>
+        <%= @resident.name %>
       </div>
       <div class="label">
         Address
       </div>
       <div class="value">
-        <%= current_user.address %>
+        <%= @resident.address %>
       </div>
       <div class="label">
         City
       </div>
       <div class="value">
-        <%= current_user.city %>
+        <%= @resident.city %>
       </div>
       <div class="label">
         State
       </div>
       <div class="value">
-        <%= current_user.state %>
+        <%= @resident.state %>
       </div>
       <div class="label">
         Zip
       </div>
       <div class="value">
-        <%= current_user.zip %>
+        <%= @resident.zip %>
       </div>
       <div class="label">
         Email
       </div>
       <div class="value">
-        <%= current_user.email %>
+        <%= @resident.email %>
       </div>
     </div>
 
@@ -48,7 +48,7 @@
       <h3>Current Community</h3>
 
       <div class="property">
-        <%= current_user.current_community %>
+        <%= @resident.current_community %>
       </div>
     </div>
   </div>

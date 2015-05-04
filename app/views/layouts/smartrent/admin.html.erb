@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= stylesheet_link_tag    "smartrent/admin", media: "all" %>
+    <%= javascript_include_tag "smartrent/admin" %>
+    <%= csrf_meta_tags %>
+    <link rel="canonical" href="http://www.bozzutosmartrent.com/">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="http://nagalskiy-evgeniy.com/favicon.png" type="image/png">
+    <link rel="icon" href="http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/assets/images/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/assets/images/favicon.ico">
+    <title>SmartRent Admin Panel | SmartRent Bozzuto</title>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<%= form_for([:admin, @resident], {:class => "form-horizontal"}) do |f| %>
+  <% if @resident.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@resident.errors.count, "error") %> prohibited this admin_resident from being saved:</h2>
+
+      <ul>
+      <% @resident.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <fieldset>
+    <div class="form-group">
+      <%= f.label :name, :class => "col-md-4 control-label" %>
+      <div class="col-md-6">
+        <%= f.text_field :name, :class => "form-control input-md" %>
+      </div>
+    </div>
+  </fieldset>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

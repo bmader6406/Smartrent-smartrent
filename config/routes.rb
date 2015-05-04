@@ -42,7 +42,6 @@ Smartrent::Engine.routes.draw do
 
   # resource :users
 
-  resource :contacts
 
   root :to => "pages#home"
   get "/faq", :to => "pages#faq", :as => "faq"
@@ -63,6 +62,16 @@ Smartrent::Engine.routes.draw do
                        module: :devise,
   :controllers => { :sessions => "smartrent/sessions" }
                    }
+  devise_for :residents, {
+                       class_name: 'Smartrent::Resident',
+                       module: :devise,
+  :controllers => { :sessions => "smartrent/sessions" }
+                   }
+
+  namespace :admin do
+    root :to => "residents#index"
+    resources :residents
+  end
 
 
 end
