@@ -26,21 +26,12 @@ Smartrent::Engine.routes.draw do
     end
   end
 
-
-  resources :articles
-
-
- # devise_for :users, class_name: "Smartrent::User", module: :devise, mounted: true#,  :controllers => { :registrations => "devise/registrations" }, :skip => [:sessions]
-
-
-
-   # devise_for :residents, class_name: "Smartrent::Resident", mounted: true
-
-
-  # devise_for :residents, class_name: "Smartrent::Resident", :path => '', path_names: {sign_in: "login", sign_out: "logout"},
-  #            controllers: {omniauth_callbacks: "authentications", registrations: "registrations"}
-
-  # resource :users
+  resource :residents do
+    collection do
+      get "change_password"
+      put "update_password"
+    end
+  end
 
 
   root :to => "pages#home"
@@ -55,8 +46,8 @@ Smartrent::Engine.routes.draw do
   get "/contact", :to => "contacts#new", :as => "new_contact"
   post "/contact", :to => "contacts#create", :as => "submit_contact"
   get "/460-new-york-avenue", :to => "pages#ny_avenue", :as => "ny_avenue"
-  get "/member-profile", :to => "users#profile", :as => "member_profile"
-  get "/member-statement", :to => "users#statement", :as => "member_statement"
+  get "/member-profile", :to => "residents#profile", :as => "member_profile"
+  get "/member-statement", :to => "residents#statement", :as => "member_statement"
   devise_for :users, {
                        class_name: 'Smartrent::User',
                        module: :devise,

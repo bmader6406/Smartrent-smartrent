@@ -17,7 +17,7 @@
 //= require smartrent/slides.min.jquery
 //= require smartrent/smartRentMarkers
 //= require smartrent/map
-//= require smartrent/google_map_apis
+// require smartrent/google_map_apis
 //= require smartrent/home
 //= require smartrent/properties
 //= require smartrent/slides.min.jquery

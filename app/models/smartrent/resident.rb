@@ -5,7 +5,9 @@ module Smartrent
     devise :database_authenticatable, :registerable,
            :recoverable, :rememberable, :trackable, :validatable, :lockable
     # Setup accessible (or protected) attributes for your model
-    attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :apartment_id, :type_, :status, :current_community, :city, :state, :country
+    attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :apartment_id, :type_, :status, :current_community, :city, :state, :country, :current_password
+
+    #attr_accessor :original_password
     # attr_accessible :title, :body
     belongs_to :apartment
     def self.statuses
@@ -36,8 +38,8 @@ module Smartrent
       update_attributes(:status => self.class.STATUS_ARCHIVE)
     end
     after_create do
-      Reward.create(:resident_id => self.id, :amount => Reward.SIGNUP_BONUS, :type => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now)
-      Reward.create(:resident_id => self.id, :amount => Reward.INITIAL_REWARD, :type => Reward.TYPE_INITIAL_REWARD, :period_start => Time.now)
+      Reward.create(:resident_id => self.id, :amount => Reward.SIGNUP_BONUS, :type => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => Time.now + 1.year.from_now)
+      Reward.create(:resident_id => self.id, :amount => Reward.INITIAL_REWARD, :type => Reward.TYPE_INITIAL_REWARD, :period_start => Time.now, :period_end => Time.now + 1.year.from_now)
     end
     def sign_up_bonus
       reward = Reward.find_by_type_(Reward.TYPE_SIGNUP_BONUS)
@@ -68,6 +70,14 @@ module Smartrent
         ((Time.now - move_in_date)/(60*60*24)).to_i
       else
         ((move_out_date - move_in_date)/(60*60*24)).to_i
+      end
+    end
+    def update_password(attributes)
+      if self.valid_password?(attributes[:current_password])
+        attributes.delete(:current_password)
+        update_attributes(attributes)
+      else
+        errors.add(:current_password, "is incorrect")
       end
     end
   end

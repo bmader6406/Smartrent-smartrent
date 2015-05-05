@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag    "smartrent/application", media: "all" %>
     <%= javascript_include_tag "smartrent/application" %>
+    <%= javascript_include_tag "http://maps.google.com/maps/api/js?sensor=true" %>
     <%= csrf_meta_tags %>
     <link rel="canonical" href="http://www.bozzutosmartrent.com/">
     <meta property="og:locale" content="en_US">
@@ -21,6 +22,9 @@
   </head>
   <body>
     <%= render partial: "layouts/smartrent/header" %>
+      <% if notice %>
+        <%= render partial: "shared/success_message", :locals => {:message => notice}  %>
+      <% end %>
     <%= yield %>
     <%= render partial: "layouts/smartrent/footer" %>
   </body>
