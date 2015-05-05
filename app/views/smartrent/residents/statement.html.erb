@@ -1,7 +1,7 @@
 <div class="member clearfix">
   <div class="memberStatementLeft">
     <div class="saveTitle">
-      <span class="lightBlue"><%= @resident.name %>,</span> You have <span class="lightBlue"><%= number_to_currency @resident.total_saved %></span> Saved.
+      <span class="lightBlue"><%= @resident.name %>,</span> You have <span class="lightBlue"><%= number_to_currency @resident.total_rewards %></span> Saved.
     </div>
 
     <div class="saveSubTitle">
@@ -51,13 +51,13 @@
     <h3>Months Earned</h3>
 
     <div class="v">
-      <%= @resident.months_earned %>
+      <%= @resident.total_months %>
     </div>
 
     <h3>Total Earned</h3>
 
     <div class="v">
-      <%= @resident.total_earned %>
+      <%= @resident.total_rewards %>
     </div>
 
     <h3>Sign-Up Bonus</h3>
@@ -69,7 +69,7 @@
     <h3>Combined Total</h3>
 
     <div class="v total">
-      <%= number_to_currency @resident.total_saved %>
+      <%= number_to_currency @resident.total_rewards %>
     </div>
   </div>
 </div>
