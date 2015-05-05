@@ -16,7 +16,7 @@ class AddFieldsToResident < ActiveRecord::Migration
     add_column :smartrent_residents, :pets_count, :integer
     add_column :smartrent_residents, :contract_signing_date, :datetime
     add_column :smartrent_residents, :apartment_id, :integer
-    add_column :smartrent_residents, :type, :integer
+    add_column :smartrent_residents, :type_, :integer
     add_column :smartrent_residents, :status, :integer
     add_column :smartrent_residents, :current_community, :string
     add_column :smartrent_residents, :move_in_date, :datetime
@@ -25,10 +25,10 @@ class AddFieldsToResident < ActiveRecord::Migration
     add_column :smartrent_residents, :city, :string
     add_column :smartrent_residents, :state, :string
     add_column :smartrent_residents, :zip, :string
-    add_column :smartrent_residents, :monthly_awards_amount, :float, :default => 0.0
-    add_column :smartrent_residents, :months_earned, :float, :default => 0.0
-    add_column :smartrent_residents, :total_earned, :float, :default => 0.0
-    add_column :smartrent_residents, :sign_up_bonus, :float, :default => 0.0
+    #add_column :smartrent_residents, :monthly_awards_amount, :float, :default => 0.0
+    #add_column :smartrent_residents, :months_earned, :float, :default => 0.0
+    #add_column :smartrent_residents, :total_earned, :float, :default => 0.0
+    #add_column :smartrent_residents, :sign_up_bonus, :float, :default => 0.0
     add_column :smartrent_residents, :active, :boolean, :default => true
 
   end

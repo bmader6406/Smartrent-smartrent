@@ -13,5 +13,18 @@
 //= require jquery
 //= require jquery_ujs
 //= require js-routes
-// require smartrent/jquery-ui
 //= require smartrent/bootstrap.min
+//= require smartrent/slides.min.jquery
+//= require smartrent/jquery.blockUI.js
+$(function(){
+  $('a.request-password-reset').click(function(){
+    $('.password-reset-request-box').block({
+      "message": "Please Wait..."
+    })
+  });
+  $('.change-password-form').submit(function(){
+    $('.password-change-form-box').block({
+      "message": "Please Wait..."
+    })
+  });
+})

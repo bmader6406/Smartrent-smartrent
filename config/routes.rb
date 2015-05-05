@@ -70,7 +70,12 @@ Smartrent::Engine.routes.draw do
 
   namespace :admin do
     root :to => "residents#index"
-    resources :residents
+    resources :residents do
+      collection do
+        get "archive/:id", :to => "residents#archive", :as => "archive"
+        get "send-password-reset-information/:id", :to => "residents#send_password_reset_information", :as => "send_password_reset_information"
+      end
+    end
   end
 
 

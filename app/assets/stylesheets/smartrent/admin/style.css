@@ -1,0 +1,45 @@
+.resident-box {
+  box-shadow: 0px 3px 1px 1px #E0E0E0;
+  border-radius: 3px;
+  margin-bottom:15px;
+  padding: 5px;
+}
+.resident-right-col {
+  margin-left: 10px;
+}
+.resident-top-col {
+  height: 166px;
+}
+.resident-amount-box {
+  border: 1px solid rgb(125, 205, 247);
+  padding: 18px;
+  font-size: 19px;
+  color: rgb(125, 205, 247);
+}
+.resident-status-box {
+  border: 1px solid;
+  padding: 25px 0px 0 0px;
+  text-align: center;
+}
+.resident-status-bottom {
+  height: 16px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+}
+.resident-status-bottom-archive {
+  background-color: #E8D239;
+}
+.resident-status-bottom-active {
+  background-color: #67C5D1;
+}
+.resident-status-bottom-champion {
+  background-color: #30CD58;
+}
+.resident-status-bottom-expired {
+  background-color: #C90019;
+}
+.resident-status-bottom span.glyphicon-chevron-down {
+  color: white;
+}

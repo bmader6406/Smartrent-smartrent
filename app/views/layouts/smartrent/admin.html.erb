@@ -15,6 +15,14 @@
     <title>SmartRent Admin Panel | SmartRent Bozzuto</title>
   </head>
   <body>
-    <%= yield %>
+    <%= render partial: "layouts/smartrent/admin_header" %>
+    <div class="clearfix"></div>
+    <div class="container">
+      <% if notice %>
+        <%= render partial: "shared/success_message", :locals => {:message => notice}  %>
+      <% end %>
+      <%= yield %>
+    </div>
+    <%= render partial: "layouts/smartrent/admin_footer" %>
   </body>
 </html>

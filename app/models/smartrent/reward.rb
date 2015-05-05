@@ -1,6 +1,6 @@
 module Smartrent
   class Reward < ActiveRecord::Base
-    attr_accessible :amount, :period_end, :period_start, :property_id, :type, :user_id
+    attr_accessible :amount, :period_end, :period_start, :property_id, :type, :resident_id
     belongs_to :resident
     belongs_to :property
     validates_presence_of :amount, :user_id, :property_id, :type, :period_start, :period_end
@@ -19,7 +19,25 @@ module Smartrent
     end
 
     def self.types
-      {0 => "Sign Up", 1 => "Monthly Awards", 2 => "Initial Balance", 3 => "Champion"}
+      {self.TYPE_SIGNUP_BONUS => "Sign Up", self.TYPE_MONTHLY_AWARDS => "Monthly Awards", self.TYPE_INITIAL_REWARD => "Initial Balance", self.TYPE_CHAMPION => "Champion"}
+    end
+    def self.TYPE_SIGNUP_BONUS
+      0
+    end
+    def self.TYPE_MONTHLY_AWARDS
+      1
+    end
+    def self.TYPE_INITIAL_REWARD
+      2
+    end
+    def self.TYPE_CHAMPION
+      3
+    end
+    def self.SIGNUP_BONUS
+      350
+    end
+    def self.INITIAL_REWARD
+      1200
     end
   end
 end

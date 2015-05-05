@@ -13,10 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //= require js-routes
-// require smartrent/jquery-ui
 //= require smartrent/bootstrap.min
 //= require smartrent/slides.min.jquery
 //= require smartrent/smartRentMarkers
 //= require smartrent/map
 //= require smartrent/google_map_apis
-//= require_tree .
+//= require smartrent/home
+//= require smartrent/properties
+//= require smartrent/slides.min.jquery
+//= require smartrent/apartments
