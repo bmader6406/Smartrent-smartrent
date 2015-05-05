@@ -48,11 +48,6 @@ Smartrent::Engine.routes.draw do
   get "/460-new-york-avenue", :to => "pages#ny_avenue", :as => "ny_avenue"
   get "/member-profile", :to => "residents#profile", :as => "member_profile"
   get "/member-statement", :to => "residents#statement", :as => "member_statement"
-  devise_for :users, {
-                       class_name: 'Smartrent::User',
-                       module: :devise,
-  :controllers => { :sessions => "smartrent/sessions" }
-                   }
   devise_for :residents, {
                        class_name: 'Smartrent::Resident',
                        module: :devise,
@@ -61,6 +56,11 @@ Smartrent::Engine.routes.draw do
 
   namespace :admin do
     root :to => "residents#index"
+    devise_for :users, {
+                         class_name: 'Smartrent::User',
+                         module: :devise,
+    :controllers => { :sessions => "smartrent/admin/sessions" }
+                     }
     resources :residents do
       collection do
         get "archive/:id", :to => "residents#archive", :as => "archive"

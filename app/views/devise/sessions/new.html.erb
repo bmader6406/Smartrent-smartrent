@@ -1,3 +1,4 @@
+<% if resource_name.to_s == "resident" %>
 <div class="member clearfix">
   <div class="memberLeft">
     <%= image_tag "smartrent21.jpg" %>
@@ -33,3 +34,21 @@
       <%= render "devise/shared/links" %>
   </div>
 </div>
+<% else %>
+    <div class="loginForm">
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <%= devise_error_messages! %>
+      <div class="form-group">
+        <%= f.email_field :email, autofocus: true , :class => "form-control"%>
+      </div>
+      <div class="form-group">
+        <%= f.password_field :password, autocomplete: "off", :class => "form-control"  %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Go", {:class => "btn btn-primary btn-sm"} %>
+      </div>
+    <% end %>
+    </div>
+      <%= render "devise/shared/links" %>
+<% end %>
