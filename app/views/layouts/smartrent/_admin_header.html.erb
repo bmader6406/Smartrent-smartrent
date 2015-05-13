@@ -9,6 +9,29 @@
       </button>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li <%if @active == "home"%>class="active"<% end %>>
+          <%= link_to "Home", admin_root_path  %>
+        </li>
+        <li <%if @active == "residents"%>class="active"<% end %>>
+          <%= link_to "Residents", admin_residents_path %>
+        </li>
+        <li <%if @active == "rewards"%>class="active"<% end %>>
+          <%= link_to "Rewards", admin_rewards_path %>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li class="dropdown-header">Nav header</li>
+            <li><a href="#">Separated link</a></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
       <% if admin_user_signed_in? %>
         <%= link_to "Logout", destroy_admin_user_session_path, :class => "btn btn-danger pull-right"  %>
       <% else %>

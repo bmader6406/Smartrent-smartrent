@@ -24,7 +24,10 @@ $(function(){
         map_results_html = map_results_html.replace(/\n/g, "").replace(/ /g, "")
         if (map_results_html == '')
         {
-          properties_path = Routes.smartrent_properties_path({format: "json"})
+          page = 1
+          if (urlParams['page'])
+            page = urlParams['page']
+          properties_path = Routes.smartrent_properties_path({format: "json", page: page})
           $.get(properties_path, function(data){
             properties = data;
             pois['all'] = {'show':true,'points':[]};
@@ -33,9 +36,9 @@ $(function(){
               pois['all']['points'].push({
                   title: property.title,
                   description: property.description,
-                  address: property.address + ',' + property.city + ',' + property.state + ' ' + property.postal_code,
-                  lat: property.lat,
-                  lon: property.lng,
+                  address: property.street_address + ',' + property.city + ',' + property.state + ' ' + property.postal_code,
+                  lat: property.latitude,
+                  lon: property.longitude,
                   //image: property.left_image,
                   //image_link: property.left_image
               });

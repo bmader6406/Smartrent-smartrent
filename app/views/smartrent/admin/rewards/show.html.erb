@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-md-10">
+    <b>Resident Email: </b><%= @reward.resident.email %><br />
+    <b>Amount: </b><%= number_to_currency @reward.amount %><br />
+    <b>Period Start: </b><%= @reward.period_start.to_s(:year_month_day) %><br />
+    <% if @reward.period_end %>
+      <b>Period End: </b><%= @reward.period_end.to_s(:year_month_day) %><br />
+    <% end %>
+    <% if @reward.property %>
+      <b>Property: </b><%= @reward.property.title %><br />
+    <% end %>
+  </div>
+  <br />
+  <br />
+  <%= link_to 'Edit', edit_admin_reward_path(@reward) %> |
+  <%= link_to 'Back', admin_rewards_path %>
+</div>

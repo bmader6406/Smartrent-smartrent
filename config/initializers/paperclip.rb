@@ -11,6 +11,6 @@ if Rails.env == "production"
       :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
     },
     #s3_permissions:       :private,
-    s3_protocol:          'https'
+    s3_protocol:          'http'
   )
 end

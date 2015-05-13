@@ -7,7 +7,8 @@ module Smartrent
     #
     before_filter :set_resident
     def index
-      @residents = Resident.all
+      @active = "residents"
+      @residents = Resident.paginate(:page => params[:page], :per_page => 15)
   
       respond_to do |format|
         format.html # index.html.erb
@@ -18,6 +19,7 @@ module Smartrent
     # GET /admin/residents/1
     # GET /admin/residents/1.json
     def show
+      @active = "residents"
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @resident }
@@ -27,6 +29,7 @@ module Smartrent
     # GET /admin/residents/new
     # GET /admin/residents/new.json
     def new
+      @active = "residents"
       @resident = Resident.new
   
       respond_to do |format|
@@ -37,6 +40,7 @@ module Smartrent
   
     # GET /admin/residents/1/edit
     def edit
+      @active = "residents"
       @resident = Resident.find(params[:id])
     end
 
@@ -98,6 +102,14 @@ module Smartrent
     end
     def set_resident
       @resident = Resident.find(params[:id]) if params[:id]
+    end
+    def import_page
+      @active = "residents"
+      render :import
+    end
+    def import
+      Resident.import(params[:file])
+      redirect_to admin_residents_path, notice: "Residents have been imported"
     end
   end
 

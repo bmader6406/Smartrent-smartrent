@@ -4,10 +4,12 @@ PATH
     smartrent (0.0.1)
       aws-sdk (< 2.0)
       devise
+      geocoder
       jquery-rails
       js-routes
       less-rails
       mandrill-api
+      mysql2
       omniauth
       paperclip
       pg
@@ -17,6 +19,7 @@ PATH
       therubyracer
       twitter-bootstrap-rails
       will_paginate
+      will_paginate-bootstrap
 
 GEM
   remote: https://rubygems.org/
@@ -71,6 +74,7 @@ GEM
     erubis (2.7.0)
     excon (0.45.3)
     execjs (2.5.2)
+    geocoder (1.2.8)
     hashie (3.4.1)
     hike (1.2.3)
     i18n (0.7.0)
@@ -97,6 +101,7 @@ GEM
     mime-types (1.25.1)
     mini_portile (0.6.2)
     multi_json (1.11.0)
+    mysql2 (0.3.18)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     omniauth (1.2.2)
@@ -172,6 +177,8 @@ GEM
     warden (1.2.3)
       rack (>= 1.0)
     will_paginate (3.0.7)
+    will_paginate-bootstrap (1.0.1)
+      will_paginate (>= 3.0.3)
 
 PLATFORMS
   ruby

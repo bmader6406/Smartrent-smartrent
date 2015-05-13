@@ -1,9 +1,9 @@
 module Smartrent
   class Reward < ActiveRecord::Base
-    attr_accessible :amount, :period_end, :period_start, :property_id, :type, :resident_id
+    attr_accessible :amount, :period_end, :period_start, :property_id, :type_, :resident_id
     belongs_to :resident
     belongs_to :property
-    validates_presence_of :amount, :user_id, :property_id, :type, :period_start, :period_end
+    validates_presence_of :amount, :resident_id, :type_, :period_start
     validates_numericality_of :amount , :greater_than => 0
     validate :period_start_greater_than_period_end
     validate :valid_type
@@ -15,7 +15,7 @@ module Smartrent
     end
 
     def valid_type
-      errors[:type] << "is invalid" if type < 0 or type > 3
+      errors[:type_] << "is invalid" if type_ < 0 or type_ > 3
     end
 
     def self.types
@@ -34,10 +34,37 @@ module Smartrent
       3
     end
     def self.SIGNUP_BONUS
-      350
+      100
     end
     def self.INITIAL_REWARD
       1200
+    end
+    def self.MONTHLY_AWARDS
+      350
+    end
+    def self.import(file)
+      f = File.open(file.path, "r:bom|utf-8")
+      rewards = SmarterCSV.process(f)
+      types = {}
+      Reward.types.each do |value, type|
+        types[type.downcase] = value
+      end
+      rewards.each do |reward_hash|
+        email = reward_hash[:email]
+        resident = Resident.find_by_email(email)
+        reward_hash.delete(:email)
+        if resident
+          if !reward_hash[:period_start].present?
+            reward_hash[:period_start] = Time.now
+          end
+          if reward_hash[:type] and types[reward_hash[:type].downcase].present?
+            reward_hash[:type_] = types[reward_hash[:type].downcase]
+          end
+          reward_hash.delete(:type)
+          reward_hash[:resident_id] = resident.id
+          create! reward_hash
+        end
+      end
     end
   end
 end

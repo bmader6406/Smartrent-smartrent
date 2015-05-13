@@ -1,0 +1,16 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Property</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+<% @residents.rewards.each do |reward| %>
+  <tr>
+    <td><%= @reward.type_text %></td>
+  </tr>
+<% end %>
+</table>

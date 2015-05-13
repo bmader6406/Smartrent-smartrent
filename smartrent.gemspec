@@ -33,4 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency "ransack"
   s.add_dependency "mandrill-api"
   s.add_dependency "smarter_csv"
+  s.add_dependency "mysql2"
+  s.add_dependency "will_paginate-bootstrap"
+  s.add_dependency "geocoder"
 end

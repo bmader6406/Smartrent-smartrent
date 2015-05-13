@@ -6,7 +6,7 @@ module Smartrent
     # GET /properties.json
     def index
       @current_page = "homes"
-      @properties = Property.all
+      @properties = Property.paginate(:page => params[:page], :per_page => 10)
   
       respond_to do |format|
         format.html # index.html.erb
@@ -87,7 +87,7 @@ module Smartrent
     end
 
     def import_page
-      render "import"
+      render :import
     end
 
     def import

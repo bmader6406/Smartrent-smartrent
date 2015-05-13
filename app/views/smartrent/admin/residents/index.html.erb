@@ -1,25 +1,32 @@
 <h1>Listing Residents</h1>
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Apartment</th>
-    <th>Status</th>
-    <th>Actions</th>
-  </tr>
-
-<% @residents.each do |resident| %>
-  <tr>
-    <td><%= resident.name %></td>
-    <td><%= resident.email %></td>
-    <td><%= resident.apartment.title if resident.apartment %></td>
-    <td><%= resident.status %></td>
-    <td><%= link_to 'Show', admin_resident_path(resident) %> | <%= link_to 'Edit', edit_admin_resident_path(resident) %> | <%= link_to 'Destroy', admin_resident_path(resident), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
+<div class="links pull-right">
+  <%= link_to 'Import Residents', import_admin_residents_path, :class => "btn btn-default" %>
+  <%= link_to 'New Resident', new_admin_resident_path, :class => "btn btn-primary" %>
+</div>
 <br />
+<br />
+<br />
+<% if @residents.present? %>
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Apartment</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
 
-<%= link_to 'New Resident', new_admin_resident_path %>
+  <% @residents.each do |resident| %>
+    <tr>
+      <td><%= resident.name %></td>
+      <td><%= resident.email %></td>
+      <td><%= resident.apartment.title if resident.apartment %></td>
+      <td><%= resident.status %></td>
+      <td><%= link_to 'Show', admin_resident_path(resident) %> | <%= link_to 'Edit', edit_admin_resident_path(resident) %> | <%= link_to 'Destroy', admin_resident_path(resident), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </table>
+  <%= will_paginate @residents, renderer: BootstrapPagination::Rails %>
+<% else %>
+    No residents available
+<% end %>

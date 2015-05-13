@@ -1,0 +1,49 @@
+<%= form_for([:admin, @reward], html: {:class => "form-horizontal"}) do |f| %>
+  <% if @reward.errors.any? %>
+    <%= render partial: "shared/form_errors", :locals => {:errors => @reward.errors} %>
+  <% end %>
+  <fieldset>
+    <div class="form-group">
+      <%= f.label :name, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.text_field :name, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :resident_id, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.collection_select :resident_id, Smartrent::Resident.all, :id, :email, {:include_blank => "--Select Resident"}, {:class => "form-control input-md"} %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :property_id, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.collection_select :property_id, Smartrent::Property.all, :id, :title, {:include_blank => "--Select Property"}, {:class => "form-control input-md"} %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :type_, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.select :type_, Smartrent::Reward.types.collect{|key,value| [value, key]}, {:include_blank => "--Select Type"}, {:class => "form-control input-md"} %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :period_start, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.date_select :period_start, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :period_end, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.date_select :period_end, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-2 control-label" for="singlebutton"></label>
+      <div class="col-md-4">
+        <%= f.submit :class => "btn btn-primary" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
