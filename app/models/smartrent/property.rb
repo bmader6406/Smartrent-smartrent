@@ -68,7 +68,7 @@ module Smartrent
       f = File.open(file.path, "r:bom|utf-8")
       properties = SmarterCSV.process(f)
       properties.each do |property_hash|
-        create! property_hash
+        create property_hash
       end
     end
   end
