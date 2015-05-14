@@ -9,9 +9,10 @@
       </button>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
+    <% if admin_user_signed_in? %>
       <ul class="nav navbar-nav">
         <li <%if @active == "home"%>class="active"<% end %>>
-          <%= link_to "Home", smartrent.root_url + "/admin"  %>
+          <%= link_to "Home", smartrent.root_url + "admin"  %>
         </li>
         <li <%if @active == "residents"%>class="active"<% end %>>
           <%= link_to "Residents", admin_residents_path %>
@@ -32,6 +33,7 @@
           </ul>
         </li>
       </ul>
+    <% end %>
       <% if admin_user_signed_in? %>
         <%= link_to "Logout", destroy_admin_user_session_path, :class => "btn btn-danger pull-right"  %>
       <% else %>
