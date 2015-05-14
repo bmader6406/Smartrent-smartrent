@@ -2,8 +2,8 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::RewardsController < Admin::AdminController
-    # GET /admin/residents
-    # GET /admin/residents.json
+    # GET /admin/rewards
+    # GET /admin/rewards.json
     #
     before_filter :set_reward
     def index
@@ -16,8 +16,8 @@ module Smartrent
       end
     end
   
-    # GET /admin/residents/1
-    # GET /admin/residents/1.json
+    # GET /admin/rewards/1
+    # GET /admin/rewards/1.json
     def show
       @active = "rewards"
       respond_to do |format|
@@ -26,8 +26,8 @@ module Smartrent
       end
     end
   
-    # GET /admin/residents/new
-    # GET /admin/residents/new.json
+    # GET /admin/rewards/new
+    # GET /admin/rewards/new.json
     def new
       @active = "rewards"
       @reward = Reward.new
@@ -38,14 +38,14 @@ module Smartrent
       end
     end
   
-    # GET /admin/residents/1/edit
+    # GET /admin/rewards/1/edit
     def edit
       @active = "rewards"
       @reward = Reward.find(params[:id])
     end
 
-    # POST /admin/residents
-    # POST /admin/residents.json
+    # POST /admin/rewards
+    # POST /admin/rewards.json
     def create
       @reward = Reward.new(params[:reward])
   
@@ -60,14 +60,14 @@ module Smartrent
       end
     end
   
-    # PUT /admin/residents/1
-    # PUT /admin/residents/1.json
+    # PUT /admin/rewards/1
+    # PUT /admin/rewards/1.json
     def update
       @reward = Reward.find(params[:id])
   
       respond_to do |format|
-        if @reward.update_attributes(params[:resident])
-          format.html { redirect_to admin_resident_path(@reward), notice: 'Reward was successfully updated.' }
+        if @reward.update_attributes(params[:reward])
+          format.html { redirect_to admin_reward_path(@reward), notice: 'Reward was successfully updated.' }
           format.json { head :no_content }
           format.js {}
         else
@@ -78,8 +78,8 @@ module Smartrent
       end
     end
   
-    # DELETE /admin/residents/1
-    # DELETE /admin/residents/1.json
+    # DELETE /admin/rewards/1
+    # DELETE /admin/rewards/1.json
     def destroy
       @reward.destroy
       respond_to do |format|

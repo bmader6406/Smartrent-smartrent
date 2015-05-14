@@ -1,0 +1,35 @@
+<h1>Listing more_homes</h1>
+<div class="links pull-right">
+  <%= link_to 'Import More Homes', import_admin_more_homes_path, :class => "btn btn-default" %>
+  <%= link_to 'New More Home', new_admin_more_home_path, :class => "btn btn-primary" %>
+</div>
+<br />
+<br />
+<br />
+<% if @more_homes.present? %>
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Beds</th>
+      <th>Baths</th>
+      <th>Sq ft</th>
+      <th>Featured</th>
+      <th>Property</th>
+      <th>Actions</th>
+    </tr>
+  <% @more_homes.each do |more_home| %>
+    <tr>
+      <td><%= more_home.name %></td>
+      <td><%= more_home.beds %></td>
+      <td><%= more_home.baths %></td>
+      <td><%= more_home.sq_ft %></td>
+      <td><%= more_home.featured %></td>
+      <td><%= more_home.property_id %></td>
+      <td><%= link_to 'Show', admin_more_home_path(more_home) %> | <%= link_to 'Edit', edit_more_home_path(more_home) %> | <%= link_to 'Destroy', admin_more_home_path(more_home), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </table>
+  <%= will_paginate @more_homes, renderer: BootstrapPagination::Rails %>
+<% else %>
+  <div class="alert alert-warning">No more_homes have been added yet.</div>
+<% end %>

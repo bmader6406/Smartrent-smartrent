@@ -30,3 +30,4 @@ config/secrets.yml
 *.bowerrc
 bower.json
 html/*
+csvs/*

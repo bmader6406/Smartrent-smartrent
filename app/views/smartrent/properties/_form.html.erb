@@ -16,40 +16,32 @@
     <%= f.text_field :title %>
   </div>
   <div class="field">
-    <%= f.label :video_url %><br />
-    <%= f.url_field :video_url %>
-  </div>
-  <div class="field">
     <%= f.label :phone_number %><br />
     <%= f.text_field :phone_number %>
   </div>
   <div class="field">
-    <%= f.label :address %><br />
-    <%= f.text_field :address %>
+    <%= f.label :detail_url %><br />
+    <%= f.text_field :detail_url %>
   </div>
   <div class="field">
-    <%= f.label :city %><br />
-    <%= f.text_field :city %>
+    <%= f.label :short_description %><br />
+    <%= f.text_field :short_description %>
   </div>
   <div class="field">
     <%= f.label :state %><br />
     <%= f.text_field :state %>
   </div>
   <div class="field">
-    <%= f.label :website %><br />
-    <%= f.url_field :website %>
+    <%= f.label :county %><br />
+    <%= f.text_field :county %>
   </div>
   <div class="field">
-    <%= f.label :home_page_desc %><br />
-    <%= f.text_field :home_page_desc %>
+    <%= f.label :city %><br />
+    <%= f.text_field :city %>
   </div>
   <div class="field">
-    <%= f.label :search_page_description %><br />
-    <%= f.text_area :search_page_description %>
-  </div>
-  <div class="field">
-    <%= f.label :description %><br />
-    <%= f.text_area :description %>
+    <%= f.label :address %><br />
+    <%= f.text_field :address %>
   </div>
   <div class="field">
     <%= f.label :lat %><br />
@@ -60,12 +52,64 @@
     <%= f.text_field :lng %>
   </div>
   <div class="field">
-    <%= f.label :image %><br />
-    <%= f.file_field :image %>
+    <%= f.label :one_bedroom %><br />
+    <%= f.check_box :one_bedroom %>
   </div>
   <div class="field">
-    <%= f.label :image_description %><br />
-    <%= f.text_field :image_description %>
+    <%= f.label :one_bedroom_price %><br />
+    <%= f.text_field :one_bedroom_price %>
+  </div>
+  <div class="field">
+    <%= f.label :two_bedroom %><br />
+    <%= f.check_box :two_bedroom %>
+  </div>
+  <div class="field">
+    <%= f.label :two_bedroom_price %><br />
+    <%= f.text_field :two_bedroom_price %>
+  </div>
+  <div class="field">
+    <%= f.label :three_bedroom %><br />
+    <%= f.check_box :three_bedroom %>
+  </div>
+  <div class="field">
+    <%= f.label :three_bedroom_price %><br />
+    <%= f.text_field :three_bedroom_price %>
+  </div>
+  <div class="field">
+    <%= f.label :four_bedroom %><br />
+    <%= f.check_box :four_bedroom %>
+  </div>
+  <div class="field">
+    <%= f.label :four_bedroom_price %><br />
+    <%= f.text_field :four_bedroom_price %>
+  </div>
+  <div class="field">
+    <%= f.label :studio %><br />
+    <%= f.check_box :studio %>
+  </div>
+  <div class="field">
+    <%= f.label :studio_price %><br />
+    <%= f.text_field :studio_price %>
+  </div>
+  <div class="field">
+    <%= f.label :penthouse %><br />
+    <%= f.check_box :penthouse %>
+  </div>
+  <div class="field">
+    <%= f.label :pent_house_price %><br />
+    <%= f.text_field :pent_house_price %>
+  </div>
+  <div class="field">
+    <%= f.label :special_promotion %><br />
+    <%= f.check_box :special_promotion %>
+  </div>
+  <div class="field">
+    <%= f.label :features %><br />
+    <%= f.select :feature_ids, Smartrent::Feature.all.collect {|x| [x.name, x.id]}, {}, {:multiple => true} %>
+  </div>
+  <div class="field">
+    <%= f.label :image %><br />
+    <%= f.file_field :image %>
   </div>
   <div class="actions">
     <%= f.submit %>

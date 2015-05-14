@@ -28,5 +28,5 @@
   </table>
   <%= will_paginate @residents, renderer: BootstrapPagination::Rails %>
 <% else %>
-    No residents available
+  <div class="alert alert-warning"> No residents available</div>
 <% end %>

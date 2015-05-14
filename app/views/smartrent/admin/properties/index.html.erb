@@ -1,0 +1,29 @@
+<h1>Listing Properties</h1>
+<div class="links pull-right">
+  <%= link_to 'Import Properties', import_admin_properties_path, :class => "btn btn-default" %>
+  <%= link_to 'New Property', new_admin_property_path, :class => "btn btn-primary" %>
+</div>
+<br />
+<br />
+<br />
+<% if @properties.present? %>
+  <table class="table">
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Website</th>
+      <th>Actions</th>
+    </tr>
+  <% @properties.each do |property| %>
+    <tr>
+      <td><%= property.title %></td>
+      <td><%= strip_tags(property.description).truncate(27) if property.description %></td>
+      <td><%= link_to "Website Url", property.website, :target => "_blank" %></td>
+      <td><%= link_to 'Show', admin_property_path(property) %> | <%= link_to 'Edit', edit_admin_property_path(property) %> | <%= link_to 'Destroy', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </table>
+  <%= will_paginate @homes, renderer: BootstrapPagination::Rails %>
+<% else %>
+  <div class="alert alert-warning">No Properties have been added yet.</div>
+<% end %>

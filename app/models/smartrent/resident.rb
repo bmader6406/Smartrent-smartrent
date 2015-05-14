@@ -5,13 +5,13 @@ module Smartrent
     devise :database_authenticatable, :registerable,
            :recoverable, :rememberable, :trackable, :validatable, :lockable
     # Setup accessible (or protected) attributes for your model
-    attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :apartment_id, :type_, :status, :current_community, :city, :state, :country, :current_password, :origin_id, :property_id
+    attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :type_, :status, :current_community, :city, :state, :country, :current_password, :origin_id, :property_id
     validates_uniqueness_of :origin_id, :allow_nil => true
     validates_presence_of :status, :name
 
     #attr_accessor :original_password
     # attr_accessible :title, :body
-    belongs_to :apartment
+    belongs_to :property
     has_many :rewards, :dependent => :destroy
 
     def self.import(file)

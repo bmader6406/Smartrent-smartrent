@@ -2,10 +2,10 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::ResidentsController < Admin::AdminController
+    before_filter :set_resident
+
     # GET /admin/residents
     # GET /admin/residents.json
-    #
-    before_filter :set_resident
     def index
       @active = "residents"
       @residents = Resident.paginate(:page => params[:page], :per_page => 15)

@@ -1,0 +1,285 @@
+<%= form_for([:admin, @property], :html => {:class => "form-horizontal"}) do |f| %>
+  <% if @property.errors.any? %>
+    <%= render partial: "shared/form_errors", :locals => {:errors => @property.errors} %>
+  <% end %>
+  <fieldset>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :title, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :title, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :phone_number, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :phone_number, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :website, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :website, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :short_description, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_area :short_description, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :description, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_area :description, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :state, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :state, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :county, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :county, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :city, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :city, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :address, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :address, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :latitude, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :latitude, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :longitude, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :longitude, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :one_bedroom, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.check_box :one_bedroom, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :one_bedroom_price, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :one_bedroom_price, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :two_bedroom, "Two Bedrooms", :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :two_bedroom, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :two_bedroom_price, "Two Bedrooms Price", :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :two_bedroom_price, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :three_bedroom, "Three Bedrooms", :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :three_bedroom, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :three_bedroom_price, "Three Bedrooms Price", :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :three_bedroom_price, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :four_bedroom, "Four Bedrooms", :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :four_bedroom, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :four_bedroom_price, "Four Bedrooms Price", :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :four_bedroom_price, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :studio, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.check_box :studio, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :studio_price, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :studio_price, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :penthouse, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.check_box :penthouse, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :pent_house_price, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :pent_house_price, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :special_promotion, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.check_box :special_promotion, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :features, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.select :feature_ids, Smartrent::Feature.all.collect {|x| [x.name, x.id]}, {:include_blank => "--Select Features--"}, {:multiple => true, :class => "form-control input-md"} %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :image, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.file_field :image, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :origin_id, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.number_field :origin_id, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :bozzuto_url, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.url_field :bozzuto_url, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :email, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :email, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :promotion_title, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.url_field :promotion_title, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :promotion_subtitle, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :promotion_subtitle, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :promotion_subtitle, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.url_field :promotion_url, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :promotion_expiration_date, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.date_select :promotion_expiration_date, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :zip, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :zip, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-2 control-label" for="singlebutton"></label>
+      <div class="col-md-4">
+        <%= f.submit :class => "btn btn-primary" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>

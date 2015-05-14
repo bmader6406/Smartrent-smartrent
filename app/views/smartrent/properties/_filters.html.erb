@@ -1,0 +1,96 @@
+<div id="contactLeft">
+  <div id="search">
+    <%= search_form_for @q, {:class => "property_listing"} do |f|%>
+      <div class="searchTitle">
+        <h1>Search By</h1>
+      </div>
+
+      <div class="searchBedrooms modern-checkbox">
+        <div class="searchCategory">
+          Bedrooms
+        </div>
+
+        <ul>
+          <li>
+            <%= f.check_box :studio_true %>
+            <%= f.label :studio_true, "Studios" %>
+          </li>
+          <li>
+            <%= f.check_box :one_bedroom_true %>
+            <%= f.label :one_bedroom_true, "1 Bedrooms" %>
+          </li>
+          <li>
+            <%= f.check_box :two_bedroom_true %>
+            <%= f.label :two_bedroom_true, "2 Bedrooms" %>
+          <li>
+            <%= f.check_box :three_bedroom_or_four_bedroom_true %>
+            <%= f.label :three_bedroom_or_four_bedroom_true, "3 or more Bedrooms" %>
+          </li>
+          <li>
+            <%= f.check_box :penthouse_true %>
+            <%= f.label :penthouse_true, "Penthouses" %>
+          </li>
+        </ul>
+      </div>
+
+      <div class="searchPrice">
+        <label for="fourbed"></label>
+
+        <div class="searchCategory">
+          <label for="fourbed">Price</label>
+        </div><label for="fourbed"></label>
+
+        <ul>
+          <li>
+          <label for="fourbed">
+            <% minimum_price = f.object.one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq %>
+            <%= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq, options_for_select(Smartrent::Property.prices("Choose Minimum..."), minimum_price.to_i)%>
+          </label></li>
+
+          <li style="list-style: none"><label for="fourbed"></label></li>
+
+          <li>
+            <label for="fourbed">
+              <% maximum_price = f.object.one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq %>
+              <%= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq, options_for_select(Smartrent::Property.prices("Choose Maximum..."), maximum_price.to_i)%>
+            </label>
+          </li>
+
+          <li style="list-style: none"><label for="fourbed"></label></li>
+        </ul>
+      </div>
+
+      <div class="searchFeatures modern-checkbox">
+        <label for="fourbed"></label>
+
+        <div class="searchCategory">
+          <label for="fourbed">Most Searched Features &amp; Amenities</label>
+        </div><label for="fourbed"></label>
+
+        <ul>
+          <% Smartrent::Feature.all.each do |feature| %>
+            <li>
+            <%= f.check_box :features_id_in, {:multiple => true}, feature.id, nil %><label for="q_features_id_in_<%=feature.id %>"><%= feature.name %></label>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="searchMore modern-checkbox">
+        <div class="searchCategory">
+          More Filters
+        </div>
+
+        <ul>
+          <li>
+          <%= f.check_box :special_promotion_true %>
+          <%= f.label :special_promotion_true, "Special Promotions" %>
+          </li>
+        </ul>
+        <%= f.hidden_field :state_eq %>
+        <%= f.hidden_field :county_eq %>
+        <%= f.hidden_field :city_eq %>
+      </div>
+      <%= f.submit "Filter", :class => "hidden" %>
+    <% end %>
+  </div>
+</div>

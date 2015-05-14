@@ -27,20 +27,20 @@ $(function(){
           page = 1
           if (urlParams['page'])
             page = urlParams['page']
-          properties_path = Routes.smartrent_properties_path({format: "json", page: page})
-          $.get(properties_path, function(data){
-            properties = data;
+          homes_path = Routes.smartrent_homes_path({format: "json", page: page})
+          $.get(homes_path, function(data){
+            homes = data;
             pois['all'] = {'show':true,'points':[]};
-            for(var x in properties) {
-              var property = properties[x]
+            for(var x in homes) {
+              var home = homes[x]
               pois['all']['points'].push({
-                  title: property.title,
-                  description: property.description,
-                  address: property.street_address + ',' + property.city + ',' + property.state + ' ' + property.postal_code,
-                  lat: property.latitude,
-                  lon: property.longitude,
-                  //image: property.left_image,
-                  //image_link: property.left_image
+                  title: home.title,
+                  description: home.description,
+                  address: home.street_address + ',' + home.city + ',' + home.state + ' ' + home.postal_code,
+                  lat: home.latitude,
+                  lon: home.longitude,
+                  //image: home.left_image,
+                  //image_link: home.left_image
               });
             }
             mapStart();
@@ -53,7 +53,7 @@ $(function(){
 })
 var Home = {
   "showFloorPlan": function(floor_id){
-    $('.fpImageHolder .homeFPImages').hide();
+    $('.fpImageHolder .more_homeFPImages').hide();
     $('#' + floor_id).show();
   }
 }

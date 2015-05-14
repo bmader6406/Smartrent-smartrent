@@ -1,26 +1,23 @@
-require_dependency "smartrent/application_controller"
+require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
-  class PropertiesController < ApplicationController
+  class Admin::PropertiesController < Admin::AdminController
+    before_filter :set_property
     # GET /properties
     # GET /properties.json
     def index
-      #@properties = Property.all
-      @current_page = "properties"
-      @q = Property.ransack(params[:q])
-      @properties_grouped_by_states = Property.grouped_by_states(@q)
+      @active = "properties"
+      @properties = Property.paginate(:page => params[:page], :per_page => 15)
   
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @q.result.uniq }
+        format.json { render json: @properties }
       end
     end
   
     # GET /properties/1
     # GET /properties/1.json
     def show
-      @property = Property.find(params[:id])
-  
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @property }
@@ -40,7 +37,6 @@ module Smartrent
   
     # GET /properties/1/edit
     def edit
-      @property = Property.find(params[:id])
     end
   
     # POST /properties
@@ -50,7 +46,7 @@ module Smartrent
   
       respond_to do |format|
         if @property.save
-          format.html { redirect_to @property, notice: 'Property was successfully created.' }
+          format.html { redirect_to admin_property_path(@property), notice: 'Property was successfully created.' }
           format.json { render json: @property, status: :created, location: @property }
         else
           format.html { render action: "new" }
@@ -66,7 +62,7 @@ module Smartrent
   
       respond_to do |format|
         if @property.update_attributes(params[:property])
-          format.html { redirect_to @property, notice: 'Property was successfully updated.' }
+          format.html { redirect_to admin_property_path(@property), notice: 'Property was successfully updated.' }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -82,9 +78,20 @@ module Smartrent
       @property.destroy
   
       respond_to do |format|
-        format.html { redirect_to properties_url }
+        format.html { redirect_to admin_properties_url }
         format.json { head :no_content }
       end
+    end
+    def import_page
+      @active = "properties"
+      render :import
+    end
+    def import
+      Property.import(params[:file])
+      redirect_to admin_properties_path, notice: "Properties have been imported"
+    end
+    def set_property
+      @property = Property.find(params[:id]) if params[:id]
     end
   end
 end

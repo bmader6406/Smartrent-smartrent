@@ -1,5 +1,0 @@
-<div class="homeFPImages" id="floor-plan-<%= home.id %>">
-  <% home.floor_plan_images.each do |floor_plan_image| %>
-    <%= render partial: "home_floor_plan_row", :locals => {:floor_plan_image => floor_plan_image} %>
-  <% end %>
-</div>

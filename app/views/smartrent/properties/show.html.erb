@@ -1,51 +1,90 @@
-<%= render layout: "layout" do %>
 <p id="notice"><%= notice %></p>
-  <div class="propDetails clearfix">
-    <div class="propPhoto">
-      <%= image_tag @property.image %>
-      <div>
-        <%= @property.image_description %>
-      </div>
-    </div>
 
-    <div class="details">
-      <h1><%= @property.title %></h1>
+<p>
+  <b>Title:</b>
+  <%= @property.title %>
+</p>
 
-      <div class="address">
-        <%= @property.address %>, <%= @property.city %>, <%= @property.state %>
-      </div>
-      <div class="links">
-        <% if @property.website.present? %>
-          <%= link_to "Visit the Website", @property.website %>
-        <% end %>
-        <% if @property.video_url.present? %>
-          <br /><%= link_to "View Community Video", @property.video_url, :target => "_blank" %>
-        <% end %>
-      </div>
+<p>
+  <b>Phone number:</b>
+  <%= @property.phone_number %>
+</p>
 
-      <div class="desc">
-        <%= @property.description.html_safe %>
-      </div>
-      <% if @property.homes.present? %>
-        <% homes = @property.homes  %>
-        <div class="homes">
-        <div class="title">Homes</div>
-          <%= render partial: "homes_table", :locals => {:homes => homes} %>
-        </div>
-        <div class="fpImageHolder">
-          <%= render partial: "home_floor_plan_images", :collection => homes, :as => :home  %>
-          <div class="clear"></div>
-        </div>
-        <% featured_home = homes.where(:featured => true).first %>
-        <% if featured_home %>
-          <div class="featuredHome">
-            <div class="title">
-              Featured Home
-            </div>
-            <%= render partial: "featured_home_table", :locals => {:home => featured_home} %>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
-<% end%>
+<p>
+  <b>Detail url:</b>
+  <%= @property.detail_url %>
+</p>
+
+<p>
+  <b>Short description:</b>
+  <%= @property.short_description %>
+</p>
+
+<p>
+  <b>State:</b>
+  <%= @property.state %>
+</p>
+
+<p>
+  <b>County:</b>
+  <%= @property.county %>
+</p>
+
+<p>
+  <b>City:</b>
+  <%= @property.city %>
+</p>
+
+<p>
+  <b>Address:</b>
+  <%= @property.address %>
+</p>
+
+<p>
+  <b>Lat:</b>
+  <%= @property.lat %>
+</p>
+
+<p>
+  <b>Lng:</b>
+  <%= @property.lng %>
+</p>
+
+<p>
+  <b>One bedroom price:</b>
+  <%= @property.one_bedroom_price %>
+</p>
+
+<p>
+  <b>Two bedroom price:</b>
+  <%= @property.two_bedroom_price %>
+</p>
+
+<p>
+  <b>Three bedroom price:</b>
+  <%= @property.three_bedroom_price %>
+</p>
+
+<p>
+  <b>Four bedroom price:</b>
+  <%= @property.four_bedroom_price %>
+</p>
+
+<p>
+  <b>Studio price:</b>
+  <%= @property.studio_price %>
+</p>
+
+<p>
+  <b>Pent house price:</b>
+  <%= @property.pent_house_price %>
+</p>
+
+<p>
+  <b>Special promotion:</b>
+  <%= @property.special_promotion %>
+</p>
+
+
+<%= link_to 'Edit', edit_property_path(@property) %> |
+<%= link_to 'Back', propertys_path %>

@@ -21,4 +21,3 @@
 //= require smartrent/home
 //= require smartrent/properties
 //= require smartrent/slides.min.jquery
-//= require smartrent/apartments

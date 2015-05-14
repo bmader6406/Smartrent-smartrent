@@ -308,18 +308,22 @@ label{
 }
 
 #slides .pagination{
-  height:30px;
-  list-style:none;
   background:url(<%= asset_path "pagination_background.jpg"%>) repeat-x;
-  text-align:center;
+  height: 30px;
+  list-style: none;
+  text-align: center;
+  display: block;
+  border: none;
+  padding-left: inherit;
 }
 
 #slides .pagination li{
-  background-color:#FFF;
-  display:inline-block;
-  padding:7px 20px 0 0;
-  margin:1px 0 0 0;
-  font-size:0.75em;
+  background-color: #FFF;
+  display: inline-block;
+  padding: 7px 20px 0 0;
+  margin: 1px 0 0 0;
+  font-size: 0.75em;
+  border: none !important;
 }
 
 #slides .pagination li:first-child{
@@ -328,9 +332,12 @@ label{
 
 #slides .pagination li a,
 #slides .pagination li a:visited{
-  color:#000;
-  text-decoration:none;
-  outline:none;
+  color: #000;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  border-radius: 0 !important;
+  padding: 0;
 }
 
 #slides .pagination li.current a{

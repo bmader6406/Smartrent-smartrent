@@ -11,14 +11,20 @@
     <div id="navbar" class="navbar-collapse collapse">
     <% if admin_user_signed_in? %>
       <ul class="nav navbar-nav">
-        <li <%if @active == "home"%>class="active"<% end %>>
-          <%= link_to "Home", smartrent.root_url + "admin"  %>
+        <li <%if @active == "homes"%>class="active"<% end %>>
+          <%= link_to "Homes", admin_homes_path %>
+        </li>
+        <li <%if @active == "properties"%>class="active"<% end %>>
+          <%= link_to "Properties", admin_properties_path %>
         </li>
         <li <%if @active == "residents"%>class="active"<% end %>>
           <%= link_to "Residents", admin_residents_path %>
         </li>
         <li <%if @active == "rewards"%>class="active"<% end %>>
           <%= link_to "Rewards", admin_rewards_path %>
+        </li>
+        <li>
+          <%= link_to "Website", root_path, :target => "_blank" %>
         </li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>

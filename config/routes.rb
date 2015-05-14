@@ -1,44 +1,19 @@
 Smartrent::Engine.routes.draw do
 
-  resources :homes do
-    collection do
-      get "import", :to => "homes#import_page"
-      post "import", :to => "homes#import"
-    end
-  end
-
-
-  resources :floor_plan_images do
-    collection do
-      get "import", :to => "floor_plan_images#import_page"
-      post "import", :to => "floor_plan_images#import"
-    end
-  end
-
-
-  resources :apartments
-
-
-  resources :properties do
-    collection do
-      get "import", :to => "properties#import_page"
-      post "import", :to => "properties#import"
-    end
-  end
-
   resource :residents do
     collection do
       get "change_password"
       put "update_password"
     end
   end
+  resources :homes
+  resources :properties
 
 
   root :to => "pages#home"
   get "/faq", :to => "pages#faq", :as => "faq"
-  get "/find-a-smartrent-apartment", :to => "apartments#index", :as => "find_apartments"
-  post "/find-a-smartrent-apartment", :to => "apartments#index"
-  get "/find-a-new-home", :to => "properties#index", :as => "find_a_new_home"
+  get "/find-a-smartrent-apartment", :to => "properties#index", :as => "find_apartments"
+  get "/find-a-new-home", :to => "homes#index", :as => "find_a_new_home"
   get "/smartrent-quick-program-rules", :to => "pages#program_rules", :as => "program_rules"
   get "/official-rules", :to => "pages#official_rules", :as => "official_rules"
   get "/privacy-policy", :to => "pages#privacy_policy", :as => "privacy_policy"
@@ -76,6 +51,31 @@ Smartrent::Engine.routes.draw do
       post "import", :to => "rewards#import"
       end
     end
+    resources :more_homes do
+      collection do
+        get "import", :to => "more_homes#import_page"
+        post "import", :to => "more_homes#import"
+      end
+    end
+    resources :homes do
+      collection do
+        get "import", :to => "homes#import_page"
+        post "import", :to => "homes#import"
+      end
+    end
+    resources :properties do
+      collection do
+        get "import", :to => "properties#import_page"
+        post "import", :to => "properties#import"
+      end
+    end
+    resources :floor_plan_images do
+      collection do
+        get "import", :to => "floor_plan_images#import_page"
+        post "import", :to => "floor_plan_images#import"
+      end
+    end
+
   end
 
 

@@ -5,10 +5,10 @@ var categories = [];
 var cat_counter = 1;
 var mapIcon = "homeIcon"
 $(function(){
-  $('.apartment_listing input, .apartment_listing select').change(function(){
-    $('.apartment_listing').submit();
+  $('.property_listing input, .property_listing select').change(function(){
+    $('.property_listing').submit();
   });
-  $(".search-apartment-item").click(function(){
+  $(".search-property-item").click(function(){
     if (this.id == 'listResults' && $(this).hasClass('listOff')) {
       $(this).removeClass('listOff').addClass('listOn')
       $(this).siblings().removeClass('mapOn').addClass('mapOff')
@@ -25,20 +25,20 @@ $(function(){
         map_results_html = map_results_html.replace(/\n/g, "").replace(/ /g, "")
         if (map_results_html == '')
         {
-          apartments_path = Routes.smartrent_apartments_path({format: "json"}) + location.search
-          $.get(apartments_path, function(data){
-            apartments = data;
+          properties_path = Routes.smartrent_properties_path({format: "json"}) + location.search
+          $.get(properties_path, function(data){
+            properties = data;
             pois['all'] = {'show':true,'points':[]};
-            for(var x in apartments) {
-              var apartment = apartments[x]
+            for(var x in properties) {
+              var property = properties[x]
               pois['all']['points'].push({
-                  title: apartment.title,
-                  description: apartment.short_description,
-                  address: apartment.address + ',' + apartment.city + ',' + apartment.state,
-                  lat: apartment.lat,
-                  lon: apartment.lng,
-                  image: apartment.image,
-                  image_link: apartment.image
+                  title: property.title,
+                  description: property.short_description,
+                  address: property.address + ',' + property.city + ',' + property.state,
+                  lat: property.lat,
+                  lon: property.lng,
+                  image: property.image,
+                  image_link: property.image
               });
             }
             mapStart();
@@ -50,16 +50,16 @@ $(function(){
   })
 });
 
-Apartment = {
+Property = {
   cities: function(state, city){
     $('#q_state_eq').val(state)
     $('#q_city_eq').val(city)
-    $('.apartment_listing').submit();
+    $('.property_listing').submit();
   },
   counties: function(state, county){
     $('#q_state_eq').val(state)
     $('#q_county_eq').val(county)
-    $('.apartment_listing').submit();
+    $('.property_listing').submit();
   },
   toggleCities: function(state) {
     state = state.replace(" ", "_")

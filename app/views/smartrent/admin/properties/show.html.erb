@@ -1,0 +1,114 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Title:</b>
+  <%= @property.title %>
+</p>
+
+<p>
+  <b>Phone number:</b>
+  <%= @property.phone_number %>
+</p>
+<p>
+  <%= image_tag @property.image %>
+</p>
+
+
+<p>
+  <b>Website:</b>
+  <%= link_to @property.website, @property.website, :target => "_blank" %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @property.description.html_safe %>
+</p>
+
+<p>
+  <b>State:</b>
+  <%= @property.state.upcase if @property.state.present? %>
+</p>
+
+<p>
+  <b>County:</b>
+  <%= @property.county.capitalize if @property.county.present? %>
+</p>
+
+<p>
+  <b>City:</b>
+  <%= @property.city.capitalize if @property.city.present? %>
+</p>
+
+<p>
+  <b>Address:</b>
+  <%= @property.address %>
+</p>
+<p>
+  <b>Zip Code:</b>
+  <%= @property.zip %>
+</p>
+
+<p>
+  <b>Latitude:</b>
+  <%= @property.latitude %>
+</p>
+
+<p>
+  <b>Longitude:</b>
+  <%= @property.longitude %>
+</p>
+
+<p>
+  <b>One bedroom price:</b>
+  <%= @property.one_bedroom_price %>
+</p>
+
+<p>
+  <b>Two bedroom price:</b>
+  <%= @property.two_bedroom_price %>
+</p>
+
+<p>
+  <b>Three bedroom price:</b>
+  <%= @property.three_bedroom_price %>
+</p>
+
+<p>
+  <b>Four bedroom price:</b>
+  <%= @property.four_bedroom_price %>
+</p>
+
+<p>
+  <b>Studio price:</b>
+  <%= @property.studio_price %>
+</p>
+
+<p>
+  <b>Pent house price:</b>
+  <%= @property.pent_house_price %>
+</p>
+
+<p>
+  <b>Special promotion:</b>
+  <%= @property.special_promotion %>
+</p>
+<p>
+  <b>Promotion Title:</b>
+  <%= @property.promotion_title %>
+</p>
+<p>
+  <b>Promotion Sub-Title:</b>
+  <%= @property.promotion_subtitle %>
+</p>
+<p>
+  <b>Promotion Expiration Date:</b>
+  <%= @property.promotion_expiration_date.to_s(:year_month_year) if @property.promotion_expiration_date %>
+</p>
+<p>
+  <b>Promotion Url:</b>
+  <%= link_to @property.promotion_url, @property.promotion_url if @property.promotion_url %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_property_path(@property) %> |
+<%= link_to 'Back', admin_properties_path %>

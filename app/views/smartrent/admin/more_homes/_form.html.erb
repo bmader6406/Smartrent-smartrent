@@ -1,0 +1,58 @@
+<%= form_for([:admin, @home], html: {:class => "form-horizontal"}) do |f| %>
+  <% if @more_home.errors.any? %>
+    <%= render partial: "shared/form_errors", :locals => {:errors => @more_home.errors} %>
+  <% end %>
+  <fieldset>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :name, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :name, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :beds, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.number_field :beds, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :baths, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :baths, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :sq_ft, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :sq_ft, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :featured, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.text_field :featured, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :property_id, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.collection_select :property_id, Smartrent::Property.all, :id, :title, {:include_blank => "--Select Property--", :class => "form-control input-md"}, {}  %>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <%= f.submit :class => "btn btn-primary" %>
+    </div>
+  </fieldset>
+<% end %>

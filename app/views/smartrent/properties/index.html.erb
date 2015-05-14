@@ -1,62 +1,28 @@
 <%= render layout: "layout" do %>
 <section class="wrapper clearfix">
-  <div id="contactRight" class="fl-r">
-    <p>SmartRent dollars earned while leasing one of our Bozzuto-managed apartments may be used to purchase any of these great homes.</p>
+  <%= render partial: "filters"%>
+  <div id="contactRight">
+    <p>Earn SmartRent dollars while leasing one of these properties.</p>
+
     <div class="toggle clearfix">
-      <div id="listResults" class="item search-item listOn">
+      <div class="item search-property-item listOn" id="listResults">
         <div class="text">
           View as List
         </div>
       </div>
-      <div id="mapResults" class="item search-item mapOff">
+
+      <div class="item search-property-item mapOff" id="mapResults">
         <div class="text">
           View on Map
         </div>
       </div>
     </div>
     <div class="locations" id="locationsBox">
-      <div class="results listing-results">
-        <% @properties.each do |property| %>
-          <div class="propertyListing clearfix">
-            <div class="photo">
-              <%= image_tag property.image(:search_page) %>
-            </div>
-            <div class="info">
-              <h1><%= link_to property.title, property_path(property) %></h1>
-              <div class="descHomes">
-                <%= property.search_page_description.to_s.html_safe %>
-              </div>
-              <div class="learn"><%= link_to "Learn More", property_path(property) %></div>
-            </div>
-            <div class="learnMoreHomes">
-              <h3>
-                <%= link_to "Learn More", property_path(property) %>
-                <div class="arrow">
-                  <%= link_to property_path(property) do %>
-                    <%= image_tag "learnMoreButton.png" %>
-                  <% end %>
-                </div>
-              </h3>
-              <div class="video">
-                <% if property.video_url %>
-                  <%= link_to "Watch Video", property.video_url, :target => "blank" %>
-                <% end %>
-              </div>
-              <div class="address">
-                <div class="address1"><%= property.address %></div>
-                <div class="cityState"><%= property.city %>, <%= property.state %></div>
-              </div>
-              <div class="phone"><%= property.phone_number %></div>
-              <div class="website">
-                  <%= link_to "Visit the Website", property.website, :target => "blank" %>
-              </div>
-            </div>
-          </div>
-        <% end %>
-          <%= will_paginate @properties, renderer: BootstrapPagination::Rails %>
+      <div class="listing-results">
+        <%= render partial: "search_results" %>
       </div>
-      <div id="map" class="results map-results"></div>
     </div>
+    <div id="map" class="results map-results"></div>
   </div>
 </section>
 <% end %>
