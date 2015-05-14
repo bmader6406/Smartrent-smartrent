@@ -11,7 +11,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li <%if @active == "home"%>class="active"<% end %>>
-          <%= link_to "Home", admin_root_path  %>
+          <%= link_to "Home", smartrent.root_url + "/admin"  %>
         </li>
         <li <%if @active == "residents"%>class="active"<% end %>>
           <%= link_to "Residents", admin_residents_path %>
