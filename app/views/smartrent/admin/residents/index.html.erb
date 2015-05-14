@@ -20,7 +20,7 @@
     <tr>
       <td><%= resident.name %></td>
       <td><%= resident.email %></td>
-      <td><%= resident.apartment.title if resident.apartment %></td>
+      <td><%= resident.property.title if resident.property %></td>
       <td><%= resident.status_text %></td>
       <td><%= link_to 'Show', admin_resident_path(resident) %> | <%= link_to 'Edit', edit_admin_resident_path(resident) %> | <%= link_to 'Destroy', admin_resident_path(resident), method: :delete, data: { confirm: 'Are you sure?' } %></td>
     </tr>
