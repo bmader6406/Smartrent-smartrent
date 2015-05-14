@@ -1,0 +1,10 @@
+<div class="fpImage">
+  <div class="caption">
+    <%= floor_plan_image.caption %>
+  </div>
+  <div class="image">
+    <%= link_to floor_plan_image.image.url do %>
+      <%= image_tag floor_plan_image.image.url, :width => 124 %>
+    <% end %>
+  </div>
+</div>
