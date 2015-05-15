@@ -15,6 +15,7 @@ module Smartrent
     # GET /homes/1
     # GET /homes/1.json
     def show
+      @current_page = "homes"
       @home = Home.find_by_url(params[:id])
       raise ActiveRecord::RecordNotFound if !@home
       respond_to do |format|

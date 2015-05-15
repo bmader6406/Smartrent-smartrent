@@ -5,7 +5,7 @@ module Smartrent
     # GET /floor_plan_images
     # GET /floor_plan_images.json
     def index
-      @active = "properties"
+      @active = "homes"
       @floor_plan_images = FloorPlanImage.paginate(:page => params[:page], :per_page => 15)
   
       respond_to do |format|
@@ -17,7 +17,7 @@ module Smartrent
     # GET /floor_plan_images/1
     # GET /floor_plan_images/1.json
     def show
-      @active = "properties"
+      @active = "homes"
       @floor_plan_image = FloorPlanImage.find(params[:id])
   
       respond_to do |format|
@@ -29,7 +29,7 @@ module Smartrent
     # GET /floor_plan_images/new
     # GET /floor_plan_images/new.json
     def new
-      @active = "properties"
+      @active = "homes"
       @floor_plan_image = FloorPlanImage.new
   
       respond_to do |format|
@@ -40,7 +40,7 @@ module Smartrent
   
     # GET /floor_plan_images/1/edit
     def edit
-      @active = "properties"
+      @active = "homes"
       @floor_plan_image = FloorPlanImage.find(params[:id])
     end
   
@@ -88,7 +88,7 @@ module Smartrent
       end
     end
     def import_page
-      @active = "properties"
+      @active = "homes"
       render "import"
     end
     def import
