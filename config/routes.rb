@@ -1,5 +1,9 @@
 Smartrent::Engine.routes.draw do
 
+  namespace :admin do
+  end
+
+
   resource :residents do
     collection do
       get "change_password"
@@ -85,6 +89,12 @@ Smartrent::Engine.routes.draw do
       collection do
         get "import", :to => "property_features#import_page"
         post "import", :to => "property_features#import"
+      end
+    end
+    resources :floor_plans do
+      collection do
+        get "import", :to => "floor_plans#import_page"
+        post "import", :to => "floor_plans#import"
       end
     end
 

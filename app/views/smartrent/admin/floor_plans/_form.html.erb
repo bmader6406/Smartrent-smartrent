@@ -1,0 +1,80 @@
+<%= form_for([:admin, @admin_floor_plan], html: {:class => "form-horizontal"}) do |f| %>
+  <% if @admin_floor_plan.errors.any? %>
+    <%= render partial: "shared/form_errors", :locals => {:errors => @admin_floor_plan.errors} %>
+  <% end %>
+  <fieldset>
+
+    <div class="form-group">
+      <%= f.label :property_id, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.collection_select :property_id, Smartrent::Property.all, :id, :title, {:include_blank => "--Select Property"}, {:class => "form-control input-md"} %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :origin_id, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.number_field :origin_id, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :name, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.text_field :name, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :url, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.url_field :url, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :sq_feet_max, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.text_field :sq_feet_max, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :sq_feet_min, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.text_field :sq_feet_min, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :beds, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.number_field :beds, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :baths, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.number_field :baths, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :rent_min, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.number_field :rent_min, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :rent_max, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.number_field :rent_max, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :penthouse, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.check_box :penthouse, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-2 control-label" for="singlebutton"></label>
+      <div class="col-md-4">
+        <%= f.submit :class => "btn btn-primary" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>

@@ -3,7 +3,8 @@ module Smartrent
     has_many :property_features, :dependent => :destroy
     has_many :features, :through => :property_features
     has_many :residents
-    attr_accessible :address, :city, :county, :website, :four_bedroom_price, :latitude, :longitude, :one_bedroom_price, :pent_house_price, :phone_number, :short_description, :special_promotion, :state, :studio_price, :three_bedroom_price, :title, :two_bedroom_price, :one_bedroom, :two_bedroom, :three_bedroom, :four_bedroom, :studio, :penthouse, :image, :feature_ids, :origin_id, :bozzuto_url, :email, :promotion_title, :promotion_subtitle, :promotion_url, :promotion_expiration_date, :zip, :description
+    has_many :floor_plans, :dependent => :destroy
+    attr_accessible :address, :city, :county, :website, :latitude, :longitude, :phone_number, :short_description, :special_promotion, :state, :studio_price, :title,  :studio, :image, :feature_ids, :origin_id, :bozzuto_url, :email, :promotion_title, :promotion_subtitle, :promotion_url, :promotion_expiration_date, :zip, :description
     has_attached_file :image, :styles => {:search_page => "150x150>"}
     validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
     validates_presence_of :title
