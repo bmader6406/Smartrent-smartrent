@@ -75,6 +75,18 @@ Smartrent::Engine.routes.draw do
         post "import", :to => "floor_plan_images#import"
       end
     end
+    resources :features do
+      collection do
+        get "import", :to => "features#import_page"
+        post "import", :to => "features#import"
+      end
+    end
+    resources :property_features do
+      collection do
+        get "import", :to => "property_features#import_page"
+        post "import", :to => "property_features#import"
+      end
+    end
 
   end
 

@@ -1,0 +1,26 @@
+<h1>Listing Features</h1>
+<div class="links pull-right">
+  <%= link_to 'Import Features', import_admin_features_path, :class => "btn btn-default" %>
+  <%= link_to 'New Feature', new_admin_feature_path, :class => "btn btn-primary" %>
+</div>
+<br />
+<br />
+<br />
+<% if @admin_features.present? %>
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+
+    <% @admin_features.each do |admin_feature| %>
+      <tr>
+        <td><%= admin_feature.name %></td>
+        <td><%= link_to 'Edit', edit_admin_feature_path(admin_feature) %> | <%= link_to 'Destroy', admin_feature_path(admin_feature), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </table>
+  <%= will_paginate @admin_features, renderer: BootstrapPagination::Rails %>
+<% else %>
+  <div class="alert alert-warning"> No Features available</div>
+<% end %>

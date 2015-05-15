@@ -87,6 +87,16 @@
   <b>Pent house price:</b>
   <%= @property.pent_house_price %>
 </p>
+<p>
+  <b>Property Features</b>
+  <% if @property.features %>
+    <ul>
+    <% @property.features.each do |feature| %>
+      <li><%= feature.name %></li>
+    <% end %>
+    </ul>
+  <% end  %>
+</p>
 
 <p>
   <b>Special promotion:</b>
