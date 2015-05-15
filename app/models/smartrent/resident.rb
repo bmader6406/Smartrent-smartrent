@@ -5,13 +5,14 @@ module Smartrent
     devise :database_authenticatable, :registerable,
            :recoverable, :rememberable, :trackable, :validatable, :lockable
     # Setup accessible (or protected) attributes for your model
-    attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :type_, :status, :current_community, :city, :state, :country, :current_password, :origin_id, :property_id
+    attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :type_, :status, :current_community, :city, :state, :country, :current_password, :origin_id, :property_id, :home_id
     validates_uniqueness_of :origin_id, :allow_nil => true
     validates_presence_of :status, :name
 
     #attr_accessor :original_password
     # attr_accessible :title, :body
     belongs_to :property
+    belongs_to :home
     has_many :rewards, :dependent => :destroy
 
     def self.import(file)
@@ -22,12 +23,15 @@ module Smartrent
       end
       residents = SmarterCSV.process(f)
       properties = Property.keyed_by_title
+      homes = Home.keyed_by_title
       residents.each do |resident_hash|
         #resident_hash = {:origin_id => 10, :property_id => "asf", :apartment_id => 10, :name => "asdf", :email => "yo@yo.com"}
         generated_password = Devise.friendly_token.first(8)
         resident_hash[:password] = generated_password
         property_name = resident_hash[:property_id]
+        home_name = resident_hash[:home_id]
         resident_hash[:property_id] = nil
+        resident_hash[:home_id] = nil
         begin
           resident_hash[:move_in_date] = resident_hash[:move_in_date].to_date.to_s if resident_hash[:move_in_date]
         rescue Exception => e
@@ -39,8 +43,12 @@ module Smartrent
         if properties[property_name].present?
           property = properties[property_name]
         end
+        if homes[home_name].present?
+          home = homes[home_name]
+        end
         resident_hash[:status] = Resident.STATUS_ACTIVE
         resident_hash[:property_id] = property.id if property
+        resident_hash[:home_id] = home.id if home
         create resident_hash
       end
     end

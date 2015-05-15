@@ -25,5 +25,12 @@ module Smartrent
         create! home_hash
       end
     end
+    def self.keyed_by_title
+      homes = {}
+      all.each do |home|
+        homes[home.title] = home
+      end
+      homes
+    end
   end
 end
