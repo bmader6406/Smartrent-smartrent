@@ -1,11 +1,12 @@
-require_dependency "smartrent/application_controller"
+require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
-  class FloorPlanImagesController < ApplicationController
+  class Admin::FloorPlanImagesController < Admin::AdminController
     # GET /floor_plan_images
     # GET /floor_plan_images.json
     def index
-      @floor_plan_images = FloorPlanImage.all
+      @active = "properties"
+      @floor_plan_images = FloorPlanImage.paginate(:page => params[:page], :per_page => 15)
   
       respond_to do |format|
         format.html # index.html.erb
@@ -16,6 +17,7 @@ module Smartrent
     # GET /floor_plan_images/1
     # GET /floor_plan_images/1.json
     def show
+      @active = "properties"
       @floor_plan_image = FloorPlanImage.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +29,7 @@ module Smartrent
     # GET /floor_plan_images/new
     # GET /floor_plan_images/new.json
     def new
+      @active = "properties"
       @floor_plan_image = FloorPlanImage.new
   
       respond_to do |format|
@@ -37,6 +40,7 @@ module Smartrent
   
     # GET /floor_plan_images/1/edit
     def edit
+      @active = "properties"
       @floor_plan_image = FloorPlanImage.find(params[:id])
     end
   
@@ -47,7 +51,7 @@ module Smartrent
   
       respond_to do |format|
         if @floor_plan_image.save
-          format.html { redirect_to @floor_plan_image, notice: 'Floor plan image was successfully created.' }
+          format.html { redirect_to admin_floor_plan_image_path(@floor_plan_image), notice: 'Floor plan image was successfully created.' }
           format.json { render json: @floor_plan_image, status: :created, location: @floor_plan_image }
         else
           format.html { render action: "new" }
@@ -63,7 +67,7 @@ module Smartrent
   
       respond_to do |format|
         if @floor_plan_image.update_attributes(params[:floor_plan_image])
-          format.html { redirect_to @floor_plan_image, notice: 'Floor plan image was successfully updated.' }
+          format.html { redirect_to admin_floor_plan_image_path(@floor_plan_image), notice: 'Floor plan image was successfully updated.' }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -79,16 +83,17 @@ module Smartrent
       @floor_plan_image.destroy
   
       respond_to do |format|
-        format.html { redirect_to floor_plan_images_url }
+        format.html { redirect_to admin_floor_plan_images_url }
         format.json { head :no_content }
       end
     end
     def import_page
+      @active = "properties"
       render "import"
     end
     def import
       FloorPlanImage.import(params[:file])
-      redirect_to floor_plan_images_path, notice: "Floor Plan Images imported."
+      redirect_to admin_floor_plan_images_path, notice: "Floor Plan Images imported."
     end
   end
 end

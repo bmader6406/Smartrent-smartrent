@@ -29,11 +29,5 @@
   </table>
   <%= will_paginate @rewards, renderer: BootstrapPagination::Rails %>
 <% else %>
-    No rewards available
+  <div class="alert alert-warning">No rewards available</div>
 <% end %>
-
-<br />
-<br />
-<br />
-<br />
-

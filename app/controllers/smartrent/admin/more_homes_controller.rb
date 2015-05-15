@@ -31,6 +31,7 @@ module Smartrent
     def new
       @active = "homes"
       @more_home = MoreHome.new
+      #3.times { @more_home.floor_plan_images.build }
   
       respond_to do |format|
         format.html # new.html.erb

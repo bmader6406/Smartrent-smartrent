@@ -1,0 +1,30 @@
+<h1>Listing rewards</h1>
+<div class="links pull-right">
+  <%= link_to 'Import Floor Plan Images', import_admin_floor_plan_images_path, :class => "btn btn-default" %>
+  <%= link_to 'New Floor Plan Image', new_admin_floor_plan_image_path, :class => "btn btn-primary" %>
+</div>
+<br />
+<br />
+<br />
+<% if @floor_plan_images.present? %>
+  <table class="table">
+  <tr>
+    <th>Image</th>
+    <th>Caption</th>
+    <th>More Home</th>
+    <th>Action</th>
+  </tr>
+
+<% @floor_plan_images.each do |floor_plan_image| %>
+  <tr>
+    <td><%= image_tag floor_plan_image.image, :width => 50 %></td>
+    <td><%= floor_plan_image.caption %></td>
+    <td><%= floor_plan_image.more_home.name %></td>
+    <td><%= link_to 'Show', admin_floor_plan_image_path(floor_plan_image) %> | <%= link_to 'Edit', edit_admin_floor_plan_image_path(floor_plan_image) %> | <%= link_to 'Destroy', admin_floor_plan_image_path(floor_plan_image), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+  <%= will_paginate @floor_plan_images, renderer: BootstrapPagination::Rails %>
+<% else %>
+  <div class="alert alert-warning">No Floor Plan Images available</div>
+<% end %>

@@ -51,8 +51,25 @@
         </div>
       </div>
     </div>
-    <div class="actions">
-      <%= f.submit :class => "btn btn-primary" %>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :floor_plan_images, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.fields_for :floor_plan_images do |builder| %>
+            <div class="col-md-12">
+              <%= builder.file_field :image, :class => "col-md-12 control-label" %>
+              <%= builder.check_box :_destroy %>
+              <%= builder.label :_destroy, "Remove Image", :class => "col-md-5 control-label" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-2 control-label" for="singlebutton"></label>
+      <div class="col-md-4">
+        <%= f.submit :class => "btn btn-primary" %>
+      </div>
     </div>
   </fieldset>
 <% end %>
