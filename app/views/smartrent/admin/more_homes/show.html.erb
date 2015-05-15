@@ -1,35 +1,33 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <b>Name:</b>
-  <%= @home.name %>
+  <%= @more_home.name %>
 </p>
 
 <p>
   <b>Beds:</b>
-  <%= @home.beds %>
+  <%= @more_home.beds %>
 </p>
 
 <p>
   <b>Baths:</b>
-  <%= @home.baths %>
+  <%= @more_home.baths %>
 </p>
 
 <p>
   <b>Sq ft:</b>
-  <%= @home.sq_ft %>
+  <%= @more_home.sq_ft %>
 </p>
 
 <p>
   <b>Featured:</b>
-  <%= @home.featured %>
+  <%= @more_home.featured %>
 </p>
 
 <p>
-  <b>Property:</b>
-  <%= @home.property_id %>
+  <b>Home:</b>
+  <%= @more_home.home.title %>
 </p>
 
 
-<%= link_to 'Edit', edit_home_path(@home) %> |
-<%= link_to 'Back', homes_path %>
+<%= link_to 'Edit', edit_admin_more_home_path(@more_home) %> |
+<%= link_to 'Back', admin_more_homes_path %>
