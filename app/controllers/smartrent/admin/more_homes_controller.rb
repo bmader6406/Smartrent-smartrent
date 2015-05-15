@@ -7,8 +7,8 @@ module Smartrent
     #
     before_filter :set_more_home
     def index
-      @active = "more_more_homes"
-      @more_more_homes = MoreHome.paginate(:page => params[:page], :per_page => 15).order(:created_at)
+      @active = "homes"
+      @more_homes = MoreHome.paginate(:page => params[:page], :per_page => 15).order(:created_at)
   
       respond_to do |format|
         format.html # index.html.erb
@@ -19,7 +19,7 @@ module Smartrent
     # GET /admin/more_more_homes/1
     # GET /admin/more_more_homes/1.json
     def show
-      @active = "more_more_homes"
+      @active = "homes"
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @more_home }
@@ -29,7 +29,7 @@ module Smartrent
     # GET /admin/more_more_homes/new
     # GET /admin/more_more_homes/new.json
     def new
-      @active = "more_more_homes"
+      @active = "homes"
       @more_home = MoreHome.new
   
       respond_to do |format|
@@ -40,7 +40,7 @@ module Smartrent
   
     # GET /admin/more_more_homes/1/edit
     def edit
-      @active = "more_more_homes"
+      @active = "homes"
       @more_home = MoreHome.find(params[:id])
     end
 
@@ -83,19 +83,19 @@ module Smartrent
     def destroy
       @more_home.destroy
       respond_to do |format|
-        format.html { redirect_to admin_more_more_homes_url }
+        format.html { redirect_to admin_more_homes_url }
         format.json { head :no_content }
       end
     end
 
     def import_page
-      @active = "more_more_homes"
+      @active = "homes"
       render :import
     end
 
     def import
       MoreHome.import(params[:file])
-      redirect_to admin_more_more_homes_path, notice: "more_more_homes have been imported"
+      redirect_to admin_more_homes_path, notice: "more_more_homes have been imported"
     end
 
     def set_more_home
