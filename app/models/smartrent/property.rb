@@ -65,7 +65,11 @@ module Smartrent
       properties
     end
     def self.import(file)
-      f = File.open(file.path, "r:bom|utf-8")
+      if file.class == "File"
+        f = File.open(file.path, "r:bom|utf-8")
+      else
+        f = File.open(Rails.root.to_path + "/app/assets/properties.csv")
+      end
       properties = SmarterCSV.process(f)
       properties.each do |property_hash|
         create property_hash
