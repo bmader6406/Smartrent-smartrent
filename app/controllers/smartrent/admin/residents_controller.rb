@@ -20,6 +20,7 @@ module Smartrent
     # GET /admin/residents/1.json
     def show
       @active = "residents"
+      @resident_rewards = @resident.rewards.paginate(:page => params[:page], :per_page => 10)
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @resident }

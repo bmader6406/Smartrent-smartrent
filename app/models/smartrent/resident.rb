@@ -96,9 +96,9 @@ module Smartrent
       update_attributes(:status => self.class.STATUS_ARCHIVE)
     end
     after_create do
-      Reward.create!(:resident_id => self.id, :amount => Reward.SIGNUP_BONUS, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
+      Reward.create!(:resident_id => self.id, :amount => Setting.sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
       if move_in_date.present? and ((Time.now.month - move_in_date.month) >= 1 and (move_out_date.nil? or (move_out_date.month - Time.now.month) == 1))
-        Reward.create!(:resident_id => self.id, :amount => Reward.MONTHLY_AWARDS, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
+        Reward.create!(:resident_id => self.id, :amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
       end
       #Reward.create(:resident_id => self.id, :amount => Reward.INITIAL_REWARD, :type => Reward.TYPE_INITIAL_REWARD, :period_start => Time.now, :period_end =>  1.year.from_now)
     end

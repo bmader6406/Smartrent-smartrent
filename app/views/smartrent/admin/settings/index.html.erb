@@ -1,0 +1,28 @@
+<h1>Listing Settings</h1>
+<div class="links pull-right">
+  <%= link_to 'New Setting', new_admin_setting_path, :class => "btn btn-primary" %>
+</div>
+<br />
+<br />
+<br />
+
+<% if @settings.present? %>
+<table class="table">
+  <tr>
+    <th>Key</th>
+    <th>Value</th>
+    <th>Actions</th>
+  </tr>
+
+<% @settings.each do |setting| %>
+  <tr>
+    <td><%= setting.key.humanize %></td>
+    <td><%= setting.value %></td>
+    <td><%= link_to 'Show', admin_setting_path(setting) %> | <%= link_to 'Edit', edit_admin_setting_path(setting) %> | <%= link_to 'Destroy', admin_setting_path(setting), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+  <%= will_paginate @settings, renderer: BootstrapPagination::Rails %>
+<% else %>
+  <div class="alert alert-warning"> No Settings available</div>
+<% end %>

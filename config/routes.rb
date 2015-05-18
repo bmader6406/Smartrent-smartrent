@@ -1,5 +1,7 @@
 Smartrent::Engine.routes.draw do
 
+
+
   namespace :admin do
   end
 
@@ -97,6 +99,7 @@ Smartrent::Engine.routes.draw do
         post "import", :to => "floor_plans#import"
       end
     end
+  resources :settings
 
   end
 

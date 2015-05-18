@@ -11,6 +11,15 @@
     <div id="navbar" class="navbar-collapse collapse">
     <% if admin_user_signed_in? %>
       <ul class="nav navbar-nav">
+        <li class="<%if @active == "properties"%>active <% end %>dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Properties <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><%= link_to "Properties", admin_properties_path %></li>
+            <li><%= link_to "Features", admin_features_path %></li>
+            <li><%= link_to "Import Property Features", import_admin_property_features_path %></li>
+            <li><%= link_to "Floor Plans", admin_floor_plans_path %></li>
+          </ul>
+        </li>
         <li <%if @active == "homes"%>class="active"<% end %>>
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Homes <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -28,22 +37,16 @@
         <li>
           <%= link_to "Website", root_path, :target => "_blank" %>
         </li>
-        <li class="<%if @active == "properties"%>active <% end %>dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Properties <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><%= link_to "Properties", admin_properties_path %></li>
-            <li><%= link_to "Features", admin_features_path %></li>
-            <li><%= link_to "Import Property Features", import_admin_property_features_path %></li>
-            <li><%= link_to "Floor Plans", admin_floor_plans_path %></li>
-          </ul>
-        </li>
       </ul>
     <% end %>
+      <ul class="nav navbar-nav pull-right">
       <% if admin_user_signed_in? %>
-        <%= link_to "Logout", destroy_admin_user_session_path, :class => "btn btn-danger pull-right"  %>
+        <li<% if @active == "settings" %> class"active"<%end%>><%= link_to "Settings", admin_settings_path %></li>
+        <li><%= link_to "Logout", destroy_admin_user_session_path, :class => "btn btn-danger"  %></li>
       <% else %>
-        <%= link_to "Login", new_session_path(:admin_user), :class => "btn btn-success pull-right"  %>
+        <li><%= link_to "Login", new_session_path(:admin_user), :class => "btn btn-success"  %></li>
       <% end %>
+        </ul>
     </div>
   </div>
 </nav>
