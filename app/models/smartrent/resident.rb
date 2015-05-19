@@ -28,7 +28,7 @@ module Smartrent
     end
 
     def sign_up_bonus=(bonus)
-      @@sign_up_bonus
+      @@sign_up_bonus = bonus
     end
 
     def self.import(file)
@@ -151,6 +151,7 @@ module Smartrent
     def total_rewards
       sign_up_bonus + initial_reward + monthly_awards_amount
     end
+
     def total_months
       if self.move_in_date.nil?
         0
@@ -160,6 +161,7 @@ module Smartrent
         (self.move_out_date.year * 12 + self.move_out_date.month) - (self.move_in_date.year * 12 + self.move_in_date.month)
       end
     end
+
     def update_password(attributes)
       if self.valid_password?(attributes[:current_password])
         attributes.delete(:current_password)
