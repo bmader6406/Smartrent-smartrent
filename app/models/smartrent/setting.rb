@@ -21,7 +21,7 @@ module Smartrent
       end
     end
 
-    def self.monthy_award
+    def self.monthly_award
       setting = Setting.find_by_key("monthly_award")
       if setting
         setting.value.to_f

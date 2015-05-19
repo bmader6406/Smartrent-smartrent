@@ -50,7 +50,7 @@
       <button class="btn btn-primary">View Details</button>
     </div>
   </div>
-  <div class="col-md-8">
+  <div class="col-md-9">
     <div class="col-md-4 resident-box resident-top-col">
       <b>SmartRent Balance</b><br />
       <div class="col-md-5">
@@ -75,8 +75,8 @@
         </div>
       </div>
       <div class="col-md-7">
-        <b>Move-in Date:</b> <%= @resident.move_in_date.to_s(:year_month_day) if @resident.move_in_date %><br />
-        <b>SmartRent Months:</b> <%= @resident.total_months %>
+        <b>Move-in Date:</b> <%= @resident.move_in_date.to_s(:year_month_day) if @resident.move_in_date.present? %><br />
+        <b>SmartRent Months:</b> <%= @resident.total_months.to_i %>
       </div>
     </div>
     <div class="clearfix"></div>
@@ -96,8 +96,4 @@
       <%= render partial: "rewards" %>
     </div>
   </div>
-
-
-  <%= link_to 'Edit', edit_admin_resident_path(@resident) %> |
-  <%= link_to 'Back', admin_residents_path %>
 </div>

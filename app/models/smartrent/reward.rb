@@ -4,7 +4,7 @@ module Smartrent
     belongs_to :resident
     belongs_to :property
     validates_presence_of :amount, :resident_id, :type_, :period_start
-    validates_numericality_of :amount , :greater_than => 0
+    validates_numericality_of :amount , :greater_than_equal_to => 0
     validate :period_start_greater_than_period_end
     validate :valid_type
 

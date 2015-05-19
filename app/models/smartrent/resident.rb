@@ -5,9 +5,12 @@ module Smartrent
     devise :database_authenticatable, :registerable,
            :recoverable, :rememberable, :trackable, :validatable, :lockable
     # Setup accessible (or protected) attributes for your model
-    attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :type_, :status, :current_community, :city, :state, :country, :current_password, :origin_id, :property_id, :home_id
+    attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :type_, :status, :current_community, :city, :state, :country, :current_password, :origin_id, :property_id, :home_id, :sign_up_bonus
+    #attr_reader :sign_up_bonus
+    @@sign_up_bonus = 0
+
     validates_uniqueness_of :origin_id, :allow_nil => true
-    validates_presence_of :status, :name
+    validates_presence_of :status
 
     #attr_accessor :original_password
     # attr_accessible :title, :body
@@ -15,8 +18,21 @@ module Smartrent
     belongs_to :home
     has_many :rewards, :dependent => :destroy
 
+    def sign_up_bonus
+      sign_up_reward = rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
+      if sign_up_reward.present?
+        sign_up_reward.first.amount.to_f
+      else
+        0.0
+      end
+    end
+
+    def sign_up_bonus=(bonus)
+      @@sign_up_bonus
+    end
+
     def self.import(file)
-      if file.class == "File"
+      if file.class.to_s == "ActionDispatch::Http::UploadedFile"
         f = File.open(file.path, "r:bom|utf-8")
       else
         f = File.open(Rails.root.to_path + "/app/assets/residents.csv")
@@ -46,19 +62,23 @@ module Smartrent
         if homes[home_name].present?
           home = homes[home_name]
         end
-        resident_hash[:status] = Resident.STATUS_ACTIVE
+        if resident_hash[:status] == "Y"
+          resident_hash[:status] = Resident.STATUS_INACTIVE
+        else
+          resident_hash[:status] = Resident.STATUS_ACTIVE
+        end
         resident_hash[:property_id] = property.id if property
         resident_hash[:home_id] = home.id if home
-        create resident_hash
+        create! resident_hash
       end
     end
     def self.statuses
       {self.STATUS_ACTIVE => "Active", self.STATUS_INACTIVE => "Inactive", self.STATUS_EXPIRED => "Expired", self.STATUS_CHAMPION => "Champion", self.STATUS_ARCHIVE => "Archive"}
     end
-    def self.STATUS_ACTIVE
+    def self.STATUS_INACTIVE
       0
     end
-    def self.STATUS_INACTIVE
+    def self.STATUS_ACTIVE
       1
     end
     def self.STATUS_EXPIRED
@@ -96,7 +116,14 @@ module Smartrent
       update_attributes(:status => self.class.STATUS_ARCHIVE)
     end
     after_create do
-      Reward.create!(:resident_id => self.id, :amount => Setting.sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
+      if @@sign_up_bonus.present?
+        sign_up_bonus = @@sign_up_bonus
+      else
+        sign_up_bonus = Setting.sign_up_bonus
+      end
+      if !rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).present?
+        Reward.create!(:resident_id => self.id, :amount => sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
+      end
       if move_in_date.present? and ((Time.now.month - move_in_date.month) >= 1 and (move_out_date.nil? or (move_out_date.month - Time.now.month) == 1))
         Reward.create!(:resident_id => self.id, :amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
       end
@@ -128,9 +155,9 @@ module Smartrent
       if self.move_in_date.nil?
         0
       elsif self.move_out_date.nil?
-        ((Time.now - self.move_in_date)/(60*60*24)).to_i
+        (Time.now.year * 12 + Time.now.month) - (self.move_in_date.year * 12 + self.move_in_date.month)
       else
-        ((self.move_out_date - self.move_in_date)/(60*60*24)).to_i
+        (self.move_out_date.year * 12 + self.move_out_date.month) - (self.move_in_date.year * 12 + self.move_in_date.month)
       end
     end
     def update_password(attributes)
