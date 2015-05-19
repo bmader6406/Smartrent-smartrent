@@ -9,7 +9,7 @@ require 'smarter_csv'
 require "twitter-bootstrap-rails"
 require "will_paginate"
 require "will_paginate-bootstrap"
-require "geocoder"
+require "squeel"
 
 module Smartrent
   class Engine < ::Rails::Engine

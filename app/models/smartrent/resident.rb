@@ -122,10 +122,10 @@ module Smartrent
         sign_up_bonus = Setting.sign_up_bonus
       end
       if !rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).present?
-        Reward.create!(:resident_id => self.id, :amount => sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
+        rewards.create!(:amount => sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
       end
-      if move_in_date.present? and ((Time.now.month - move_in_date.month) >= 1 and (move_out_date.nil? or (move_out_date.month - Time.now.month) == 1))
-        Reward.create!(:resident_id => self.id, :amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
+      if move_in_date.present? and !property.nil? and property.status == Property.STATUS_ACTIVE and ((Time.now.month - move_in_date.month) >= 1 and (move_out_date.nil? or (move_out_date.month - Time.now.month) == 1))
+        rewards.create!(:amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
       end
       #Reward.create(:resident_id => self.id, :amount => Reward.INITIAL_REWARD, :type => Reward.TYPE_INITIAL_REWARD, :period_start => Time.now, :period_end =>  1.year.from_now)
     end
@@ -168,6 +168,23 @@ module Smartrent
         update_attributes(attributes)
       else
         errors.add(:current_password, "is incorrect")
+      end
+    end
+    def self.monthly_awards_job
+      residents = Resident.where(:status => Resident.STATUS_ACTIVE)
+      residents = residents.where("move_out_date is null and property_id is not null") if residents.present?
+      residents = residents.includes(:property).where{property.status == Property.STATUS_ACTIVE}
+      residents.each do |resident|
+        monthly_reward = resident.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).last
+        should_add_reward = true
+        if monthly_reward.present?
+          if (monthly_reward.period_start.year * 12 + monthly_reward.period_start.month) - (Time.now.year * 12 + Time.now.month) == 0
+            should_add_reward = false
+          end
+        end
+        if should_add_reward
+          resident.rewards.create(:amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
+        end
       end
     end
   end

@@ -76,5 +76,17 @@ module Smartrent
         create property_hash
       end
     end
+    def self.statuses
+      {self.STATUS_ACTIVE => "Active", self.STATUS_INACTIVE => "Inactive"}
+    end
+    def self.STATUS_INACTIVE
+      0
+    end
+    def self.STATUS_ACTIVE
+      1
+    end
+    def status_text
+      self.class.statuses[self.status]
+    end
   end
 end
