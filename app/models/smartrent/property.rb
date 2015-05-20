@@ -16,8 +16,11 @@ module Smartrent
     end
     def self.grouped_by_states(q)
       states = {}
-      properties = q.result.uniq#.includes(:features)
+      properties = q.result(distinct: true)#.includes(:features)
+      ids = []
       properties.each do |property|
+          next if ids.include?(property.id)
+          ids.push property.id
           states[property.state] = {} if states[property.state].nil?
           states[property.state]["cities"] = {}  if states[property.state]["cities"].nil?
           states[property.state]["cities"][property.city] = 0 if states[property.state]["cities"][property.city].nil?
@@ -30,7 +33,8 @@ module Smartrent
           states[property.state]["total"] = 0  if states[property.state]["total"].nil?
           states[property.state]["total"] +=1
       end
-      puts states
+      puts "yo yo"
+      puts ids
       states
     end
     def self.ransack(q)

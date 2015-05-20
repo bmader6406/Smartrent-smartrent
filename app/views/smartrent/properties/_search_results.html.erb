@@ -1,3 +1,7 @@
-<% @properties_grouped_by_states.each do |state,property|%>
-  <%= render partial: "row", locals: {property: property, state: state}%>
-<% end%>
+<% if @properties_grouped_by_states.present? %>
+  <% @properties_grouped_by_states.each do |state,property|%>
+    <%= render partial: "row", locals: {property: property, state: state}%>
+  <% end%>
+<% else %>
+  <div class="alert alert-warning">No Apartments matching the criteria found</div>
+<% end %>

@@ -12,6 +12,7 @@ module Smartrent
   
       respond_to do |format|
         format.html # index.html.erb
+        format.js {}
         format.json { render json: @q.result.uniq }
       end
     end

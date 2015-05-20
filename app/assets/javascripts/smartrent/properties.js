@@ -6,6 +6,7 @@ var cat_counter = 1;
 var mapIcon = "homeIcon"
 $(function(){
   $('.property_listing input, .property_listing select').change(function(){
+    $.blockUI();
     $('.property_listing').submit();
   });
   $(".search-property-item").click(function(){
@@ -25,24 +26,7 @@ $(function(){
         map_results_html = map_results_html.replace(/\n/g, "").replace(/ /g, "")
         if (map_results_html == '')
         {
-          properties_path = Routes.smartrent_properties_path({format: "json"}) + location.search
-          $.get(properties_path, function(data){
-            properties = data;
-            pois['all'] = {'show':true,'points':[]};
-            for(var x in properties) {
-              var property = properties[x]
-              pois['all']['points'].push({
-                  title: property.title,
-                  description: property.short_description,
-                  address: property.address + ',' + property.city + ',' + property.state,
-                  lat: property.lat,
-                  lon: property.lng,
-                  image: property.image,
-                  image_link: property.image
-              });
-            }
-            mapStart();
-          });
+          Property.loadMap();
         }
       });
 
@@ -90,6 +74,26 @@ Property = {
         $('#countiesPlusMinus' + state).html("+");
       });
     }
+  },
+  loadMap: function() {
+    properties_path = Routes.smartrent_properties_path({format: "json"}) + location.search
+    $.get(properties_path, function(data){
+      properties = data;
+      pois['all'] = {'show':true,'points':[]};
+      for(var x in properties) {
+        var property = properties[x]
+        pois['all']['points'].push({
+            title: property.title,
+            description: property.short_description,
+            address: property.address + ',' + property.city + ',' + property.state,
+            lat: property.lat,
+            lon: property.lng,
+            image: property.image,
+            image_link: property.image
+        });
+      }
+      mapStart();
+    });
   },
   showState: function(state) {
     state = state.replace(" ", "_")
