@@ -37,4 +37,5 @@ Gem::Specification.new do |s|
   s.add_dependency "will_paginate-bootstrap"
   s.add_dependency "geocoder"
   s.add_dependency "squeel"
+  s.add_dependency "htmlentities"
 end

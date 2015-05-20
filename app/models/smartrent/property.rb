@@ -77,6 +77,8 @@ module Smartrent
       end
       properties = SmarterCSV.process(f)
       properties.each do |property_hash|
+        property_hash[:title] = HTMLEntities.new.decode property_hash[:title]
+        property_hash[:description] = HTMLEntities.new.decode property_hash[:description]
         create property_hash
       end
     end
