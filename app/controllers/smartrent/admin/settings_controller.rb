@@ -84,5 +84,9 @@ module Smartrent
         format.json { head :no_content }
       end
     end
+    def run_monthly_awards_job
+      Resident.monthly_awards_job
+      redirect_to admin_settings_path, :notice => "The monthly awards job has been run manually."
+    end
   end
 end

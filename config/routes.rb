@@ -99,7 +99,11 @@ Smartrent::Engine.routes.draw do
         post "import", :to => "floor_plans#import"
       end
     end
-  resources :settings
+  resources :settings do
+    collection do
+      get "run-monthly-awards-job", :to => "settings#run_monthly_awards_job", :as => "run_monthly_awards_job"
+    end
+  end
 
   end
 
