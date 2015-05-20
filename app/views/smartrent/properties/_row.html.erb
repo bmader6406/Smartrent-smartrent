@@ -83,21 +83,21 @@
           <li><span class="bold">Studio</span> from <%= number_to_currency property_.studio_price %></li>
         <% end %>
 
-        <% if property_.one_bedroom %>
-          <li><span class="bold">1 Bedroom</span> from <%= number_to_currency property_.one_bedroom_price %></li>
+        <% if property_.one_bedroom.present? %>
+          <li><span class="bold">1 Bedroom</span> from <%= number_to_currency property_.one_bedroom.first.rent_min %></li>
         <% end%>
 
-        <% if property_.two_bedroom %>
-          <li><span class="bold">2 Bedrooms</span> from <%= number_to_currency property_.two_bedroom_price %></li>
+        <% if property_.two_bedrooms.present? %>
+          <li><span class="bold">2 Bedrooms</span> from <%= number_to_currency property_.two_bedrooms.first.rent_min %></li>
         <% end%>
-        <% if property_.three_bedroom %>
-          <li><span class="bold">3 Bedrooms</span> from <%= number_to_currency property_.three_bedroom_price %></li>
+        <% if property_.three_bedrooms.present? %>
+          <li><span class="bold">3 Bedrooms</span> from <%= number_to_currency property_.three_bedrooms.first.rent_min %></li>
         <% end%>
-        <% if property_.four_bedroom %>
-          <li><span class="bold">4 Bedrooms or more</span> from <%= number_to_currency property_.four_bedroom_price %></li>
+        <% if property_.four_bedrooms.present? %>
+          <li><span class="bold">4 Bedrooms or more</span> from <%= number_to_currency property_.four_bedrooms.first.rent_min %></li>
         <% end %>
-        <% if property_.penthouse %>
-          <li><span class="bold">Penthouses</span> from <%= number_to_currency property_.pent_house_price %></li>
+        <% if property_.penthouses.present? %>
+          <li><span class="bold">Penthouses</span> from <%= number_to_currency property_.penthouses.first.rent_min %></li>
         <% end %>
       </ul>
 

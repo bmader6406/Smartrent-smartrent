@@ -88,5 +88,20 @@ module Smartrent
     def status_text
       self.class.statuses[self.status]
     end
+    def one_bedroom
+      floor_plans.where(:beds => 1).order(:rent_min)
+    end
+    def two_bedrooms
+      floor_plans.where(:beds => 2).order(:rent_min)
+    end
+    def three_bedrooms
+      floor_plans.where(:beds => 3).order(:rent_min)
+    end
+    def four_bedrooms
+      floor_plans.where(:beds => 3).order(:rent_min)
+    end
+    def penthouses
+      floor_plans.where(:penthouse => true).order(:rent_min)
+    end
   end
 end
