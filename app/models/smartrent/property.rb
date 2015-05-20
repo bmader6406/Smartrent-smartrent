@@ -66,7 +66,7 @@ module Smartrent
       properties
     end
     def self.import(file)
-      if file.class == "File"
+      if file.class.to_s == "ActionDispatch::Http::UploadedFile"
         f = File.open(file.path, "r:bom|utf-8")
       else
         f = File.open(Rails.root.to_path + "/app/assets/properties.csv")
