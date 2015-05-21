@@ -41,7 +41,6 @@ module Smartrent
     # GET /admin/rewards/1/edit
     def edit
       @active = "rewards"
-      @reward = Reward.find(params[:id])
     end
 
     # POST /admin/rewards

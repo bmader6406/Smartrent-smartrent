@@ -53,8 +53,8 @@ Smartrent::Engine.routes.draw do
 
     resources :rewards do
       collection do
-      get "import", :to => "rewards#import_page"
-      post "import", :to => "rewards#import"
+        get "import", :to => "rewards#import_page"
+        post "import", :to => "rewards#import"
       end
     end
     resources :more_homes do
