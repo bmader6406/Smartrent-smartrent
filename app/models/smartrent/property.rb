@@ -9,11 +9,34 @@ module Smartrent
     validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
     validates_presence_of :title
     validates_uniqueness_of :title, :case_sensitive => true
+    scope :matches_all_features, -> *feature_ids { where(matches_all_features_arel(feature_ids)) }
     before_save do
       self.state = self.state.downcase if self.state
       self.city = self.city.downcase if self.city
       self.county = self.county.downcase if self.county
     end
+
+
+  def self.ransackable_scopes(auth_object = nil)
+    super + %w(matches_all_features)
+  end
+
+  def self.matches_all_features_arel(feature_ids)
+    properties = Arel::Table.new(:smartrent_properties)
+    features = Arel::Table.new(:smartrent_features)
+    property_features = Arel::Table.new(:smartrent_property_features)
+
+    properties[:id].in(
+      properties.project(properties[:id])
+        .join(property_features).on(properties[:id].eq(property_features[:property_id]))
+        .join(features).on(property_features[:feature_id].eq(features[:id]))
+        .where(features[:id].in(feature_ids))
+        .group(properties[:id])
+        .having(features[:id].count.eq(feature_ids.length))
+    )
+  end
+
+
     def self.grouped_by_states(q)
       states = {}
       properties = q.result(distinct: true)#.includes(:features)

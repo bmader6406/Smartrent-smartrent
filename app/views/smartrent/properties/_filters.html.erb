@@ -70,8 +70,13 @@
         <ul>
           <% Smartrent::Feature.all.each do |feature| %>
             <li>
-              <%= f.check_box :features_id_in, {:multiple => true}, feature.id, nil %>
-              <label for="q_features_id_in_<%=feature.id %>">
+              <%#= f.check_box :match_all_features, {:multiple => true}, feature.id, nil %>
+              <%= check_box_tag(
+                'q[matches_all_features][]',
+                feature.id,
+                params["q"] && params["q"].fetch("matches_all_features", []).include?(feature.id.to_s), id: "q_matches_all_features_" + feature.id.to_s
+                ) %>
+              <label for="q_matches_all_features_<%=feature.id %>">
                 <%= feature.name %>
               </label>
             </li>
