@@ -47,6 +47,9 @@ module Smartrent
         q.delete_if {|key, value| key == "studio_true" and value == "0"}
         q.delete_if {|key, value| key == "one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq" and value == "0"}
         q.delete_if {|key, value| key == "one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq" and value == "0"}
+        if q[:features_id_in]
+          puts q[:features_id_in]
+        end
       end
       super q
     end

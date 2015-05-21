@@ -70,7 +70,11 @@
         <ul>
           <% Smartrent::Feature.all.each do |feature| %>
             <li>
-            <%= f.check_box :features_id_in, {:multiple => true}, feature.id, nil %><label for="q_features_id_in_<%=feature.id %>"><%= feature.name %></label>
+              <%= f.check_box :features_id_in, {:multiple => true}, feature.id, nil %>
+              <label for="q_features_id_in_<%=feature.id %>">
+                <%= feature.name %>
+              </label>
+            </li>
           <% end %>
         </ul>
       </div>

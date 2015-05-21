@@ -15,7 +15,9 @@ module Smartrent
     end
 
     def valid_type
-      errors[:type_] << "is invalid" if type_ < 0 or type_ > 3
+      if !type_.nil? 
+        errors[:type_] << "is invalid" if type_.to_i < 0 or type_.to_i > 3
+      end
     end
 
     def self.types
