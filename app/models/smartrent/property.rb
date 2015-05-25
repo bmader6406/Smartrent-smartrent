@@ -10,6 +10,10 @@ module Smartrent
     validates_presence_of :title
     validates_uniqueness_of :title, :case_sensitive => true
     scope :matches_all_features, -> *feature_ids { where(matches_all_features_arel(feature_ids)) }
+    scope :where_one_bed, -> *search { where(where_bed_arel(1)) }
+    scope :where_two_bed, -> *search { where(where_bed_arel(2)) }
+    scope :where_three_more_bed, -> *search { where(where_bed_arel_more_than_eq(3)) }
+    scope :where_penthouse, -> *search { where(where_penthouse_arel) }
     before_save do
       self.state = self.state.downcase if self.state
       self.city = self.city.downcase if self.city
@@ -18,7 +22,7 @@ module Smartrent
 
 
   def self.ransackable_scopes(auth_object = nil)
-    super + %w(matches_all_features)
+    super + %w(matches_all_features) + %w(where_one_bed) + %w(where_two_bed) + %w(where_three_more_bed) + %w(where_penthouse)
   end
 
   def self.matches_all_features_arel(feature_ids)
@@ -34,6 +38,39 @@ module Smartrent
         .group(properties[:id])
         .having(features[:id].count.eq(feature_ids.length))
     )
+  end
+
+  def self.where_bed_arel(bed_count)
+      properties = Arel::Table.new(:smartrent_properties)
+      floor_plans = Arel::Table.new(:smartrent_floor_plans)
+      properties[:id].in(
+        properties.project(properties[:id])
+          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          .where(floor_plans[:beds].eq(bed_count))
+          .group(properties[:id])
+      )
+  end
+  def self.where_bed_arel_more_than_eq(bed_count)
+    if search.to_s == "1"
+      properties = Arel::Table.new(:smartrent_properties)
+      floor_plans = Arel::Table.new(:smartrent_floor_plans)
+      properties[:id].in(
+        properties.project(properties[:id])
+          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          .where(floor_plans[:beds].gteq(bed_count))
+          .group(properties[:id])
+      )
+    end
+  end
+  def self.where_penthouse_arel
+      properties = Arel::Table.new(:smartrent_properties)
+      floor_plans = Arel::Table.new(:smartrent_floor_plans)
+      properties[:id].in(
+        properties.project(properties[:id])
+          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          .where(floor_plans[:penthouse].eq(true))
+          .group(properties[:id])
+      )
   end
 
 
@@ -56,23 +93,12 @@ module Smartrent
           states[property.state]["total"] = 0  if states[property.state]["total"].nil?
           states[property.state]["total"] +=1
       end
-      puts "yo yo"
-      puts ids
       states
     end
     def self.ransack(q)
       if q
-        q.delete_if {|key, value| key == "one_bedroom_true" and value == "0"}
-        q.delete_if {|key, value| key == "two_bedroom_true" and value == "0"}
-        q.delete_if {|key, value| key == "three_bedroom_true" and value == "0"}
-        q.delete_if {|key, value| key == "four_bedroom_true" and value == "0"}
         q.delete_if {|key, value| key == "penthouse_true" and value == "0"}
         q.delete_if {|key, value| key == "studio_true" and value == "0"}
-        q.delete_if {|key, value| key == "one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq" and value == "0"}
-        q.delete_if {|key, value| key == "one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq" and value == "0"}
-        if q[:features_id_in]
-          puts q[:features_id_in]
-        end
       end
       super q
     end

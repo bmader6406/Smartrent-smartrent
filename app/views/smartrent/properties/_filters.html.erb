@@ -16,19 +16,19 @@
             <%= f.label :studio_true, "Studios" %>
           </li>
           <li>
-            <%= f.check_box :floor_plans_beds %>
-            <%#= f.label :one_bedroom_true, "1 Bedrooms" %>
+            <%= check_box_tag "q[where_one_bed]" %>
+            <%= label_tag "q[where_one_bed]", "1 Bedroom" %>
           </li>
           <li>
-            <%#= f.check_box :two_bedroom_true %>
-            <%#= f.label :two_bedroom_true, "2 Bedrooms" %>
+            <%= check_box_tag "q[where_two_bed]" %>
+            <%= label_tag "q[where_two_bed]", "2 Bedrooms" %>
           <li>
-            <%#= f.check_box :three_bedroom_or_four_bedroom_true %>
-            <%#= f.label :three_bedroom_or_four_bedroom_true, "3 or more Bedrooms" %>
+            <%= check_box_tag "q[where_three_more_bed]" %>
+            <%= label_tag "q[where_three_more_bed]", "3 or more Bedrooms" %>
           </li>
           <li>
-            <%#= f.check_box :penthouse_true %>
-            <%#= f.label :penthouse_true, "Penthouses" %>
+            <%= check_box_tag "q[where_penthouse]" %>
+            <%= label_tag "q[where_penthouse]", "Penthouse" %>
           </li>
         </ul>
       </div>
@@ -70,7 +70,6 @@
         <ul>
           <% Smartrent::Feature.all.each do |feature| %>
             <li>
-              <%#= f.check_box :match_all_features, {:multiple => true}, feature.id, nil %>
               <%= check_box_tag(
                 'q[matches_all_features][]',
                 feature.id,
