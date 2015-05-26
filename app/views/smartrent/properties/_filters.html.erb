@@ -42,20 +42,16 @@
 
         <ul>
           <li>
-          <label for="fourbed">
-            <% #minimum_price = f.object.one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq %>
-            <%#= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_gteq, options_for_select(Smartrent::Property.prices("Choose Minimum..."), minimum_price.to_i)%>
-          </label></li>
-
-          <li style="list-style: none"><label for="fourbed"></label></li>
-
-          <li>
             <label for="fourbed">
-              <%# maximum_price = f.object.one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq %>
-              <%#= f.select :one_bedroom_price_or_two_bedroom_price_or_three_bedroom_price_or_four_bedroom_price_or_studio_price_or_pent_house_price_lteq, options_for_select(Smartrent::Property.prices("Choose Maximum..."), maximum_price.to_i)%>
+              <%= select_tag "q[minimum_price]", options_for_select(Smartrent::Property.prices("Choose Minimum..."), "")%>
             </label>
           </li>
-
+          <li style="list-style: none"><label for="fourbed"></label></li>
+          <li>
+            <label for="fourbed">
+            <%= select_tag "q[maximum_price]", options_for_select(Smartrent::Property.prices("Choose Maximum..."), "")%>
+            </label>
+          </li>
           <li style="list-style: none"><label for="fourbed"></label></li>
         </ul>
       </div>

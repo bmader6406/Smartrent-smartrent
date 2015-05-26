@@ -10,10 +10,11 @@ module Smartrent
     validates_presence_of :title
     validates_uniqueness_of :title, :case_sensitive => true
     scope :matches_all_features, -> *feature_ids { where(matches_all_features_arel(feature_ids)) }
-    scope :where_one_bed, -> *search { where(where_bed_arel(1)) }
-    scope :where_two_bed, -> *search { where(where_bed_arel(2)) }
+    scope :where_one_bed, -> *search { where(where_bed_arel(1, search)) }
+    scope :where_two_bed, -> *search { where(where_bed_arel(2, search)) }
     scope :where_three_more_bed, -> *search { where(where_bed_arel_more_than_eq(3)) }
     scope :where_penthouse, -> *search { where(where_penthouse_arel) }
+    scope :price, -> *price { where(price_arel(price)) }
     before_save do
       self.state = self.state.downcase if self.state
       self.city = self.city.downcase if self.city
@@ -22,7 +23,7 @@ module Smartrent
 
 
   def self.ransackable_scopes(auth_object = nil)
-    super + %w(matches_all_features) + %w(where_one_bed) + %w(where_two_bed) + %w(where_three_more_bed) + %w(where_penthouse)
+    super + %w(matches_all_features) + %w(where_one_bed) + %w(where_two_bed) + %w(where_three_more_bed) + %w(where_penthouse) + %w(price)
   end
 
   def self.matches_all_features_arel(feature_ids)
@@ -40,7 +41,7 @@ module Smartrent
     )
   end
 
-  def self.where_bed_arel(bed_count)
+  def self.where_bed_arel(bed_count, search)
       properties = Arel::Table.new(:smartrent_properties)
       floor_plans = Arel::Table.new(:smartrent_floor_plans)
       properties[:id].in(
@@ -51,7 +52,6 @@ module Smartrent
       )
   end
   def self.where_bed_arel_more_than_eq(bed_count)
-    if search.to_s == "1"
       properties = Arel::Table.new(:smartrent_properties)
       floor_plans = Arel::Table.new(:smartrent_floor_plans)
       properties[:id].in(
@@ -60,7 +60,6 @@ module Smartrent
           .where(floor_plans[:beds].gteq(bed_count))
           .group(properties[:id])
       )
-    end
   end
   def self.where_penthouse_arel
       properties = Arel::Table.new(:smartrent_properties)
@@ -71,6 +70,39 @@ module Smartrent
           .where(floor_plans[:penthouse].eq(true))
           .group(properties[:id])
       )
+  end
+  def self.price_arel(price)
+    prices = price[0].split(",")
+    puts prices[0]
+    minimum_price = prices[0].to_i
+    maximum_price = prices[1].to_i
+    puts minimum_price
+    puts maximum_price
+    properties =  Arel::Table.new(:smartrent_properties)
+    floor_plans = Arel::Table.new(:smartrent_floor_plans)
+    if maximum_price > 0 and minimum_price > 0
+      properties[:id].in(
+        properties.project(properties[:id])
+          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          .where(floor_plans[:rent_min].gteq(minimum_price))
+          .where(floor_plans[:rent_max].lteq(maximum_price))
+          .group(properties[:id])
+      )
+    elsif minimum_price > 0
+      properties[:id].in(
+        properties.project(properties[:id])
+          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          .where(floor_plans[:rent_min].gteq(minimum_price))
+          .group(properties[:id])
+      )
+    elsif maximum_price > 0
+      properties[:id].in(
+        properties.project(properties[:id])
+          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          .where(floor_plans[:rent_max].lteq(maximum_price))
+          .group(properties[:id])
+      )
+    end
   end
 
 
@@ -93,12 +125,18 @@ module Smartrent
           states[property.state]["total"] = 0  if states[property.state]["total"].nil?
           states[property.state]["total"] +=1
       end
+      puts ids.count
+      puts "total Count"
       states
     end
     def self.ransack(q)
       if q
-        q.delete_if {|key, value| key == "penthouse_true" and value == "0"}
-        q.delete_if {|key, value| key == "studio_true" and value == "0"}
+        q.delete_if {|key, value| (key == "studio_true" or key == "maximum_price" or key == "minimum_price" or key == "where_one_bed" or key == "where_two_bed" or key == "where_three_more_bed" or key == "where_penthouse") and value == "0"}
+        q[:minimum_price] = q[:minimum_price].to_i
+        q[:maximum_price] = q[:maximum_price].to_i
+        q[:price] = "#{q[:minimum_price]},#{q[:maximum_price]}"
+        q.delete(:minimum_price)
+        q.delete(:maximum_price)
       end
       super q
     end
@@ -156,7 +194,7 @@ module Smartrent
       floor_plans.where(:beds => 3).order(:rent_min)
     end
     def four_bedrooms
-      floor_plans.where(:beds => 3).order(:rent_min)
+      floor_plans.where(:beds => 4).order(:rent_min)
     end
     def penthouses
       floor_plans.where(:penthouse => true).order(:rent_min)
