@@ -53,8 +53,23 @@ $(function(){
 })
 var Home = {
   "showFloorPlan": function(floor_id){
-    $('.fpImageHolder .more_homeFPImages').hide();
-    $('#' + floor_id).show();
+    var imageIsShowing = false
+    $('.fpImageHolder .homeFPImages').each(function(key, value){
+      if ($(value).css('display')== 'block') {
+        imageIsShowing = true;
+        return
+      }
+    })
+    if (imageIsShowing)
+    {
+      $('.fpImageHolder .homeFPImages').fadeOut('fast', function(){
+        $('#' + floor_id).fadeIn('fast');
+      });
+    }
+    else
+    {
+      $('#' + floor_id).fadeIn('fast');
+    }
   }
 }
 $(function() {
@@ -101,4 +116,5 @@ $(document).ready(function() {
       bottom: initHeight
     });
   });
+  $("a[rel^='prettyPhoto']").prettyPhoto();
 });

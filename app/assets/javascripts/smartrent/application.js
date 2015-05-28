@@ -22,6 +22,7 @@
 //= require smartrent/properties
 //= require smartrent/slides.min.jquery
 //= require smartrent/jquery.blockUI.js
+//= require prettyphoto-rails
 var queryString = function () {
   // This function is anonymous, is executed immediately and
   // the return value is assigned to QueryString!

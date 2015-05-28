@@ -3,7 +3,7 @@
     <%= floor_plan_image.caption %>
   </div>
   <div class="image">
-    <%= link_to floor_plan_image.image.url do %>
+    <%= link_to floor_plan_image.image.url, {:rel => "prettyPhoto[floor_plan_image_#{featured}_gallery_#{floor_plan_image.more_home.id}]"} do %>
       <%= image_tag floor_plan_image.image.url, :width => 124 %>
     <% end %>
   </div>

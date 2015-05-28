@@ -38,4 +38,5 @@ Gem::Specification.new do |s|
   s.add_dependency "geocoder"
   s.add_dependency "squeel"
   s.add_dependency "htmlentities"
+  s.add_dependency "prettyphoto-rails"
 end
