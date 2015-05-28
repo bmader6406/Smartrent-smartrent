@@ -7,13 +7,15 @@ module Smartrent
     def index
       #@properties = Property.all
       @current_page = "properties"
-      @q = Property.ransack(params[:q])
-      @properties_grouped_by_states = Property.grouped_by_states(@q)
+      q_params = params[:q]
+      @q = Property.ransack(q_params)
+      properties = Property.unique_result(@q)
+      properties = Property.custom_filters q_params, properties
+      @properties_grouped_by_states = Property.grouped_by_states(properties)
   
       respond_to do |format|
         format.html # index.html.erb
         format.js {}
-        format.json { render json: @q.result.uniq }
       end
     end
   

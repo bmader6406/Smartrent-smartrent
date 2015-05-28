@@ -4,17 +4,17 @@ module Smartrent
     has_many :features, :through => :property_features
     has_many :residents
     has_many :floor_plans, :dependent => :destroy
-    attr_accessible :address, :city, :county, :website, :latitude, :longitude, :phone_number, :short_description, :special_promotion, :state, :studio_price, :title,  :studio, :image, :feature_ids, :origin_id, :bozzuto_url, :email, :promotion_title, :promotion_subtitle, :promotion_url, :promotion_expiration_date, :zip, :description
+    attr_accessible :address, :city, :county, :website, :latitude, :longitude, :phone_number, :short_description, :special_promotion, :state, :studio_price, :title,  :studio, :image, :feature_ids, :origin_id, :bozzuto_url, :email, :promotion_title, :promotion_subtitle, :promotion_url, :promotion_expiration_date, :zip, :description, :status
     has_attached_file :image, :styles => {:search_page => "150x150>"}
     validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
     validates_presence_of :title
     validates_uniqueness_of :title, :case_sensitive => true
-    scope :matches_all_features, -> *feature_ids { where(matches_all_features_arel(feature_ids)) }
-    scope :where_one_bed, -> *search { where(where_bed_arel(1, search)) }
-    scope :where_two_bed, -> *search { where(where_bed_arel(2, search)) }
-    scope :where_three_more_bed, -> *search { where(where_bed_arel_more_than_eq(3)) }
-    scope :where_penthouse, -> *search { where(where_penthouse_arel) }
-    scope :price, -> *price { where(price_arel(price)) }
+    #scope :matches_all_features, -> *feature_ids { where(matches_all_features_arel(feature_ids)) }
+    #scope :where_one_bed, -> *search { where(where_bed_arel(1, search)) }
+    #scope :where_two_bed, -> *search { where(where_bed_arel(2, search)) }
+    #scope :where_three_more_bed, -> *search { where(where_bed_arel_more_than_eq(3)) }
+    #scope :where_penthouse, -> *search { where(where_penthouse_arel) }
+    #scope :price, -> *price { where(price_arel(price)) }
     before_save do
       self.state = self.state.downcase if self.state
       self.city = self.city.downcase if self.city
@@ -22,97 +22,143 @@ module Smartrent
     end
 
 
-  def self.ransackable_scopes(auth_object = nil)
-    super + %w(matches_all_features) + %w(where_one_bed) + %w(where_two_bed) + %w(where_three_more_bed) + %w(where_penthouse) + %w(price)
+  #def self.ransackable_scopes(auth_object = nil)
+    #super + %w(matches_all_features) + %w(where_one_bed) + %w(where_two_bed) + %w(where_three_more_bed) + %w(where_penthouse) + %w(price)
+  #end
+
+  def self.property_ids_from_properties(properties)
+    property_ids = []
+    properties.each do |property|
+      property_ids.push property.id
+    end
+    property_ids
   end
 
-  def self.matches_all_features_arel(feature_ids)
-    properties = Arel::Table.new(:smartrent_properties)
-    features = Arel::Table.new(:smartrent_features)
-    property_features = Arel::Table.new(:smartrent_property_features)
-
-    properties[:id].in(
-      properties.project(properties[:id])
-        .join(property_features).on(properties[:id].eq(property_features[:property_id]))
-        .join(features).on(property_features[:feature_id].eq(features[:id]))
-        .where(features[:id].in(feature_ids))
-        .group(properties[:id])
-        .having(features[:id].count.eq(feature_ids.length))
-    )
+  def self.filter_from_result(result, properties)
+    property_ids = self.property_ids_from_properties(properties)
+    properties = []
+    result.each do |property|
+      if property_ids.include?(property.id)
+        properties.push property
+      end
+    end
+    properties
   end
 
-  def self.where_bed_arel(bed_count, search)
-      properties = Arel::Table.new(:smartrent_properties)
-      floor_plans = Arel::Table.new(:smartrent_floor_plans)
-      properties[:id].in(
-        properties.project(properties[:id])
-          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
-          .where(floor_plans[:beds].eq(bed_count))
-          .group(properties[:id])
-      )
+  def self.custom_filters(q_params, properties)
+      if q_params.present?
+          properties = self.matches_all_features(properties, q_params[:matches_all_features]) if q_params[:matches_all_features].present?
+          properties = self.where_bed(properties, 1) if q_params[:where_one_bed].present?
+          properties = self.where_bed(properties, 2) if q_params[:where_two_bed].present?
+          properties = self.where_bed_more_than_eq(properties, 3) if q_params[:where_three_more_bed].present?
+          properties = self.where_penthouse(properties) if q_params[:where_penthouse].present?
+          properties = self.where_price(properties, q_params[:price]) if q_params[:where_price].present?
+      end
+      properties
   end
-  def self.where_bed_arel_more_than_eq(bed_count)
-      properties = Arel::Table.new(:smartrent_properties)
-      floor_plans = Arel::Table.new(:smartrent_floor_plans)
-      properties[:id].in(
-        properties.project(properties[:id])
-          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
-          .where(floor_plans[:beds].gteq(bed_count))
-          .group(properties[:id])
-      )
+
+  def self.matches_all_features(properties, feature_ids)
+    result = Property.joins(:property_features)
+      .where(:property_features => {:feature_id => feature_ids})
+      .group("smartrent_properties.id")
+      .having("count(*) = ?", feature_ids.count)
+    self.filter_from_result result, properties
+    #properties[:id].in(
+      #properties.project(properties[:id])
+        #.join(property_features).on(properties[:id].eq(property_features[:property_id]))
+        #.join(features).on(property_features[:feature_id].eq(features[:id]))
+        #.where(features[:id].in(feature_ids))
+        #.group(properties[:id])
+        #.having(features[:id].count.eq(feature_ids.length))
+    #)
   end
-  def self.where_penthouse_arel
-      properties = Arel::Table.new(:smartrent_properties)
-      floor_plans = Arel::Table.new(:smartrent_floor_plans)
-      properties[:id].in(
-        properties.project(properties[:id])
-          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
-          .where(floor_plans[:penthouse].eq(true))
-          .group(properties[:id])
-      )
+
+  def self.where_bed(properties, bed_count)
+    result = Property.joins(:floor_plans)
+      .where(:floor_plans => {:beds => bed_count})
+      .group("smartrent_properties.id")
+    self.filter_from_result result, properties
+      #properties = Arel::Table.new(:smartrent_properties)
+      #floor_plans = Arel::Table.new(:smartrent_floor_plans)
+      #properties[:id].in(
+        #properties.project(properties[:id])
+          #.join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          #.where(floor_plans[:beds].eq(bed_count))
+          #.group(properties[:id])
+      #)
   end
-  def self.price_arel(price)
-    prices = price[0].split(",")
-    puts prices[0]
+  def self.where_bed_more_than_eq(properties,bed_count)
+    result = Property.joins(:floor_plans)
+      .where("smartrent_floor_plans.beds >= ?", bed_count)
+      .group("smartrent_properties.id")
+    self.filter_from_result result, properties
+      #properties = Arel::Table.new(:smartrent_properties)
+      #floor_plans = Arel::Table.new(:smartrent_floor_plans)
+      #properties[:id].in(
+        #properties.project(properties[:id])
+          #.join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          #.where(floor_plans[:beds].gteq(bed_count))
+          #.group(properties[:id])
+      #)
+  end
+  def self.where_penthouse(properties)
+    result = Property.joins(:floor_plans)
+      .where(:floor_plans => {:penthouse => true})
+      .group("smartrent_properties.id")
+    self.filter_from_result result, properties
+      #properties = Arel::Table.new(:smartrent_properties)
+      #floor_plans = Arel::Table.new(:smartrent_floor_plans)
+      #properties[:id].in(
+        #properties.project(properties[:id])
+          #.join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          #.where(floor_plans[:penthouse].eq(true))
+          #.group(properties[:id])
+      #)
+  end
+  def self.where_price(price, properties)
+    prices = price.split(",")
+    puts prices
+    puts prices.length
+    return properties if prices.length != 2
     minimum_price = prices[0].to_i
     maximum_price = prices[1].to_i
-    puts minimum_price
-    puts maximum_price
-    properties =  Arel::Table.new(:smartrent_properties)
-    floor_plans = Arel::Table.new(:smartrent_floor_plans)
     if maximum_price > 0 and minimum_price > 0
-      properties[:id].in(
-        properties.project(properties[:id])
-          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
-          .where(floor_plans[:rent_min].gteq(minimum_price))
-          .where(floor_plans[:rent_max].lteq(maximum_price))
-          .group(properties[:id])
-      )
+      result = Property.joins(:floor_plans)
+        .where("smartrent_floor_plans.rent_min >= ?", minimum_price)
+        .where("smartrent_floor_plans.rent_max <= ?", maximum_price)
+        .group("smartrent_properties.id")
     elsif minimum_price > 0
-      properties[:id].in(
-        properties.project(properties[:id])
-          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
-          .where(floor_plans[:rent_min].gteq(minimum_price))
-          .group(properties[:id])
-      )
+      result = Property.joins(:floor_plans)
+        .where("smartrent_floor_plans.rent_min >= ?", minimum_price)
+        .group("smartrent_properties.id")
     elsif maximum_price > 0
-      properties[:id].in(
-        properties.project(properties[:id])
-          .join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
-          .where(floor_plans[:rent_max].lteq(maximum_price))
-          .group(properties[:id])
-      )
+      result = Property.joins(:floor_plans)
+        .where("smartrent_floor_plans.rent_max <= ?", maximum_price)
+        .group("smartrent_properties.id")
     end
+      #properties[:id].in(
+        #properties.project(properties[:id])
+          #.join(floor_plans).on(properties[:id].eq(floor_plans[:property_id]))
+          #.where(floor_plans[:rent_min].gteq(minimum_price))
+          #.where(floor_plans[:rent_max].lteq(maximum_price))
+          #.group(properties[:id])
+      #)
+  end
+
+  def self.unique_result(q)
+      properties = q.result
+      ids = []
+      properties.each do |property|
+        next if ids.include?(property.id)
+        ids.push property.id
+      end
+      properties
   end
 
 
-    def self.grouped_by_states(q)
+    def self.grouped_by_states(properties)
       states = {}
-      properties = q.result(distinct: true)#.includes(:features)
-      ids = []
       properties.each do |property|
-          next if ids.include?(property.id)
-          ids.push property.id
           states[property.state] = {} if states[property.state].nil?
           states[property.state]["cities"] = {}  if states[property.state]["cities"].nil?
           states[property.state]["cities"][property.city] = 0 if states[property.state]["cities"][property.city].nil?
@@ -125,8 +171,6 @@ module Smartrent
           states[property.state]["total"] = 0  if states[property.state]["total"].nil?
           states[property.state]["total"] +=1
       end
-      puts ids.count
-      puts "total Count"
       states
     end
     def self.ransack(q)

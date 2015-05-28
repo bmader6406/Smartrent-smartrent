@@ -93,6 +93,10 @@
   <b>Promotion Url:</b>
   <%= link_to @property.promotion_url, @property.promotion_url if @property.promotion_url %>
 </p>
+<p>
+  <b>Status:</b>
+  <%= @property.status_text %>
+</p>
 
 
 <%= link_to 'Edit', edit_admin_property_path(@property) %> |
