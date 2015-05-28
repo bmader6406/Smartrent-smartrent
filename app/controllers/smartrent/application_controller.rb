@@ -4,7 +4,7 @@ module Smartrent
     # protect_from_forgery
     layout :layout_by_resource
     def after_sign_in_path_for(resource)
-      if resource.name == :resident
+      if resource_name == :resident
         request.env['omniauth.origin'] || stored_location_for(resource) || smartrent.root_path
       else
         request.env['omniauth.origin'] || stored_location_for(resource) || smartrent.admin_root_path

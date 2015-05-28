@@ -2,15 +2,16 @@ require_dependency "smartrent/application_controller"
 
 module Smartrent
   class ResidentsController < ApplicationController
-    before_filter :authenticate_resident!
     before_filter :set_resident
 
     def profile
+      authenticate_resident!
       respond_to do |format|
         format.html {}
       end
     end
     def update_password
+      authenticate_resident!
       @resident.update_password(params[:resident])
       if @resident.errors.any?
         render "change_password"
@@ -20,14 +21,16 @@ module Smartrent
       end
     end
     def change_password
+      authenticate_resident!
     end
     def statement
+      authenticate_resident!
       respond_to do |format|
         format.html {}
       end
     end
     def set_resident
-      @resident = current_resident || Resident.find(params[:id])
+      @resident = current_resident if current_resident
     end
   end
 end
