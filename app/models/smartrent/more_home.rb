@@ -1,6 +1,6 @@
 module Smartrent
   class MoreHome < ActiveRecord::Base
-    attr_accessible :baths, :beds, :featured, :name, :home_id, :sq_ft
+    #attr_accessible :baths, :beds, :featured, :name, :home_id, :sq_ft
     belongs_to :home
     has_many :floor_plan_images, :dependent => :destroy
     #accepts_nested_attributes_for :floor_plan_images, :reject_if => lambda { |a| a[:image].blank? }, :allow_destroy => true

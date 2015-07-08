@@ -4,7 +4,7 @@ module Smartrent
   class Admin::HomesController < Admin::AdminController
     # GET /homes
     # GET /homes.json
-    before_filter :set_home
+    before_action :set_home
 
     def index
       @active = "homes"
@@ -45,7 +45,7 @@ module Smartrent
     # POST /homes
     # POST /homes.json
     def create
-      @home = Home.new(params[:home])
+      @home = Home.new(home_params)
       respond_to do |format|
         if @home.save
           format.html { redirect_to admin_home_path(@home), notice: 'Home was successfully created.' }
@@ -61,7 +61,7 @@ module Smartrent
     # PUT /homes/1.json
     def update
       respond_to do |format|
-        if @home.update_attributes(params[:home])
+        if @home.update_attributes(home_params)
           format.html { redirect_to admin_home_path(@home), notice: 'Home was successfully updated.' }
           format.json { head :no_content }
         else
@@ -94,5 +94,12 @@ module Smartrent
     def set_home
       @home = Home.find(params[:id]) if params[:id]
     end
+    
+    private
+    
+      def home_params
+        params.require(:home).permit!
+      end
+      
   end
 end

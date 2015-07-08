@@ -1,6 +1,6 @@
 module Smartrent
   class FloorPlan < ActiveRecord::Base
-    attr_accessible :baths, :beds, :name, :origin_id, :penthouse, :property_id, :rent_max, :rent_min, :sq_feet_max, :sq_feet_min, :url
+    #attr_accessible :baths, :beds, :name, :origin_id, :penthouse, :property_id, :rent_max, :rent_min, :sq_feet_max, :sq_feet_min, :url
     validates_numericality_of :beds, :greater_than_equal_to => 0
     validates_numericality_of :rent_min, :greater_than_equal_to => 0
     validates_numericality_of :rent_max, :greater_than_equal_to => 0

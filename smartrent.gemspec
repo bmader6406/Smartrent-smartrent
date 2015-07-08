@@ -7,36 +7,25 @@ require "smartrent/version"
 Gem::Specification.new do |s|
   s.name        = "smartrent"
   s.version     = Smartrent::VERSION
-  s.authors     = ["Chon Doan"]
-  s.email       = ["domich.dt@gmail.com"]
-  s.homepage    = "http://mygem.com"
-  s.summary     = "Summary of Smartrent."
-  s.description = "Description of Smartrent."
-  s.license     = "MIT"
+  s.authors = ["Hy.ly"]
+  s.email = ["help@hy.ly"]
+  s.homepage    = ""
+  s.summary     = ""
+  s.description = ""
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 3.2.13"
-
-  s.add_dependency "pg"
-  s.add_dependency "devise"
-  s.add_dependency 'omniauth'
-  s.add_dependency "jquery-rails"
-  s.add_dependency "therubyracer"
-  s.add_dependency "less-rails"
-  s.add_dependency "twitter-bootstrap-rails"
-  s.add_dependency "paperclip"
-  s.add_dependency "will_paginate"
-  s.add_dependency "js-routes"
-  s.add_dependency "aws-sdk", "< 2.0"
-  s.add_dependency "ransack"
-  s.add_dependency "mandrill-api"
-  s.add_dependency "smarter_csv"
-  s.add_dependency "mysql2"
-  s.add_dependency "will_paginate-bootstrap"
-  s.add_dependency "geocoder"
-  s.add_dependency "squeel"
-  s.add_dependency "htmlentities"
-  s.add_dependency "prettyphoto-rails"
+  s.add_dependency "rails", "4.2.2"
+  s.add_dependency "devise", "~> 3.5.1"
+  s.add_dependency "js-routes", "~> 1.0.1"
+  s.add_dependency "aws-sdk", "~> 1.9.5"
+  s.add_dependency "ransack", "~> 1.6.6"
+  s.add_dependency "mandrill-api", "~> 1.0.53"
+  s.add_dependency "smarter_csv", "~> 1.0.19"
+  s.add_dependency "will_paginate-bootstrap", "~> 1.0.1"
+  s.add_dependency "geocoder", "~> 1.2.8"
+  s.add_dependency "squeel", "~> 0.8.9"
+  s.add_dependency "htmlentities", "~> 4.3.3"
+  s.add_dependency "prettyphoto-rails", "~> 0.2.1"
 end

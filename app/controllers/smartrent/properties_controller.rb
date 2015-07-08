@@ -49,7 +49,7 @@ module Smartrent
     # POST /properties
     # POST /properties.json
     def create
-      @property = Property.new(params[:property])
+      @property = Property.new(property_params)
   
       respond_to do |format|
         if @property.save
@@ -68,7 +68,7 @@ module Smartrent
       @property = Property.find(params[:id])
   
       respond_to do |format|
-        if @property.update_attributes(params[:property])
+        if @property.update_attributes(property_params)
           format.html { redirect_to @property, notice: 'Property was successfully updated.' }
           format.json { head :no_content }
         else
@@ -89,5 +89,11 @@ module Smartrent
         format.json { head :no_content }
       end
     end
+    
+    private
+    
+      def property_params
+        params.require(:property).permit!
+      end
   end
 end

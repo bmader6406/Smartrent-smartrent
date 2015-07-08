@@ -1,6 +1,6 @@
 module Smartrent
   class Reward < ActiveRecord::Base
-    attr_accessible :amount, :period_end, :period_start, :property_id, :type_, :resident_id
+    #attr_accessible :amount, :period_end, :period_start, :property_id, :type_, :resident_id
     belongs_to :resident
     belongs_to :property
     validates_presence_of :amount, :resident_id, :type_, :period_start

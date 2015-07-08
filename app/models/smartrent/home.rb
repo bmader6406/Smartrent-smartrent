@@ -1,7 +1,7 @@
 #encoding: utf-8
 module Smartrent
   class Home < ActiveRecord::Base
-    attr_accessible :address, :description, :latitude, :image, :image_description, :longitude, :title, :website, :video_url, :phone_number, :home_page_desc, :city, :state, :search_page_description, :origin_id, :url, :county
+    #attr_accessible :address, :description, :latitude, :image, :image_description, :longitude, :title, :website, :video_url, :phone_number, :home_page_desc, :city, :state, :search_page_description, :origin_id, :url, :county
     has_attached_file :image, :styles => {:home_page => "195x145>", :search_page => "149x112>"}
     validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
     validates_presence_of :title

@@ -7,8 +7,8 @@ module Smartrent
            # :confirmable, :lockable, :token_authenticatable
   
     # Setup accessible (or protected) attributes for your model
-    attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address
-    # attr_accessible :title, :body
+    #attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address
+    # #attr_accessible :title, :body
 
     def total_saved
       self.monthly_awards_amount + self.months_earned + self.total_earned + self.sign_up_bonus

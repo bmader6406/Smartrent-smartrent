@@ -2,7 +2,7 @@ require_dependency "smartrent/application_controller"
 
 module Smartrent
   class ResidentsController < ApplicationController
-    before_filter :set_resident
+    before_action :set_resident
 
     def profile
       authenticate_resident!

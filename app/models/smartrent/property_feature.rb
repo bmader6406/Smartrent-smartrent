@@ -2,7 +2,7 @@ module Smartrent
   class PropertyFeature < ActiveRecord::Base
     belongs_to :feature
     belongs_to :property
-    attr_accessible :property_id, :feature_id
+    #attr_accessible :property_id, :feature_id
     validates_uniqueness_of :feature_id, scope: :property_id
 
     def self.import(file)

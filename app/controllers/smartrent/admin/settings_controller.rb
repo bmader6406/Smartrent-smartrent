@@ -44,7 +44,7 @@ module Smartrent
     # POST /settings
     # POST /settings.json
     def create
-      @setting = Setting.new(params[:setting])
+      @setting = Setting.new(setting_params)
   
       respond_to do |format|
         if @setting.save
@@ -63,7 +63,7 @@ module Smartrent
       @setting = Setting.find(params[:id])
   
       respond_to do |format|
-        if @setting.update_attributes(params[:setting])
+        if @setting.update_attributes(setting_params)
           format.html { redirect_to admin_setting_path(@setting), notice: 'Setting was successfully updated.' }
           format.json { head :no_content }
         else
@@ -88,5 +88,11 @@ module Smartrent
       Resident.monthly_awards_job
       redirect_to admin_settings_path, :notice => "The monthly awards job has been run manually."
     end
+    
+    private
+    
+      def setting_params
+        params.require(:setting).permit!
+      end
   end
 end

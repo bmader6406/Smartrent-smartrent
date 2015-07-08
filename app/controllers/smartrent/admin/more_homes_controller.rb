@@ -5,7 +5,7 @@ module Smartrent
     # GET /admin/more_more_homes
     # GET /admin/more_more_homes.json
     #
-    before_filter :set_more_home
+    before_action :set_more_home
     def index
       @active = "homes"
       @more_homes = MoreHome.paginate(:page => params[:page], :per_page => 15).order(:created_at)
@@ -48,7 +48,7 @@ module Smartrent
     # POST /admin/more_more_homes
     # POST /admin/more_more_homes.json
     def create
-      @more_home = MoreHome.new(params[:more_home])
+      @more_home = MoreHome.new(more_home_params)
   
       respond_to do |format|
         if @more_home.save
@@ -67,7 +67,7 @@ module Smartrent
       @more_home = MoreHome.find(params[:id])
   
       respond_to do |format|
-        if @more_home.update_attributes(params[:more_home])
+        if @more_home.update_attributes(more_home_params)
           format.html { redirect_to admin_more_home_path(@more_home), notice: 'MoreHome was successfully updated.' }
           format.json { head :no_content }
           format.js {}
@@ -102,5 +102,11 @@ module Smartrent
     def set_more_home
       @more_home = MoreHome.find(params[:id]) if params[:id]
     end
+    
+    private
+    
+      def more_home_params
+        params.require(:more_home).permit!
+      end
   end
 end

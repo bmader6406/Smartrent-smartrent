@@ -5,7 +5,7 @@ module Smartrent
     # GET /admin/rewards
     # GET /admin/rewards.json
     #
-    before_filter :set_reward
+    before_action :set_reward
     def index
       @active = "rewards"
       @rewards = Reward.paginate(:page => params[:page], :per_page => 15).order(:created_at)
@@ -46,7 +46,7 @@ module Smartrent
     # POST /admin/rewards
     # POST /admin/rewards.json
     def create
-      @reward = Reward.new(params[:reward])
+      @reward = Reward.new(reward_params)
   
       respond_to do |format|
         if @reward.save
@@ -65,7 +65,7 @@ module Smartrent
       @reward = Reward.find(params[:id])
   
       respond_to do |format|
-        if @reward.update_attributes(params[:reward])
+        if @reward.update_attributes(reward_params)
           format.html { redirect_to admin_reward_path(@reward), notice: 'Reward was successfully updated.' }
           format.json { head :no_content }
           format.js {}
@@ -100,5 +100,11 @@ module Smartrent
     def set_reward
       @reward = Reward.find(params[:id]) if params[:id]
     end
+    
+    private
+    
+      def reward_params
+        params.require(:reward).permit!
+      end
   end
 end

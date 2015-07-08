@@ -14,7 +14,7 @@ module Smartrent
     # POST /contacts
     # POST /contacts.json
     def create
-      @contact = Contact.new(params[:contact])
+      @contact = Contact.new(contact_params)
   
       respond_to do |format|
         if @contact.save
@@ -24,5 +24,11 @@ module Smartrent
         end
       end
     end
+    
+    private
+    
+      def contact_params
+        params.require(:contact).permit!
+      end
   end
 end

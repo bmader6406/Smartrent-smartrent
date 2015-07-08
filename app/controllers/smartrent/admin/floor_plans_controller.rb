@@ -47,7 +47,7 @@ module Smartrent
     # POST /admin/floor_plans
     # POST /admin/floor_plans.json
     def create
-      @admin_floor_plan = FloorPlan.new(params[:floor_plan])
+      @admin_floor_plan = FloorPlan.new(floor_plan_params)
   
       respond_to do |format|
         if @admin_floor_plan.save
@@ -66,7 +66,7 @@ module Smartrent
       @admin_floor_plan = FloorPlan.find(params[:id])
   
       respond_to do |format|
-        if @admin_floor_plan.update_attributes(params[:floor_plan])
+        if @admin_floor_plan.update_attributes(floor_plan_params)
           format.html { redirect_to admin_floor_plan_path(@admin_floor_plan), notice: 'Floor plan was successfully updated.' }
           format.json { head :no_content }
         else
@@ -96,5 +96,11 @@ module Smartrent
       FloorPlan.import(params[:file])
       redirect_to admin_floor_plans_path, notice: "Floor Plans have been imported"
     end
+    
+    private
+    
+      def floor_plan_params
+        params.require(:floor_plan).permit!
+      end
   end
 end

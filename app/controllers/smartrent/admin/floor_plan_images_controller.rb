@@ -47,7 +47,7 @@ module Smartrent
     # POST /floor_plan_images
     # POST /floor_plan_images.json
     def create
-      @floor_plan_image = FloorPlanImage.new(params[:floor_plan_image])
+      @floor_plan_image = FloorPlanImage.new(floor_plan_image_params)
   
       respond_to do |format|
         if @floor_plan_image.save
@@ -66,7 +66,7 @@ module Smartrent
       @floor_plan_image = FloorPlanImage.find(params[:id])
   
       respond_to do |format|
-        if @floor_plan_image.update_attributes(params[:floor_plan_image])
+        if @floor_plan_image.update_attributes(floor_plan_image_params)
           format.html { redirect_to admin_floor_plan_image_path(@floor_plan_image), notice: 'Floor plan image was successfully updated.' }
           format.json { head :no_content }
         else
@@ -95,5 +95,12 @@ module Smartrent
       FloorPlanImage.import(params[:file])
       redirect_to admin_floor_plan_images_path, notice: "Floor Plan Images imported."
     end
+    
+    private
+    
+      def floor_plan_image_params
+        params.require(:floor_plan_image).permit!
+      end
+      
   end
 end

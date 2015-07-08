@@ -34,7 +34,7 @@ module Smartrent
     # POST /admin/features
     # POST /admin/features.json
     def create
-      @admin_feature = Feature.new(params[:admin_feature])
+      @admin_feature = Feature.new(admin_feature_params)
   
       respond_to do |format|
         if @admin_feature.save
@@ -53,7 +53,7 @@ module Smartrent
       @admin_feature = Feature.find(params[:id])
   
       respond_to do |format|
-        if @admin_feature.update_attributes(params[:admin_feature])
+        if @admin_feature.update_attributes(admin_feature_params)
           format.html { redirect_to admin_features_url, notice: 'Feature was successfully updated.' }
           format.json { head :no_content }
         else
@@ -82,5 +82,12 @@ module Smartrent
       Feature.import(params[:file])
       redirect_to admin_features_path, notice: "Features have been imported"
     end
+    
+    private
+    
+      def admin_feature_params
+        params.require(:admin_feature).permit!
+      end
+      
   end
 end

@@ -2,7 +2,7 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::ResidentsController < Admin::AdminController
-    before_filter :set_resident
+    before_action :set_resident
 
     # GET /admin/residents
     # GET /admin/residents.json
@@ -53,7 +53,7 @@ module Smartrent
     # POST /admin/residents
     # POST /admin/residents.json
     def create
-      @resident = Resident.new(params[:resident])
+      @resident = Resident.new(resident_params)
   
       respond_to do |format|
         if @resident.save
@@ -72,7 +72,7 @@ module Smartrent
       @resident = Resident.find(params[:id])
   
       respond_to do |format|
-        if @resident.update_attributes(params[:resident])
+        if @resident.update_attributes(resident_params)
           format.html { redirect_to admin_resident_path(@resident), notice: 'Resident was successfully updated.' }
           format.json { head :no_content }
           format.js {}
@@ -112,7 +112,11 @@ module Smartrent
       Resident.import(params[:file])
       redirect_to admin_residents_path, notice: "Residents have been imported"
     end
+    
+    private
+    
+      def service_params
+        params.require(:service).permit!
+      end
   end
-
-
 end

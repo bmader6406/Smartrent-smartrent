@@ -1,6 +1,6 @@
 module Smartrent
   class Setting < ActiveRecord::Base
-    attr_accessible :key, :value
+    #attr_accessible :key, :value
     validates_presence_of :key, :value
     validates_uniqueness_of :key, :case_sensitive => true
 
