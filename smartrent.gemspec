@@ -20,12 +20,12 @@ Gem::Specification.new do |s|
   s.add_dependency "devise", "~> 3.5.1"
   s.add_dependency "js-routes", "~> 1.0.1"
   s.add_dependency "aws-sdk", "~> 1.9.5"
-  s.add_dependency "ransack", "~> 1.6.6"
+  s.add_dependency "ransack", "~> 1.6.5" # make ransack use polyamorous 1.1
   s.add_dependency "mandrill-api", "~> 1.0.53"
   s.add_dependency "smarter_csv", "~> 1.0.19"
   s.add_dependency "will_paginate-bootstrap", "~> 1.0.1"
-  s.add_dependency "geocoder", "~> 1.2.8"
-  s.add_dependency "squeel", "~> 0.8.9"
-  s.add_dependency "htmlentities", "~> 4.3.3"
-  s.add_dependency "prettyphoto-rails", "~> 0.2.1"
+  s.add_dependency "geocoder", "~> 1.2.9"
+  s.add_dependency "squeel", "~> 1.2.3"
+  s.add_dependency "htmlentities", "~> 4.3.4"
+  #s.add_dependency "prettyphoto-rails", "~> 0.2.1" #TODO: this gem is out of date, don't use it any more
 end
