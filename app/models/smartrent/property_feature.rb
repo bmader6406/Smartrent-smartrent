@@ -13,7 +13,7 @@ module Smartrent
         feature_name = property_feature_hash[:feature_id]
         property = Property.find_by_title(property_title)
         if property
-        feature = Feature.find_by_name(feature_name)
+          feature = Feature.find_by_name(feature_name)
           if feature
             create(:property_id => property.id, :feature_id => feature.id)
           end

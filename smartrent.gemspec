@@ -27,5 +27,5 @@ Gem::Specification.new do |s|
   s.add_dependency "geocoder", "~> 1.2.9"
   s.add_dependency "squeel", "~> 1.2.3"
   s.add_dependency "htmlentities", "~> 4.3.4"
-  #s.add_dependency "prettyphoto-rails", "~> 0.2.1" #TODO: this gem is out of date, don't use it any more
+  #s.add_dependency "prettyphoto-rails", "~> 0.2.1" #this gem is out of date, don't use it any more
 end

@@ -30,10 +30,10 @@ Smartrent::Engine.routes.draw do
   namespace :admin do
     root :to => "residents#index"
     devise_for :users, {
-                         class_name: 'Smartrent::User',
-                         module: :devise,
-    :controllers => { :sessions => "smartrent/admin/sessions" }
-                     }
+      class_name: 'Smartrent::User',
+      module: :devise,
+        :controllers => { :sessions => "smartrent/admin/sessions" }
+    }
     resources :residents do
       collection do
         get "archive/:id", :to => "residents#archive", :as => "archive"
@@ -91,11 +91,11 @@ Smartrent::Engine.routes.draw do
         post "import", :to => "floor_plans#import"
       end
     end
-  resources :settings do
-    collection do
-      get "run-monthly-awards-job", :to => "settings#run_monthly_awards_job", :as => "run_monthly_awards_job"
+    resources :settings do
+      collection do
+        get "run-monthly-awards-job", :to => "settings#run_monthly_awards_job", :as => "run_monthly_awards_job"
+      end
     end
-  end
 
   end
 

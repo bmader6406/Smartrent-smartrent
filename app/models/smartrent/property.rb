@@ -207,7 +207,7 @@ module Smartrent
       if file.class.to_s == "ActionDispatch::Http::UploadedFile"
         f = File.open(file.path, "r:bom|utf-8")
       else
-        f = File.open(Rails.root.to_path + "/app/assets/properties.csv")
+        f = File.open(Smartrent::Engine.root.to_path + "/data/properties.csv")
       end
       properties = SmarterCSV.process(f)
       properties.each do |property_hash|

@@ -35,7 +35,7 @@ module Smartrent
       if file.class.to_s == "ActionDispatch::Http::UploadedFile"
         f = File.open(file.path, "r:bom|utf-8")
       else
-        f = File.open(Rails.root.to_path + "/app/assets/residents.csv")
+        f = File.open(Smartrent::Engine.root.to_path + "/data/residents.csv")
       end
       residents = SmarterCSV.process(f)
       properties = Property.keyed_by_title

@@ -11,7 +11,6 @@ require "will_paginate"
 require "will_paginate-bootstrap"
 require "squeel"
 require "htmlentities"
-#require "prettyphoto-rails"
 
 module Smartrent
   class Engine < ::Rails::Engine
