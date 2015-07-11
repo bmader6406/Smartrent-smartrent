@@ -93,7 +93,7 @@ module Smartrent
 
     def set_home
       #TODO add index homes on title
-      @home = Home.find_by_title(params[:id]) if params[:id]
+      @home = Home.find_by_url(params[:id])
     end
     
     private
