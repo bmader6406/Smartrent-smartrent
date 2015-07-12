@@ -49,9 +49,9 @@ module Smartrent
         resident_hash[:property_id] = nil
         resident_hash[:home_id] = nil
         begin
-          resident_hash[:move_in_date] = resident_hash[:move_in_date].to_date.to_s if resident_hash[:move_in_date]
+          resident_hash[:move_in_date] =  Date.parse(resident_hash[:move_in_date]) if resident_hash[:move_in_date].present?
         rescue Exception => e
-          puts "Yo!..there was an exception while importing residents"
+          puts "Yo!..there was an exception while parsing date #{resident_hash[:move_in_date]}"
           puts e
         end
         #property = Property.find_by_title(property_name)

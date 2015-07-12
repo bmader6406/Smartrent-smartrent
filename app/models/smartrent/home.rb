@@ -7,6 +7,7 @@ module Smartrent
     validates_presence_of :title
     validates_uniqueness_of :title, :case_sensitive => false
     has_many :more_homes, :dependent => :destroy
+    #process_in_background :image
     #geocoded_by :complete_street_address
     #after_validation :geocode
 
