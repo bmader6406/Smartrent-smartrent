@@ -69,7 +69,12 @@ module Smartrent
         end
         resident_hash[:property_id] = property.id if property
         resident_hash[:home_id] = home.id if home
-        create! resident_hash
+        resident = new(resident_hash)
+        if resident.save
+          puts "Resident has been saved"
+        else
+          puts resident.errors.to_a
+        end
       end
     end
     def self.statuses
