@@ -1,5 +1,5 @@
 module Smartrent
-  class ApplicationController < ActionController::Base
+  class ApplicationController < ::ApplicationController
     # before_action :authenticate_user!
     # protect_from_forgery
     layout :layout_by_resource

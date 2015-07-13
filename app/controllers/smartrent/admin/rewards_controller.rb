@@ -6,8 +6,10 @@ module Smartrent
     # GET /admin/rewards.json
     #
     before_action :set_reward
-    def index
+    before_action do
       @active = "rewards"
+    end
+    def index
       @rewards = Reward.paginate(:page => params[:page], :per_page => 15).order(:created_at)
   
       respond_to do |format|
@@ -19,7 +21,6 @@ module Smartrent
     # GET /admin/rewards/1
     # GET /admin/rewards/1.json
     def show
-      @active = "rewards"
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @reward }
@@ -29,7 +30,6 @@ module Smartrent
     # GET /admin/rewards/new
     # GET /admin/rewards/new.json
     def new
-      @active = "rewards"
       @reward = Reward.new
   
       respond_to do |format|
@@ -40,7 +40,6 @@ module Smartrent
   
     # GET /admin/rewards/1/edit
     def edit
-      @active = "rewards"
     end
 
     # POST /admin/rewards
@@ -62,8 +61,6 @@ module Smartrent
     # PUT /admin/rewards/1
     # PUT /admin/rewards/1.json
     def update
-      @reward = Reward.find(params[:id])
-  
       respond_to do |format|
         if @reward.update_attributes(reward_params)
           format.html { redirect_to admin_reward_path(@reward), notice: 'Reward was successfully updated.' }
@@ -75,6 +72,11 @@ module Smartrent
           format.js {}
         end
       end
+    end
+
+    def move_all_rewards_to_initial_balance
+      Resident.move_all_rewards_to_initial_balance
+      redirect_to admin_rewards_path, :notive => "All Resident rewards have been set as initial reward"
     end
   
     # DELETE /admin/rewards/1
@@ -88,7 +90,6 @@ module Smartrent
     end
 
     def import_page
-      @active = "rewards"
       render :import
     end
 

@@ -1,13 +1,13 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <b>Title:</b>
-  <%= @property.title %>
+  <b>Name:</b>
+  <%= @property.name %>
 </p>
 
 <p>
   <b>Phone number:</b>
-  <%= @property.phone_number %>
+  <%= @property.phone %>
 </p>
 <p>
   <%= image_tag @property.image %>
@@ -16,7 +16,7 @@
 
 <p>
   <b>Website:</b>
-  <%= link_to @property.website, @property.website, :target => "_blank" %>
+  <%= link_to @property.website_url, @property.website_url, :target => "_blank" %>
 </p>
 
 <p>
@@ -41,7 +41,7 @@
 
 <p>
   <b>Address:</b>
-  <%= @property.address %>
+  <%= @property.address_line1 %>
 </p>
 <p>
   <b>Zip Code:</b>
@@ -95,7 +95,7 @@
 </p>
 <p>
   <b>Status:</b>
-  <%= @property.status_text %>
+  <%= @property.status %>
 </p>
 
 

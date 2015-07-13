@@ -4,10 +4,12 @@ module Smartrent
   class Admin::FloorPlanImagesController < Admin::AdminController
     # GET /floor_plan_images
     # GET /floor_plan_images.json
-    def index
+    before_action :set_floor_plan_image, :only => [:show, :edit, :delete, :update]
+    before_action do
       @active = "homes"
+    end
+    def index
       @floor_plan_images = FloorPlanImage.paginate(:page => params[:page], :per_page => 15)
-  
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @floor_plan_images }
@@ -17,9 +19,6 @@ module Smartrent
     # GET /floor_plan_images/1
     # GET /floor_plan_images/1.json
     def show
-      @active = "homes"
-      @floor_plan_image = FloorPlanImage.find(params[:id])
-  
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @floor_plan_image }
@@ -29,9 +28,7 @@ module Smartrent
     # GET /floor_plan_images/new
     # GET /floor_plan_images/new.json
     def new
-      @active = "homes"
       @floor_plan_image = FloorPlanImage.new
-  
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @floor_plan_image }
@@ -40,15 +37,12 @@ module Smartrent
   
     # GET /floor_plan_images/1/edit
     def edit
-      @active = "homes"
-      @floor_plan_image = FloorPlanImage.find(params[:id])
     end
   
     # POST /floor_plan_images
     # POST /floor_plan_images.json
     def create
       @floor_plan_image = FloorPlanImage.new(floor_plan_image_params)
-  
       respond_to do |format|
         if @floor_plan_image.save
           format.html { redirect_to admin_floor_plan_image_path(@floor_plan_image), notice: 'Floor plan image was successfully created.' }
@@ -63,8 +57,6 @@ module Smartrent
     # PUT /floor_plan_images/1
     # PUT /floor_plan_images/1.json
     def update
-      @floor_plan_image = FloorPlanImage.find(params[:id])
-  
       respond_to do |format|
         if @floor_plan_image.update_attributes(floor_plan_image_params)
           format.html { redirect_to admin_floor_plan_image_path(@floor_plan_image), notice: 'Floor plan image was successfully updated.' }
@@ -79,9 +71,7 @@ module Smartrent
     # DELETE /floor_plan_images/1
     # DELETE /floor_plan_images/1.json
     def destroy
-      @floor_plan_image = FloorPlanImage.find(params[:id])
       @floor_plan_image.destroy
-  
       respond_to do |format|
         format.html { redirect_to admin_floor_plan_images_url }
         format.json { head :no_content }
@@ -100,6 +90,9 @@ module Smartrent
     
       def floor_plan_image_params
         params.require(:floor_plan_image).permit!
+      end
+      def set_floor_plan_image
+        @floor_plan_image = FloorPlanImage.find(params[:id])
       end
       
   end

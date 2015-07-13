@@ -38,8 +38,8 @@ Smartrent::Engine.routes.draw do
       collection do
         get "archive/:id", :to => "residents#archive", :as => "archive"
         get "send-password-reset-information/:id", :to => "residents#send_password_reset_information", :as => "send_password_reset_information"
-      get "import", :to => "residents#import_page"
-      post "import", :to => "residents#import"
+        get "import", :to => "residents#import_page"
+        post "import", :to => "residents#import"
       end
     end
 

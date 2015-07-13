@@ -1,4 +1,4 @@
-"origin_id","title","website","bozzuto_url","latitude","longitude","address","city","state","zip","county","email","phone_number","description","promotion_title","promotion_subtitle","promotion_url","promotion_expiration_date","image"
+"origin_id","name","website_url","bozzuto_url","latitude","longitude","address_line1","city","state","zip","county","email","phone","description","promotion_title","promotion_subtitle","promotion_url","promotion_expiration_date","image"
 "216","The Apartments at Regent&#039;s Park","http://www.regentsparkapartments.com/?utm_source=bozzuto.com&utm_medium=url&utm_campaign=bozzuto.com","http://bozzuto.com/apartments/communities/24-the-apartments-at-regents-park","38.8731","-77.2681","9333 Clocktower Place","Fairfax","VA","22031","Fairfax","regentspark@lead2lease.com","888.488.2540","<ul><li><p>
 	Introducing a distinguished new style of luxury apartment living just steps away from the Vienna Metro. Enjoy every comfort of Regent&#39;s Park and real value in fine apartment living.&nbsp;</p>
 <p>

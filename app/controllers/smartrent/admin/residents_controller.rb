@@ -114,6 +114,9 @@ module Smartrent
     end
     
     private
+    def resident_params
+      params.require(:resident).permit!
+    end
     
       def service_params
         params.require(:service).permit!

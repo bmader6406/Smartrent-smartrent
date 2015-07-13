@@ -7,7 +7,7 @@ module Smartrent
     # Setup accessible (or protected) attributes for your model
     #attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :type_, :status, :current_community, :city, :state, :country, :current_password, :origin_id, :property_id, :home_id, :sign_up_bonus
     #attr_reader :sign_up_bonus
-    @@sign_up_bonus = 0
+    @@sign_up_bonus = 350
 
     validates_uniqueness_of :origin_id, :allow_nil => true
     validates_presence_of :status
@@ -19,6 +19,16 @@ module Smartrent
     has_many :rewards, :dependent => :destroy
 
     def sign_up_bonus
+      sign_up_reward = rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
+      if sign_up_reward.present?
+        sign_up_reward.first.amount.to_f
+      else
+        0.0
+      end
+    end
+
+    #Some problem with the above method, always returning 0
+    def sign_up_bonus_
       sign_up_reward = rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
       if sign_up_reward.present?
         sign_up_reward.first.amount.to_f
@@ -148,6 +158,15 @@ module Smartrent
         rewards.first.amount
       else
         0.0
+      end
+    end
+    def self.move_all_rewards_to_initial_balance
+      Resident.each do |resident|
+        if resident.rewards.present?
+          resident.rewards.each do |reward|
+            reward.update_attributes(:type_ => Reward.TYPE_INITIAL_REWARD)
+          end
+        end
       end
     end
     def monthly_awards_amount

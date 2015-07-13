@@ -49,7 +49,6 @@ module Smartrent
     # POST /admin/more_more_homes.json
     def create
       @more_home = MoreHome.new(more_home_params)
-  
       respond_to do |format|
         if @more_home.save
           format.html { redirect_to [:admin, @more_home], notice: 'MoreHome was successfully created.' }
@@ -102,9 +101,8 @@ module Smartrent
     def set_more_home
       @more_home = MoreHome.find(params[:id]) if params[:id]
     end
-    
+
     private
-    
       def more_home_params
         params.require(:more_home).permit!
       end

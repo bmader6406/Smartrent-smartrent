@@ -13,7 +13,7 @@
       <td><%= Smartrent::Reward.types[reward.type_] %></td>
       <td><%= reward.period_start.to_s(:year_month_day) if reward.period_start %></td>
       <td><%= reward.period_end.to_s(:year_month_day) if reward.period_end %></td>
-      <td><%= reward.property.title if reward.property %></td>
+      <td><%= reward.property.name if reward.property %></td>
       <td><%= number_to_currency reward.amount %> <%= link_to edit_admin_reward_path(reward) do %>
         <span class="glyphicon glyphicon-pencil"></span>
       <% end %>

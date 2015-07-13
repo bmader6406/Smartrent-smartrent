@@ -93,9 +93,7 @@ module Smartrent
     def set_property
       @property = Property.find(params[:id]) if params[:id]
     end
-    
     private
-    
       def property_params
         params.require(:property).permit!
       end

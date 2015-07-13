@@ -9,16 +9,16 @@
 <% if @properties.present? %>
   <table class="table">
     <tr>
-      <th>Title</th>
+      <th>Name</th>
       <th>Description</th>
       <th>Website</th>
       <th>Actions</th>
     </tr>
   <% @properties.each do |property| %>
     <tr>
-      <td><%= property.title %></td>
+      <td><%= property.name %></td>
       <td><%= strip_tags(property.description).truncate(27) if property.description %></td>
-      <td><%= link_to "Website Url", property.website, :target => "_blank" %></td>
+      <td><%= link_to "Website Url", property.website_url, :target => "_blank" %></td>
       <td><%= link_to 'Show', admin_property_path(property) %> | <%= link_to 'Edit', edit_admin_property_path(property) %> | <%= link_to 'Destroy', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %></td>
     </tr>
   <% end %>

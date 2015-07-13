@@ -45,7 +45,7 @@
     <div class="smartrent resident-box">
       <b>Total:</b> <%= @resident.total_rewards  %><br />
       <b>Monthly Awards:</b> <%= @resident.monthly_awards_amount %><br />
-      <b>Sign-Up Bonus:</b> <%= @resident.sign_up_bonus %><br />
+      <b>Sign-Up Bonus:</b> <%= @resident.sign_up_bonus_ %><br />
       <b>Initial Reward:</b> <%= @resident.initial_reward %><br />
       <button class="btn btn-primary">View Details</button>
     </div>
@@ -60,7 +60,7 @@
       </div>
       <div class="col-md-7">
         <b>Monthly Total:</b> <%= number_to_currency @resident.monthly_awards_amount %><br />
-        <b>Sign-Up Bonus:</b> <%= number_to_currency @resident.sign_up_bonus %><br />
+        <b>Sign-Up Bonus:</b> <%= number_to_currency @resident.sign_up_bonus_ %><br />
         <b>Initial Reward:</b> <%= number_to_currency @resident.initial_reward %>
       </div>
     </div>
