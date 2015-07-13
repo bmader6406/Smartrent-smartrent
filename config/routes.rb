@@ -40,6 +40,8 @@ Smartrent::Engine.routes.draw do
         get "send-password-reset-information/:id", :to => "residents#send_password_reset_information", :as => "send_password_reset_information"
         get "import", :to => "residents#import_page"
         post "import", :to => "residents#import"
+        get "move-all-rewards-to-initial-balance", :to => "residents#move_all_rewards_to_initial_balance", :as => "move_all_rewards_to_initial_balance"
+
       end
     end
 

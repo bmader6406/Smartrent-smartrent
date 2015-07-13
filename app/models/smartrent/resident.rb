@@ -161,7 +161,7 @@ module Smartrent
       end
     end
     def self.move_all_rewards_to_initial_balance
-      Resident.each do |resident|
+      Resident.all.each do |resident|
         if resident.rewards.present?
           resident.rewards.each do |reward|
             reward.update_attributes(:type_ => Reward.TYPE_INITIAL_REWARD)

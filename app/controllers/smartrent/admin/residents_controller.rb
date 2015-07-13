@@ -65,6 +65,11 @@ module Smartrent
         end
       end
     end
+
+    def move_all_rewards_to_initial_balance
+      Resident.move_all_rewards_to_initial_balance
+      redirect_to admin_rewards_path, :notive => "All Resident rewards have been set as initial reward"
+    end
   
     # PUT /admin/residents/1
     # PUT /admin/residents/1.json
