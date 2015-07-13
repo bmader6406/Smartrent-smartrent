@@ -11,8 +11,12 @@ module Smartrent
       floor_plan_images.each do |floor_plan_image_hash|
         home_name = floor_plan_image_hash[:more_home_id]
         more_home = MoreHome.find_by_name(home_name)
-        floor_plan_image_hash[:more_home_id] = more_home.id
-        create floor_plan_image_hash
+        if more_home.present?
+          floor_plan_image_hash[:more_home_id] = more_home.id
+          create floor_plan_image_hash
+        else
+          puts "Can't as home is not present"
+        end
       end
     end
   end

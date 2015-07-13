@@ -3,9 +3,6 @@ module Smartrent
     has_many :property_features, :dependent => :destroy
     has_many :features, :through => :property_features
     has_many :floor_plans, :dependent => :destroy
-    attr_accessor :price
-
-    @@price = 0
 
     before_save do
       self.state = self.state.downcase if self.state
@@ -13,9 +10,6 @@ module Smartrent
       self.county = self.county.downcase if self.county
     end
 
-    def price=(amount)
-      @@price = bonus
-    end
 
     def self.property_ids_from_properties(properties)
       property_ids = []
@@ -51,7 +45,7 @@ module Smartrent
     def self.matches_all_features(properties, feature_ids)
       result = Property.joins(:property_features)
         .where(:property_features => {:feature_id => feature_ids})
-        .group("smartrent_properties.id")
+        .group("properties.id")
         .having("count(*) = ?", feature_ids.count)
       self.filter_from_result result, properties
     end
@@ -59,19 +53,19 @@ module Smartrent
     def self.where_bed(properties, bed_count)
       result = Property.joins(:floor_plans)
         .where(:floor_plans => {:beds => bed_count})
-        .group("smartrent_properties.id")
+        .group("properties.id")
       self.filter_from_result result, properties
     end
     def self.where_bed_more_than_eq(properties,bed_count)
       result = Property.joins(:floor_plans)
         .where("smartrent_floor_plans.beds >= ?", bed_count)
-        .group("smartrent_properties.id")
+        .group("properties.id")
       self.filter_from_result result, properties
     end
     def self.where_penthouse(properties)
       result = Property.joins(:floor_plans)
         .where(:floor_plans => {:penthouse => true})
-        .group("smartrent_properties.id")
+        .group("properties.id")
       self.filter_from_result result, properties
     end
     def self.where_price(price, properties)
@@ -171,7 +165,7 @@ module Smartrent
 
     def self.custom_ransack(q)
       if q
-        q.delete_if {|key, value| (key == "studio_true" or key == "maximum_price" or key == "minimum_price" or key == "where_one_bed" or key == "where_two_bed" or key == "where_three_more_bed" or key == "where_penthouse") and value == "0"}
+        q.delete_if {|key, value| key == "studio_true" or key == "maximum_price" or key == "minimum_price" or key == "where_one_bed" or key == "where_two_bed" or key == "where_three_more_bed" or key == "where_penthouse"}
       end
       super q
     end

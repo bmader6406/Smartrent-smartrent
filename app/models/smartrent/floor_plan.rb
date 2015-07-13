@@ -14,8 +14,8 @@ module Smartrent
       f = File.open(file.path, "r:bom|utf-8")
       floor_plans = SmarterCSV.process(f)
       floor_plans.each do |floor_plan|
-        property_title = floor_plan[:property_id]
-        property = Property.find_by_title(property_title)
+        property_name = floor_plan[:property_id]
+        property = Property.find_by_name(property_name)
         if property
           floor_plan[:property_id] = property.id
           create! floor_plan

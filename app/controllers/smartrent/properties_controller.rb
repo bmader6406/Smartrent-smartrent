@@ -8,14 +8,17 @@ module Smartrent
       #@properties = Property.all
       @current_page = "properties"
       q_params = params[:q]
-      q_params.delete_if {|key, value| key == "price"}
-      price = Property.get_price(q_params)
+      q_params.delete_if {|key, value| key == "price"} if q_params.present?
+      price = Property.get_price(q_params) if q_params.present?
+      #Doing this to cater new ransack issue of not allowing custom params in q
+      q_params_copy = q_params.clone if q_params.present?
       @q = Property.custom_ransack(q_params)
-      #price = q_params[:price]
       properties = Property.unique_result(@q)
-      #q_params[:price] = price if price.present?
-      q_params[:price] = price
-      properties = Property.custom_filters q_params, properties
+      q_params_copy[:price] = price if q_params.present?
+      #puts q_params_copy
+      #exit
+      q_params_copy.delete_if {|key, value| (key == "maximum_price" or key == "minimum_price" or key == "where_one_bed" or key == "where_two_bed" or key == "where_three_more_bed" or key == "where_penthouse") and value == "0"} if q_params.present?
+      properties = Property.custom_filters q_params_copy, properties
       @properties_grouped_by_states = Smartrent::Property.grouped_by_states(properties)
   
       respond_to do |format|
