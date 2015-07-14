@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "devise", "~> 3.5.1"
   s.add_dependency "js-routes", "~> 1.0.1"
   s.add_dependency "aws-sdk", "~> 1.9.5"
-  #s.add_dependency "ransack" # make ransack use polyamorous 1.1
+  s.add_dependency "ransack", "~> 1.6.5" # must use 1.6.5 to make ransack use polyamorous 1.1
   s.add_dependency "mandrill-api", "~> 1.0.53"
   s.add_dependency "smarter_csv", "~> 1.0.19"
   s.add_dependency "will_paginate-bootstrap", "~> 1.0.1"
