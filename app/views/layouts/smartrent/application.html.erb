@@ -24,6 +24,8 @@
     <%= render partial: "layouts/smartrent/header" %>
       <% if notice %>
         <%= render partial: "shared/success_message", :locals => {:message => notice}  %>
+      <% elsif flash[:error].present? %>
+        <%= render partial: "shared/error_message", :locals => {:message => alert}  %>
       <% end %>
     <%= yield %>
     <%= render partial: "layouts/smartrent/footer" %>

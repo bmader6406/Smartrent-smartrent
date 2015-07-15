@@ -100,7 +100,7 @@ module Smartrent
             authorize! :cud, ::Property
           when "edit", "update", "destroy"
             authorize! :cud, @property
-          else
+          when "read"
             authorize! :read, @property
         end
       end

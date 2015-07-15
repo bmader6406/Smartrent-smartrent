@@ -10,8 +10,8 @@ module Smartrent
       @active = "rewards"
     end
     def index
-      @rewards = Reward.paginate(:page => params[:page], :per_page => 15).order(:created_at)
-  
+      @rewards = current_user.managed_rewards
+      @rewards = @rewards.paginate(:page => params[:page], :per_page => 15).order(:created_at) if @rewards.present?
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @rewards }
@@ -94,12 +94,20 @@ module Smartrent
       redirect_to admin_rewards_path, notice: "Rewards have been imported"
     end
 
-    def set_reward
-      @reward = Reward.find(params[:id]) if params[:id]
-    end
     
     private
-    
+      def set_reward
+        @reward = Reward.find(params[:id]) if params[:id]
+        case action_name
+          when "create"
+            authorize! :cud, ::Reward
+          when "edit", "update", "destroy"
+            authorize! :cud, @reward
+          when "read"
+            authorize! :read, @reward
+        end
+      end
+
       def reward_params
         params.require(:reward).permit!
       end
