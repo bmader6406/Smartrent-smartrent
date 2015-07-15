@@ -6,9 +6,12 @@ module Smartrent
 
     # GET /admin/residents
     # GET /admin/residents.json
-    def index
+    before_action do
       @active = "residents"
-      @residents = Resident.paginate(:page => params[:page], :per_page => 15)
+    end
+
+    def index
+      @residents = current_user.managed_residents.paginate(:page => params[:page], :per_page => 15)
   
       respond_to do |format|
         format.html # index.html.erb
@@ -19,7 +22,6 @@ module Smartrent
     # GET /admin/residents/1
     # GET /admin/residents/1.json
     def show
-      @active = "residents"
       @resident_rewards = @resident.rewards.paginate(:page => params[:page], :per_page => 10)
       respond_to do |format|
         format.html # show.html.erb
@@ -30,7 +32,6 @@ module Smartrent
     # GET /admin/residents/new
     # GET /admin/residents/new.json
     def new
-      @active = "residents"
       @resident = Resident.new
   
       respond_to do |format|
@@ -41,8 +42,6 @@ module Smartrent
   
     # GET /admin/residents/1/edit
     def edit
-      @active = "residents"
-      @resident = Resident.find(params[:id])
     end
 
     def archive
@@ -67,15 +66,13 @@ module Smartrent
     end
 
     def move_all_rewards_to_initial_balance
-      Resident.move_all_rewards_to_initial_balance
-      redirect_to admin_rewards_path, :notive => "All Resident rewards have been set as initial reward"
+      Resident.move_all_rewards_to_initial_balance(current_user.managed_residents)
+      redirect_to admin_rewards_path, :notive => "All Residents rewards have been set as initial reward"
     end
   
     # PUT /admin/residents/1
     # PUT /admin/residents/1.json
     def update
-      @resident = Resident.find(params[:id])
-  
       respond_to do |format|
         if @resident.update_attributes(resident_params)
           format.html { redirect_to admin_resident_path(@resident), notice: 'Resident was successfully updated.' }
@@ -98,33 +95,40 @@ module Smartrent
         format.json { head :no_content }
       end
     end
+
     def send_password_reset_information
       @resident.send_reset_password_instructions
       respond_to do |format|
         format.html {redirect_to admin_resident_path(@resident), :notice => "The password reset information have been sent to the email"}
         format.js {}
       end
-      
     end
-    def set_resident
-      @resident = Resident.find(params[:id]) if params[:id]
-    end
+
     def import_page
-      @active = "residents"
       render :import
     end
+
     def import
       Resident.import(params[:file])
       redirect_to admin_residents_path, notice: "Residents have been imported"
     end
     
     private
+
+    def set_resident
+      @resident = Resident.find(params[:id]) if params[:id]
+      case action_name
+        when "create"
+          authorize! :cud, ::Resident
+        when "edit", "update", "destroy"
+          authorize! :cud, @resident
+        when "read"
+          authorize! :read, @resident
+      end
+    end
+
     def resident_params
       params.require(:resident).permit!
     end
-    
-      def service_params
-        params.require(:service).permit!
-      end
   end
 end

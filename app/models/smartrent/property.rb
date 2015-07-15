@@ -3,6 +3,7 @@ module Smartrent
     has_many :property_features, :dependent => :destroy
     has_many :features, :through => :property_features
     has_many :floor_plans, :dependent => :destroy
+    has_many :residents
 
     before_save do
       self.state = self.state.downcase if self.state

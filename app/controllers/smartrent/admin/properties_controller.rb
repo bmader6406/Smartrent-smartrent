@@ -3,11 +3,13 @@ require_dependency "smartrent/admin/admin_controller"
 module Smartrent
   class Admin::PropertiesController < Admin::AdminController
     before_action :set_property
+    before_action do 
+      @active = "properties"
+    end
     # GET /properties
     # GET /properties.json
     def index
-      @active = "properties"
-      @properties = Property.paginate(:page => params[:page], :per_page => 15)
+      @properties = current_user.managed_properties.paginate(:page => params[:page], :per_page => 15)
   
       respond_to do |format|
         format.html # index.html.erb
@@ -58,8 +60,6 @@ module Smartrent
     # PUT /properties/1
     # PUT /properties/1.json
     def update
-      @property = Property.find(params[:id])
-  
       respond_to do |format|
         if @property.update_attributes(property_params)
           format.html { redirect_to admin_property_path(@property), notice: 'Property was successfully updated.' }
@@ -74,7 +74,6 @@ module Smartrent
     # DELETE /properties/1
     # DELETE /properties/1.json
     def destroy
-      @property = Property.find(params[:id])
       @property.destroy
   
       respond_to do |format|
@@ -90,12 +89,20 @@ module Smartrent
       Property.import(params[:file])
       redirect_to admin_properties_path, notice: "Properties have been imported"
     end
-    def set_property
-      @property = Property.find(params[:id]) if params[:id]
-    end
     private
       def property_params
         params.require(:property).permit!
+      end
+      def set_property
+        @property = Property.find(params[:id]) if params[:id]
+        case action_name
+          when "create"
+            authorize! :cud, ::Property
+          when "edit", "update", "destroy"
+            authorize! :cud, @property
+          else
+            authorize! :read, @property
+        end
       end
   end
 end
