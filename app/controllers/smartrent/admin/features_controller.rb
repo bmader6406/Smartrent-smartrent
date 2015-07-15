@@ -2,6 +2,7 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::FeaturesController < Admin::AdminController
+    before_filter :authenticate_admin!
     # GET /admin/features
     # GET /admin/features.json
     def index

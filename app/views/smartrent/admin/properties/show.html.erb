@@ -21,7 +21,7 @@
 
 <p>
   <b>Description:</b>
-  <%= @property.description.html_safe %>
+  <%= @property.description.html_safe if @property.description.present? %>
 </p>
 
 <p>

@@ -2,6 +2,8 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::PropertyFeaturesController < Admin::AdminController
+    before_filter :require_user
+    before_filter :authenticate_admin!
 
     def import_page
       @active = "properties"
