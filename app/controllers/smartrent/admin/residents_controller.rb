@@ -2,6 +2,7 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::ResidentsController < Admin::AdminController
+    before_filter :authenticate_admin!, :only => [:import, :import_page]
     before_action :set_resident
 
     # GET /admin/residents
@@ -22,7 +23,9 @@ module Smartrent
     # GET /admin/residents/1
     # GET /admin/residents/1.json
     def show
-      @resident_rewards = @resident.rewards.paginate(:page => params[:page], :per_page => 10)
+      if @resident.property.is_smartrent
+        @resident_rewards = @resident.rewards.paginate(:page => params[:page], :per_page => 10)
+      end
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @resident }
@@ -124,6 +127,8 @@ module Smartrent
           authorize! :cud, @resident
         when "read"
           authorize! :read, @resident
+        else
+          authorize! :read, ::Resident
       end
     end
 

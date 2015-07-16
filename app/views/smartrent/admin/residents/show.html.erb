@@ -1,15 +1,19 @@
 <div class="row">
   <div class="col-md-3">
     <div class="btn-group" role="group" aria-label="...">
+      <% if can? :update, @resident %>
       <%= link_to edit_admin_resident_path(@resident), {:class => "btn btn-default"} do%>
           <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit
         <% end%>
+      <% end %>
       <button type="button" class="btn btn-default">
           <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Tickets
       </button>
-      <%= link_to archive_admin_residents_path(@resident) , {:class => "btn btn-default"} do%>
-        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Archive
-      <% end %>
+      <% if can? :update, @resident %>
+        <%= link_to archive_admin_residents_path(@resident) , {:class => "btn btn-default"} do%>
+          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Archive
+        <% end %>
+    <% end %>
     </div>
     <br />
     <div class="clearfix"></div>
@@ -42,15 +46,18 @@
     </div>
     <div class="vehicle-info resident-box">
     </div>
-    <div class="smartrent resident-box">
-      <b>Total:</b> <%= @resident.total_rewards  %><br />
-      <b>Monthly Awards:</b> <%= @resident.monthly_awards_amount %><br />
-      <b>Sign-Up Bonus:</b> <%= @resident.sign_up_bonus_ %><br />
-      <b>Initial Reward:</b> <%= @resident.initial_reward %><br />
-      <button class="btn btn-primary">View Details</button>
-    </div>
+    <% if @resident.property.is_smartrent %>
+      <div class="smartrent resident-box">
+        <b>Total:</b> <%= @resident.total_rewards  %><br />
+        <b>Monthly Awards:</b> <%= @resident.monthly_awards_amount %><br />
+        <b>Sign-Up Bonus:</b> <%= @resident.sign_up_bonus_ %><br />
+        <b>Initial Reward:</b> <%= @resident.initial_reward %><br />
+        <button class="btn btn-primary">View Details</button>
+      </div>
+  <% end %>
   </div>
   <div class="col-md-9">
+    <% if @resident.property.is_smartrent %>
     <div class="col-md-4 resident-box resident-top-col">
       <b>SmartRent Balance</b><br />
       <div class="col-md-5">
@@ -64,22 +71,23 @@
         <b>Initial Reward:</b> <%= number_to_currency @resident.initial_reward %>
       </div>
     </div>
-    <div class="col-md-4 resident-box resident-right-col resident-top-col">
-      <b>SmarRent Status</b><br />
-      <div class="col-md-5">
-        <div class="resident-status-box smartrent-status-<%= @resident.status %>">
-          <%= @resident.status_text %>
-          <div class="resident-status-bottom resident-status-bottom-<%= @resident.status_text.downcase %>">
-            <span class="glyphicon glyphicon-chevron-down"></span>
-            </div>
+      <div class="col-md-4 resident-box resident-right-col resident-top-col">
+        <b>SmarRent Status</b><br />
+        <div class="col-md-5">
+          <div class="resident-status-box smartrent-status-<%= @resident.status %>">
+            <%= @resident.status_text %>
+            <div class="resident-status-bottom resident-status-bottom-<%= @resident.status_text.downcase %>">
+              <span class="glyphicon glyphicon-chevron-down"></span>
+              </div>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <b>Move-in Date:</b> <%= @resident.move_in_date.to_s(:year_month_day) if @resident.move_in_date.present? %><br />
+          <b>SmartRent Months:</b> <%= @resident.total_months.to_i %>
         </div>
       </div>
-      <div class="col-md-7">
-        <b>Move-in Date:</b> <%= @resident.move_in_date.to_s(:year_month_day) if @resident.move_in_date.present? %><br />
-        <b>SmartRent Months:</b> <%= @resident.total_months.to_i %>
-      </div>
-    </div>
-    <div class="clearfix"></div>
+      <div class="clearfix"></div>
+    <% end %>
     <div class="col-md-4 resident-box password-reset-request-box">
       <b>Reset Password Request</b>
       <br />
@@ -92,8 +100,10 @@
     <div class="col-md-4 resident-box resident-right-col password-change-form-box">
       <%= render partial: "password_change_form" %>
     </div>
-    <div class="col-md-10 resident-box">
-      <%= render partial: "rewards" %>
-    </div>
+    <% if @resident.property.is_smartrent %>
+      <div class="col-md-10 resident-box">
+        <%= render partial: "rewards" %>
+      </div>
+    <% end %>
   </div>
 </div>

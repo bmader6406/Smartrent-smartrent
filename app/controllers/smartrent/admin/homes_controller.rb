@@ -4,10 +4,13 @@ module Smartrent
   class Admin::HomesController < Admin::AdminController
     # GET /homes
     # GET /homes.json
+    before_filter :authenticate_admin!
     before_action :set_home
+    before_action do
+      @active = "homes"
+    end
 
     def index
-      @active = "homes"
       @homes = Home.paginate(:page => params[:page], :per_page => 10)
   
       respond_to do |format|
@@ -19,7 +22,6 @@ module Smartrent
     # GET /homes/1
     # GET /homes/1.json
     def show
-      @active = "homes"
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @home }
@@ -29,7 +31,6 @@ module Smartrent
     # GET /homes/new
     # GET /homes/new.json
     def new
-      @active = "homes"
       @home = Home.new
       respond_to do |format|
         format.html # new.html.erb
@@ -39,7 +40,6 @@ module Smartrent
   
     # GET /homes/1/edit
     def edit
-      @active = "homes"
     end
   
     # POST /homes
@@ -82,7 +82,6 @@ module Smartrent
     end
 
     def import_page
-      @active = "homes"
       render :import
     end
 
@@ -91,16 +90,13 @@ module Smartrent
       redirect_to admin_homes_path, notice: "Homes imported."
     end
 
-    def set_home
-      #TODO add index homes on title
-      @home = Home.find_by_url(params[:id])
-    end
     
     private
-    
       def home_params
         params.require(:home).permit!
       end
-      
+      def set_home
+        @home = Home.find(params[:id]) if params[:id].present?
+      end
   end
 end

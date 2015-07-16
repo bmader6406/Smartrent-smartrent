@@ -2,6 +2,7 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::PropertiesController < Admin::AdminController
+    before_filter :authenticate_admin!, :only => [:import, :import_page]
     before_action :set_property
     before_action do 
       @active = "properties"
@@ -102,6 +103,8 @@ module Smartrent
             authorize! :cud, @property
           when "read"
             authorize! :read, @property
+          else
+            authorize! :read, ::Property
         end
       end
   end

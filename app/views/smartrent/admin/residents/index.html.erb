@@ -23,7 +23,8 @@
       <td><%= resident.email %></td>
       <td><%= resident.property.name if resident.property %></td>
       <td><%= resident.status_text %></td>
-      <td><%= link_to 'Show', admin_resident_path(resident) %> | <%= link_to 'Edit', edit_admin_resident_path(resident) %> | <%= link_to 'Destroy', admin_resident_path(resident), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <td><%= link_to 'Show', admin_resident_path(resident) %> <% if can? :update, @resident %>| <%= link_to 'Edit', edit_admin_resident_path(resident) %> <% end %> <% if can? :destroy, @resident %> | <%= link_to 'Destroy', admin_resident_path(resident), method: :delete, data: { confirm: 'Are you sure?' } %><% end %></td>
+      <%  %>
     </tr>
   <% end %>
   </table>

@@ -5,9 +5,12 @@ module Smartrent
     # GET /admin/more_more_homes
     # GET /admin/more_more_homes.json
     #
+    before_filter :authenticate_admin!, :only => [:import, :import_page]
+    before_action do
+      @active = "homes"
+    end
     before_action :set_more_home
     def index
-      @active = "homes"
       @more_homes = MoreHome.paginate(:page => params[:page], :per_page => 15).order(:created_at)
   
       respond_to do |format|
@@ -19,7 +22,6 @@ module Smartrent
     # GET /admin/more_more_homes/1
     # GET /admin/more_more_homes/1.json
     def show
-      @active = "homes"
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @more_home }
@@ -29,7 +31,6 @@ module Smartrent
     # GET /admin/more_more_homes/new
     # GET /admin/more_more_homes/new.json
     def new
-      @active = "homes"
       @more_home = MoreHome.new
       #3.times { @more_home.floor_plan_images.build }
   
@@ -41,8 +42,6 @@ module Smartrent
   
     # GET /admin/more_more_homes/1/edit
     def edit
-      @active = "homes"
-      @more_home = MoreHome.find(params[:id])
     end
 
     # POST /admin/more_more_homes
@@ -63,8 +62,6 @@ module Smartrent
     # PUT /admin/more_more_homes/1
     # PUT /admin/more_more_homes/1.json
     def update
-      @more_home = MoreHome.find(params[:id])
-  
       respond_to do |format|
         if @more_home.update_attributes(more_home_params)
           format.html { redirect_to admin_more_home_path(@more_home), notice: 'MoreHome was successfully updated.' }
@@ -89,7 +86,6 @@ module Smartrent
     end
 
     def import_page
-      @active = "homes"
       render :import
     end
 
@@ -98,13 +94,13 @@ module Smartrent
       redirect_to admin_more_homes_path, notice: "more_more_homes have been imported"
     end
 
-    def set_more_home
-      @more_home = MoreHome.find(params[:id]) if params[:id]
-    end
 
     private
       def more_home_params
         params.require(:more_home).permit!
+      end
+      def set_more_home
+        @more_home = MoreHome.find(params[:id]) if params[:id]
       end
   end
 end

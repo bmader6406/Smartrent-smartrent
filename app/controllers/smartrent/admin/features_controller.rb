@@ -2,11 +2,14 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::FeaturesController < Admin::AdminController
-    before_filter :authenticate_admin!
+    before_filter :authenticate_admin!, :only => [:import, :import_page]
+    before_action :set_feature
+    before_action do
+      @active = "properties"
+    end
     # GET /admin/features
     # GET /admin/features.json
     def index
-      @active = "properties"
       @admin_features = Feature.paginate(:page => params[:page], :per_page => 15)
       respond_to do |format|
         format.html # index.html.erb
@@ -17,7 +20,6 @@ module Smartrent
     # GET /admin/features/new
     # GET /admin/features/new.json
     def new
-      @active = "properties"
       @admin_feature = Feature.new
   
       respond_to do |format|
@@ -28,8 +30,6 @@ module Smartrent
   
     # GET /admin/features/1/edit
     def edit
-      @active = "properties"
-      @admin_feature = Feature.find(params[:id])
     end
   
     # POST /admin/features
@@ -51,8 +51,6 @@ module Smartrent
     # PUT /admin/features/1
     # PUT /admin/features/1.json
     def update
-      @admin_feature = Feature.find(params[:id])
-  
       respond_to do |format|
         if @admin_feature.update_attributes(admin_feature_params)
           format.html { redirect_to admin_features_url, notice: 'Feature was successfully updated.' }
@@ -67,7 +65,6 @@ module Smartrent
     # DELETE /admin/features/1
     # DELETE /admin/features/1.json
     def destroy
-      @admin_feature = Feature.find(params[:id])
       @admin_feature.destroy
   
       respond_to do |format|
@@ -76,7 +73,6 @@ module Smartrent
       end
     end
     def import_page
-      @active = "properties"
       render :import
     end
     def import
@@ -88,6 +84,20 @@ module Smartrent
     
       def admin_feature_params
         params.require(:admin_feature).permit!
+      end
+
+      def set_feature
+        @admin_feature = Feature.find(params[:id]) if params[:id]
+        case action_name
+          when "create"
+            authorize! :cud, Smartrent::Feature
+          when "edit", "update", "destroy"
+            authorize! :cud, @admin_feature
+          when "read"
+            authorize! :read, @admin_feature
+          else
+            authorize! :read, Smartrent::Feature
+        end
       end
       
   end

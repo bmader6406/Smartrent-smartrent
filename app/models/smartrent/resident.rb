@@ -7,16 +7,18 @@ module Smartrent
     # Setup accessible (or protected) attributes for your model
     #attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :type_, :status, :current_community, :city, :state, :country, :current_password, :origin_id, :property_id, :home_id, :sign_up_bonus
     #attr_reader :sign_up_bonus
-    @@sign_up_bonus = 350
+    @@sign_up_bonus = 0
 
     validates_uniqueness_of :origin_id, :allow_nil => true
     validates_presence_of :status
+    validates_uniqueness_of :email, :allow_blank => true
 
     #attr_accessor :original_password
     # #attr_accessible :title, :body
     belongs_to :property
     belongs_to :home
     has_many :rewards, :dependent => :destroy
+    #has_one :crm_resident, :class_name => "Resident", :foreign_key => :crm_resident_id
 
     def sign_up_bonus
       sign_up_reward = rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
@@ -25,6 +27,10 @@ module Smartrent
       else
         0.0
       end
+    end
+
+    def crm_resident
+      ::Resident::where(:smartrent_resident_id => id)
     end
 
     #Some problem with the above method, always returning 0
@@ -131,13 +137,9 @@ module Smartrent
       update_attributes(:status => self.class.STATUS_ARCHIVE)
     end
     after_create do
-      if @@sign_up_bonus.present?
-        sign_up_bonus = @@sign_up_bonus
-      else
-        sign_up_bonus = Setting.sign_up_bonus
-      end
+      @@sign_up_bonus ||= Setting.sign_up_bonus
       if !rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).present?
-        rewards.create!(:amount => sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
+        rewards.create!(:amount => @@sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
       end
       if move_in_date.present? and !property.nil? and property.status == Property.STATUS_ACTIVE and ((Time.now.month - move_in_date.month) >= 1 and (move_out_date.nil? or (move_out_date.month - Time.now.month) == 1))
         rewards.create!(:amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)

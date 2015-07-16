@@ -4,7 +4,8 @@ module Smartrent
   class Admin::FloorPlanImagesController < Admin::AdminController
     # GET /floor_plan_images
     # GET /floor_plan_images.json
-    before_action :set_floor_plan_image, :only => [:show, :edit, :delete, :update]
+    before_filter :authenticate_admin!, :only => [:import, :import_page]
+    before_action :set_floor_plan_image
     before_action do
       @active = "homes"
     end
@@ -78,7 +79,6 @@ module Smartrent
       end
     end
     def import_page
-      @active = "homes"
       render "import"
     end
     def import
@@ -92,7 +92,17 @@ module Smartrent
         params.require(:floor_plan_image).permit!
       end
       def set_floor_plan_image
-        @floor_plan_image = FloorPlanImage.find(params[:id])
+        @floor_plan_image = FloorPlanImage.find(params[:id]) if params[:id].present?
+        case action_name
+          when "create"
+            authorize! :cud, Smartrent::FloorPlanImage
+          when "edit", "update", "destroy"
+            authorize! :cud, @floor_plan_image
+          when "read"
+            authorize! :read, @floor_plan_image
+          else
+            authorize! :read, Smartrent::FloorPlanImage
+        end
       end
       
   end

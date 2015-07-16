@@ -4,8 +4,11 @@ module Smartrent
   class Admin::SettingsController < Admin::AdminController
     # GET /settings
     # GET /settings.json
-    def index
+    before_action do
       @active = "settings"
+    end
+    before_action :set_setting
+    def index
       @settings = Setting.paginate(:page => params[:page], :per_page => 15)
   
       respond_to do |format|
@@ -17,8 +20,6 @@ module Smartrent
     # GET /settings/1
     # GET /settings/1.json
     def show
-      @setting = Setting.find(params[:id])
-  
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @setting }
@@ -60,8 +61,6 @@ module Smartrent
     # PUT /settings/1
     # PUT /settings/1.json
     def update
-      @setting = Setting.find(params[:id])
-  
       respond_to do |format|
         if @setting.update_attributes(setting_params)
           format.html { redirect_to admin_setting_path(@setting), notice: 'Setting was successfully updated.' }
@@ -76,7 +75,6 @@ module Smartrent
     # DELETE /settings/1
     # DELETE /settings/1.json
     def destroy
-      @setting = Setting.find(params[:id])
       @setting.destroy
   
       respond_to do |format|
@@ -93,6 +91,19 @@ module Smartrent
     
       def setting_params
         params.require(:setting).permit!
+      end
+      def set_setting
+        @setting = Setting.find(params[:id]) if params[:id].present?
+        case action_name
+          when "create"
+            authorize! :cud, Smartrent::Setting
+          when "edit", "update", "destroy"
+            authorize! :cud, @setting
+          when "read"
+            authorize! :read, @setting
+          else
+            authorize! :read, Smartrent::Setting
+        end
       end
   end
 end

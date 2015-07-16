@@ -100,11 +100,13 @@ module Smartrent
         @reward = Reward.find(params[:id]) if params[:id]
         case action_name
           when "create"
-            authorize! :cud, ::Reward
+            authorize! :cud, Smartrent::Reward
           when "edit", "update", "destroy"
             authorize! :cud, @reward
           when "read"
             authorize! :read, @reward
+          else
+            authorize! :read, Smartrent::Reward
         end
       end
 
