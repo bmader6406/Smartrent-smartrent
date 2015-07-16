@@ -141,17 +141,21 @@ module Smartrent
     def self.grouped_by_states(properties)
       states = {}
       properties.each do |property|
-        states[property.state] = {} if states[property.state].nil?
-        states[property.state]["cities"] = {}  if states[property.state]["cities"].nil?
-        states[property.state]["cities"][property.city] = 0 if states[property.state]["cities"][property.city].nil?
-        states[property.state]["cities"][property.city] +=1
-        states[property.state]["counties"] = {}  if states[property.state]["counties"].nil?
-        states[property.state]["counties"][property.county] = 0 if states[property.state]["counties"][property.county].nil?
-        states[property.state]["counties"][property.county] +=1
-        states[property.state]["properties"] = []  if states[property.state]["properties"].nil?
-        states[property.state]["properties"].push property
-        states[property.state]["total"] = 0  if states[property.state]["total"].nil?
-        states[property.state]["total"] +=1
+        state = property.state.downcase
+        next if !state.present?
+        states[state] ||= {}
+        states[state]["cities"] ||= {}
+        states[state]["cities"][property.city] ||= 0
+        states[state]["cities"][property.city] +=1
+        states[state]["counties"] ||= {}
+        if property.county.present?
+          states[state]["counties"][property.county] ||= 0
+          states[state]["counties"][property.county] +=1
+        end
+        states[state]["properties"] ||= []
+        states[state]["properties"].push property
+        states[state]["total"] ||= 0
+        states[state]["total"] +=1
       end
       states
     end
