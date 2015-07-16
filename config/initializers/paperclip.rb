@@ -6,9 +6,9 @@ if Rails.env != "development" and Rails.env != "test"
     path:                 ':class/:attachment/:id/:style/:filename',
     storage:              :s3,
     s3_credentials:       {
-      :bucket => ENV['S3_BUCKET_NAME'],
-      :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
-      :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+      :bucket => "smartrent.hy.ly",
+      :access_key_id => "AKIAIODQWXO6X6CB5TQQ",
+      :secret_access_key => "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"
     },
     #s3_permissions:       :private,
     s3_protocol:          'http'
