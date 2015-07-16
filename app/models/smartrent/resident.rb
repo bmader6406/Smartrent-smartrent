@@ -18,6 +18,7 @@ module Smartrent
     belongs_to :property
     belongs_to :home
     has_many :rewards, :dependent => :destroy
+    after_create :find_and_set_crm_resident
     #has_one :crm_resident, :class_name => "Resident", :foreign_key => :crm_resident_id
 
     def sign_up_bonus
@@ -31,6 +32,11 @@ module Smartrent
 
     def crm_resident
       ::Resident::where(:smartrent_resident_id => id)
+    end
+
+    def find_and_set_crm_resident
+      resident = ::Resident.where(:email => self.email).first
+      update_columns(:crm_resident_id => resident.id) if resident
     end
 
     #Some problem with the above method, always returning 0
