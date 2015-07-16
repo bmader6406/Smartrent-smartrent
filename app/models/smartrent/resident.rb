@@ -20,6 +20,22 @@ module Smartrent
     has_many :rewards, :dependent => :destroy
     after_create :find_and_set_crm_resident
     #has_one :crm_resident, :class_name => "Resident", :foreign_key => :crm_resident_id
+    #
+    def self.STATUS_ACTIVE
+      "Active"
+    end
+    def self.STATUS_INACTIVE
+      "InActive"
+    end
+    def self.STATUS_EXPIRED
+      "Expired"
+    end
+    def self.STATUS_CHAMPION
+      "Champion"
+    end
+    def self.STATUS_ARCHIVE
+      "Archive"
+    end
 
     def sign_up_bonus
       sign_up_reward = rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
