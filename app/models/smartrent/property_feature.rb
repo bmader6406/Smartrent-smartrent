@@ -11,7 +11,7 @@ module Smartrent
       property_features.each do |property_feature_hash|
         property_title = property_feature_hash[:property_id]
         feature_name = property_feature_hash[:feature_id]
-        property = Property.find_by_title(property_title)
+        property = Property.find_by_name(property_title)
         if property
           feature = Feature.find_by_name(feature_name)
           if feature
