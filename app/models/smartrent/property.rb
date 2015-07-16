@@ -101,6 +101,15 @@ module Smartrent
         end
         properties
     end
+    def self.STATUS_ACTIVE
+      "Active"
+    end
+    def self.STATUS_INACTIVE
+      "InActive"
+    end
+    def self.STATUS_CURRENT
+      "Current"
+    end
 
     def self.import(file)
       if file.class.to_s == "ActionDispatch::Http::UploadedFile"

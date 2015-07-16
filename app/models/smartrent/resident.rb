@@ -163,7 +163,7 @@ module Smartrent
       if !rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).present?
         rewards.create!(:amount => @@sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
       end
-      if move_in_date.present? and !property.nil? and property.status == Property.STATUS_ACTIVE and ((Time.now.month - move_in_date.month) >= 1 and (move_out_date.nil? or (move_out_date.month - Time.now.month) == 1))
+      if move_in_date.present? and !property.nil? and property.status == Property.STATUS_CURRENT and ((Time.now.month - move_in_date.month) >= 1 and (move_out_date.nil? or (move_out_date.month - Time.now.month) == 1))
         rewards.create!(:amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
       end
       #Reward.create(:resident_id => self.id, :amount => Reward.INITIAL_REWARD, :type => Reward.TYPE_INITIAL_REWARD, :period_start => Time.now, :period_end =>  1.year.from_now)
@@ -225,7 +225,7 @@ module Smartrent
     def self.monthly_awards_job
       residents = Resident.where(:status => Resident.STATUS_ACTIVE)
       residents = residents.where("move_out_date is null and property_id is not null") if residents.present?
-      residents = residents.includes(:property).where{property.status == Property.STATUS_ACTIVE}
+      residents = residents.includes(:property).where{property.status == Property.STATUS_CURRENT}
       residents.each do |resident|
         monthly_reward = resident.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).last
         should_add_reward = true
