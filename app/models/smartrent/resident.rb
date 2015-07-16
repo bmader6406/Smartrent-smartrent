@@ -178,6 +178,10 @@ module Smartrent
       sign_up_bonus + initial_reward + monthly_awards_amount
     end
 
+    def balance
+      total_rewards
+    end
+
     def total_months
       if self.move_in_date.nil?
         0
