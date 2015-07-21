@@ -3,7 +3,8 @@ module Smartrent
     has_many :property_features, :dependent => :destroy
     has_many :features, :through => :property_features
     has_many :floor_plans, :dependent => :destroy
-    has_many :residents
+    has_many :resident_properties
+    has_many :residents, :through => :resident_properties
 
     before_save do
       self.state = self.state.downcase if self.state
@@ -139,7 +140,7 @@ module Smartrent
       prices
     end
 
-    def self.keyed_by_title
+    def self.keyed_by_name
       properties = {}
       all.each do |property|
         properties[property.name] = property
@@ -150,7 +151,7 @@ module Smartrent
     def self.grouped_by_states(properties)
       states = {}
       properties.each do |property|
-        state = property.state.downcase
+        state = property.state.downcase if property.nil?
         next if !state.present?
         states[state] ||= {}
         states[state]["cities"] ||= {}

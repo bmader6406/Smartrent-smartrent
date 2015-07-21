@@ -6,6 +6,8 @@ module Smartrent
     validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
     validates_presence_of :title
     validates_uniqueness_of :title, :case_sensitive => false
+    has_many :resident_homes, :dependent => :destroy
+    has_many :residents, :through => :resident_homes
     has_many :more_homes, :dependent => :destroy
     #process_in_background :image
     #geocoded_by :complete_street_address

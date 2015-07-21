@@ -10,7 +10,7 @@
           <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Tickets
       </button>
       <% if can? :update, @resident %>
-        <%= link_to archive_admin_residents_path(@resident) , {:class => "btn btn-default"} do%>
+        <%= link_to archive_admin_resident_path(@resident) , {:class => "btn btn-default"} do%>
           <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Archive
         <% end %>
     <% end %>
@@ -46,18 +46,18 @@
     </div>
     <div class="vehicle-info resident-box">
     </div>
-    <% if @resident.property.is_smartrent %>
+    <% if @resident.is_smartrent? %>
       <div class="smartrent resident-box">
         <b>Total:</b> <%= @resident.total_rewards  %><br />
         <b>Monthly Awards:</b> <%= @resident.monthly_awards_amount %><br />
         <b>Sign-Up Bonus:</b> <%= @resident.sign_up_bonus_ %><br />
         <b>Initial Reward:</b> <%= @resident.initial_reward %><br />
-        <button class="btn btn-primary">View Details</button>
+        <%= link_to "View Details", rewards_admin_resident_path(@resident), :class => "btn btn-primary" %>
       </div>
   <% end %>
   </div>
   <div class="col-md-9">
-    <% if @resident.property.is_smartrent %>
+    <% if @resident.is_smartrent? %>
     <div class="col-md-4 resident-box resident-top-col">
       <b>SmartRent Balance</b><br />
       <div class="col-md-5">
@@ -75,8 +75,8 @@
         <b>SmarRent Status</b><br />
         <div class="col-md-5">
           <div class="resident-status-box smartrent-status-<%= @resident.status %>">
-            <%= @resident.status_text %>
-            <div class="resident-status-bottom resident-status-bottom-<%= @resident.status_text.downcase %>">
+            <%= @resident.smartrent_status_text %>
+            <div class="resident-status-bottom resident-status-bottom-<%= @resident.smartrent_status_text %>">
               <span class="glyphicon glyphicon-chevron-down"></span>
               </div>
           </div>
@@ -94,13 +94,13 @@
       <div class="password-reset-request-box-content">
         <p>If resident has lost his password, confirm email below and click on Reset Password Request button.</p>
         <span class="email skyblue"><%= @resident.email %></span>
-        <%= link_to "Request Password Reset", send_password_reset_information_admin_residents_path(@resident), :class => "btn btn-primary request-password-reset", :remote => true %>
+        <%= link_to "Request Password Reset", send_password_reset_information_admin_resident_path(@resident), :class => "btn btn-primary request-password-reset", :remote => true %>
       </div>
     </div>
     <div class="col-md-4 resident-box resident-right-col password-change-form-box">
       <%= render partial: "password_change_form" %>
     </div>
-    <% if @resident.property.is_smartrent %>
+    <% if @resident.is_smartrent? %>
       <div class="col-md-10 resident-box">
         <%= render partial: "rewards" %>
       </div>

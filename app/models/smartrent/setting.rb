@@ -7,9 +7,8 @@ module Smartrent
     after_save do
       if value.to_f >= 0
         rewards = []
-        if key == "monthly_award"
+        if key == "monthly_awards"
           rewards = Reward.where(:type_ => Reward.TYPE_MONTHLY_AWARDS)
-          rewards.update_attributes(:amount => value) if rewards.present?
         elsif key == "sign_up_bonus"
           rewards = Reward.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
         end
@@ -22,7 +21,7 @@ module Smartrent
     end
 
     def self.monthly_award
-      setting = Setting.find_by_key("monthly_award")
+      setting = Setting.find_by_key("monthly_awards")
       if setting
         setting.value.to_f
       else

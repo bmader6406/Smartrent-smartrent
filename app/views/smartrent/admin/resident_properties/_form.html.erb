@@ -1,0 +1,65 @@
+<%= form_for([:admin, @resident_property], :html => {:class => "form-horizontal"}) do |f| %>
+  <% if @resident_property.errors.any? %>
+    <%= render partial: "shared/form_errors", :locals => {:errors => @resident_property.errors} %>
+  <% end %>
+  <fieldset>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :property_id, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.collection_select :property_id, Smartrent::Property.all, :id, :name, {:include_blank => "--Select Property--"}, {:class => "form-control input-md"} %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :resident_id, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= f.collection_select :resident_id, Smartrent::Resident.all, :id, :name, {:include_blank => "--Select Resident--"}, {:class => "form-control input-md"} %>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :house_hold_size, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.number_field :house_hold_size, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :pets_count, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.number_field :pets_count, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :move_in_date, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.date_select :move_in_date, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :move_out_date, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.date_select :move_out_date, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :contract_signing_date, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.date_select :contract_signing_date, :class => "form-control input-md" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= f.label :status, :class => "col-md-2 control-label" %>
+      <div class="col-md-4">
+        <%= f.select :status, Smartrent::Resident.smartrent_statuses.collect{|key,value| [value, key]}, {:include_blank => "--Select Status"}, {:class => "form-control input-md"} %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-2 control-label" for="singlebutton"></label>
+      <div class="col-md-4">
+        <%= f.submit :class => "btn btn-primary" %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>

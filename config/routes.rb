@@ -35,14 +35,19 @@ Smartrent::Engine.routes.draw do
         :controllers => { :sessions => "smartrent/admin/sessions" }
     }
     resources :residents do
+      member do
+        get "archive"
+        get "send-password-reset-information", :to => "residents#send_password_reset_information", :as => "send_password_reset_information"
+        get "properties"
+        get "rewards"
+      end
       collection do
-        get "archive/:id", :to => "residents#archive", :as => "archive"
-        get "send-password-reset-information/:id", :to => "residents#send_password_reset_information", :as => "send_password_reset_information"
         get "import", :to => "residents#import_page"
         post "import", :to => "residents#import"
         get "move-all-rewards-to-initial-balance", :to => "residents#move_all_rewards_to_initial_balance", :as => "move_all_rewards_to_initial_balance"
-
       end
+    end
+    resources :resident_properties do
     end
 
     resources :rewards do

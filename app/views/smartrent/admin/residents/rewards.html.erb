@@ -1,0 +1,29 @@
+<h1>Listing Resident Rewards</h1>
+<% if @rewards.present? %>
+  <table class="table">
+    <tr>
+      <th>Email</th>
+      <th>Amount</th>
+      <th>Property</th>
+      <th>Period Start</th>
+      <th>Period End</th>
+      <th>Type</th>
+      <th>Actions</th>
+    </tr>
+
+  <% @rewards.each do |reward| %>
+    <tr>
+      <td><%= reward.resident.email %></td>
+      <td><%= number_to_currency reward.amount %></td>
+      <td><%= reward.property.name if reward.property %></td>
+      <td><%= reward.period_start.to_s(:year_month_day) if reward.period_start %></td>
+      <td><%= reward.period_end.to_s(:year_month_day) if reward.period_end %></td>
+      <td><%= Smartrent::Reward.types[reward.type_] %></td>
+      <td><%= link_to 'Show', admin_reward_path(reward) %> | <%= link_to 'Edit', edit_admin_reward_path(reward) %> | <%= link_to 'Destroy', admin_reward_path(reward), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </table>
+  <%= will_paginate @rewards, renderer: BootstrapPagination::Rails %>
+<% else %>
+  <div class="alert alert-warning">No Rewards available</div>
+<% end %>

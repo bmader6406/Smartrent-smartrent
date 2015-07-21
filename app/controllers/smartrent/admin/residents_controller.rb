@@ -23,13 +23,19 @@ module Smartrent
     # GET /admin/residents/1
     # GET /admin/residents/1.json
     def show
-      if @resident.property.is_smartrent
+      if @resident.is_smartrent?
         @resident_rewards = @resident.rewards.paginate(:page => params[:page], :per_page => 10)
       end
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @resident }
       end
+    end
+    def properties
+      @resident_properties = @resident.resident_properties.paginate(:page => params[:page], :per_page => 15)
+    end
+    def rewards
+      @rewards = @resident.rewards.paginate(:page => params[:page], :per_page => 15)
     end
   
     # GET /admin/residents/new

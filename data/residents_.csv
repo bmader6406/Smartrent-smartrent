@@ -1,4 +1,4 @@
-property_id,name,unit_id,address,city,state,zip,smartrent_status,email,move_in_date
+property_id,name,home_id,address,city,state,zip,status,email,move_in_date
 100 Capitol Yards,Adam Daniel,100-1205,100 I Street  SE #1205,Washington,DC,20003,Current,adampdaniel@gmail.com,4/1/2011
 100 Capitol Yards,Adjoa Adofo,100-0215,100 I Street  SE #0215,Washington,DC,20003,Current,adadofo@gmail.com,7/7/2013
 100 Capitol Yards,Adrianne Berman,100-0702,100 I Street  SE #0702,Washington,DC,20003,Current,adriannerb@gmail.com,7/28/2014

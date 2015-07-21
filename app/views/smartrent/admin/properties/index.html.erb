@@ -23,7 +23,7 @@
     </tr>
   <% end %>
   </table>
-  <%= will_paginate @homes, renderer: BootstrapPagination::Rails %>
+  <%= will_paginate @properties, renderer: BootstrapPagination::Rails %>
 <% else %>
   <div class="alert alert-warning">No Properties have been added yet.</div>
 <% end %>
