@@ -123,6 +123,7 @@ module Smartrent
         property_hash[:name] = HTMLEntities.new.decode property_hash[:name]
         property_hash[:description] = HTMLEntities.new.decode property_hash[:description]
         property_hash[:is_smartrent] = true
+        property_hash[:status] = self.STATUS_CURRENT
         create property_hash
       end
     end
