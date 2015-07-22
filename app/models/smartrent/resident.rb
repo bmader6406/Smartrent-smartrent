@@ -127,6 +127,9 @@ module Smartrent
         else
           resident = new(resident_hash)
           if resident.save
+            #For an imported resident the sign-up bonus be 0
+            reward = resident.rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).first
+            reward.update_attributes(:amount => 0)
             resident.resident_properties.create!(resident_properties_hash) if property.present?
             resident.resident_homes.create!({:home_id => home.id}) if home.present?
             puts "Resident has been saved"
