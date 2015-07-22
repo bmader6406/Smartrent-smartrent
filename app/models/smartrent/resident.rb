@@ -111,7 +111,9 @@ module Smartrent
         else
           resident_hash[:unit_id] = unit_code
         end
-        resident_properties_hash = {:status => resident_hash[:smartrent_status], :property_id => property.id, :move_in_date => nil} if property.present?
+        property_id = nil
+        property_id = property.id if property.present?
+        resident_properties_hash = {:status => resident_hash[:smartrent_status], :property_id => property_id, :move_in_date => nil}
         resident_hash.delete(:smartrent_status)
         begin
           resident_properties_hash[:move_in_date] =  Date.parse(resident_hash[:move_in_date]) if resident_hash[:move_in_date].present?
@@ -122,7 +124,7 @@ module Smartrent
         #byebug
         #To cater multiple properties belonging to a resident
         if resident = Resident.find_by_email(resident_hash[:email])
-          resident.resident_properties.create!(resident_properties_hash) if property.present?
+          resident.resident_properties.create(resident_properties_hash) if property.present?
           resident.resident_homes.create!({:home_id => home.id}) if home.present?
         else
           resident = new(resident_hash)
@@ -130,9 +132,9 @@ module Smartrent
             #For an imported resident the sign-up bonus be 0
             reward = resident.rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).first
             reward.update_attributes(:amount => 0)
-            resident.resident_properties.create!(resident_properties_hash) if property.present?
+            resident.resident_properties.create(resident_properties_hash) if property.present?
             resident.resident_homes.create!({:home_id => home.id}) if home.present?
-            puts "Resident has been saved"
+            puts "Resident has been Saved"
           else
             puts resident.errors.to_a
           end
