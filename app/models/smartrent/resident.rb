@@ -240,6 +240,11 @@ module Smartrent
       total_rewards
     end
 
+    def update_move_in_date_and_move_out_date
+      resident_property = resident_properties.order("move_in_date desc").first
+      self.update_columns(:move_in_date => resident_property.move_in_date, :move_out_date => resident_property.move_out_date)
+    end
+
     def total_months
       if self.move_in_date.nil?
         0

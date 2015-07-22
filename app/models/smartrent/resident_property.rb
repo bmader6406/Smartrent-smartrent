@@ -10,6 +10,7 @@ module Smartrent
           Reward.create!(:property_id => property.id, :resident_id => resident.id, :amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => period_start, :period_end => 1.year.from_now)
         end
       end
+      resident.update_move_in_date_and_move_out_date
     end
   end
 end
