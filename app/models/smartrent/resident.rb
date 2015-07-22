@@ -239,20 +239,47 @@ module Smartrent
     def balance
       total_rewards
     end
-
-    def update_move_in_date_and_move_out_date
-      resident_property = resident_properties.order("move_in_date desc").first
-      self.update_columns(:move_in_date => resident_property.move_in_date, :move_out_date => resident_property.move_out_date)
+    def move_in_date
+      #TODO Cache this result
+      if resident_properties.present?
+        resident_properties.order("move_in_date desc").first.move_in_date
+      else
+        nil
+      end
+    end
+    def move_out_date
+      #TODO Cache this result
+      if resident_properties.present?
+        resident_properties.order("move_in_date desc").first.move_out_date
+      else
+        nil
+      end
     end
 
+
     def total_months
-      if self.move_in_date.nil?
-        0
-      elsif self.move_out_date.nil?
-        (Time.now.year * 12 + Time.now.month) - (self.move_in_date.year * 12 + self.move_in_date.month)
-      else
-        (self.move_out_date.year * 12 + self.move_out_date.month) - (self.move_in_date.year * 12 + self.move_in_date.month)
+      #TODO cache this result
+      months = 0
+      move_in_date
+      resident_properties.order("move_in_date asc").each_with_index do |resident_property, index|
+        #Possible Case: When the move_in_date is present and there are more move_in_dates and move_out_date is nil in each case
+        move_in_date = resident_property.move_in_date if move_in_date.nil?
+        if resident_property.move_out_date.present?
+          months = resident_property.move_out_date.differnce_in_months(move_in_date) + months
+          move_in_date = nil
+        elsif index == resident_properties.count - 1
+          #the last element of the array and the move_out_date is still nil
+          months = Time.now.differnce_in_months(move_in_date) + months
+        end
       end
+      months
+      #if self.move_in_date.nil?
+        #0
+      #elsif self.move_out_date.nil?
+        #(Time.now.year * 12 + Time.now.month) - (self.move_in_date.year * 12 + self.move_in_date.month)
+      #else
+        #(self.move_out_date.year * 12 + self.move_out_date.month) - (self.move_in_date.year * 12 + self.move_in_date.month)
+      #end
     end
 
     def update_password(attributes)
