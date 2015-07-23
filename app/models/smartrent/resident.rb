@@ -22,23 +22,12 @@ module Smartrent
     has_many :homes, :through => :resident_homes
     has_many :rewards, :dependent => :destroy
     after_create :find_and_set_crm_resident
+    before_create do
+      #Default Status
+      self.status = self.class.STATUS_CURRENT if self.status.blank?
+    end
     #has_one :crm_resident, :class_name => "Resident", :foreign_key => :crm_resident_id
     #
-    def self.STATUS_ACTIVE
-      "Active"
-    end
-    def self.STATUS_INACTIVE
-      "InActive"
-    end
-    def self.STATUS_EXPIRED
-      "Expired"
-    end
-    def self.STATUS_CHAMPION
-      "Champion"
-    end
-    def self.STATUS_ARCHIVE
-      "Archive"
-    end
 
     def sign_up_bonus
       sign_up_reward = rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
@@ -144,37 +133,27 @@ module Smartrent
       end
     end
     def self.smartrent_statuses
-      {self.STATUS_ACTIVE => "Active", self.STATUS_INACTIVE => "Inactive", self.STATUS_EXPIRED => "Expired", self.STATUS_CHAMPION => "Champion", self.STATUS_ARCHIVE => "Archive"}
-    end
-    def self.STATUS_INACTIVE
-      0
-    end
-    def self.STATUS_ACTIVE
-      1
-    end
-    def self.STATUS_EXPIRED
-      2
-    end
-    def self.STATUS_CHAMPION
-      3
-    end
-    def self.STATUS_ARCHIVE
-      4
+      {ResidentProperty.STATUS_ACTIVE => "Active", ResidentProperty.STATUS_INACTIVE => "Inactive", ResidentProperty.STATUS_EXPIRED => "Expired", ResidentProperty.STATUS_CHAMPION => "Champion", ResidentProperty.STATUS_ARCHIVE => "Archive"}
     end
 
     def status_text
-      self.class.statuses[self.status]
+      text = self.class.statuses[self.status]
+      if text.nil?
+        self.class.STATUS_CURRENT
+      else
+        text
+      end
     end
     def self.statuses
       {self.SMARTRENT_STATUS_CURRENT => "Current", self.SMARTRENT_STATUS_NOTICE => "Notice", self.SMARTRENT_STATUS_PAST => "Past"}
     end
-    def self.SMARTRENT_STATUS_CURRENT
+    def self.STATUS_CURRENT
       "Current"
     end
-    def self.SMARTRENT_STATUS_NOTICE
+    def self.STATUS_NOTICE
       "Notice"
     end
-    def self.SMARTRENT_STATUS_PAST
+    def self.STATUS_PAST
       "Past"
     end
     def smartrent_status_text
@@ -183,7 +162,7 @@ module Smartrent
         resident_properties.each do |resident_property|
           if resident_property.move_out_date.nil?
             smartrent_status = resident_property.status
-          elsif smartrent_status != self.class.SMARTRENT_STATUS_CURRENT and resident_property.status.present?
+          elsif smartrent_status != self.class.SMARTRENT_STATUS_ACTIVE and resident_property.status.present?
             smartrent_status = resident_property.status
           end
         end
