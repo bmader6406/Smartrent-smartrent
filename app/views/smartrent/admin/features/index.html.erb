@@ -5,6 +5,7 @@
 </div>
 <br />
 <br />
+<%= render partial: "filter_form" %>
 <br />
 <% if @admin_features.present? %>
   <table class="table">
@@ -21,6 +22,8 @@
     <% end %>
   </table>
   <%= will_paginate @admin_features, renderer: BootstrapPagination::Rails %>
+<% elsif @search == "1" %>
+  <div class="alert alert-warning"> No Features found</div>
 <% else %>
   <div class="alert alert-warning"> No Features available</div>
 <% end %>

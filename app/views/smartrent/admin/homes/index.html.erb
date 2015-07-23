@@ -5,6 +5,7 @@
 </div>
 <br />
 <br />
+<%= render partial: "filter_form" %>
 <br />
 <% if @homes.present? %>
   <table class="table">
@@ -23,6 +24,8 @@
     </tr>
   <% end %>
   </table>
+<% elsif @search == "1" %>
+  <div class="alert alert-warning">No Homes found</div>
   <%= will_paginate @homes, renderer: BootstrapPagination::Rails %>
 <% else %>
   <div class="alert alert-warning">No homes have been added yet.</div>

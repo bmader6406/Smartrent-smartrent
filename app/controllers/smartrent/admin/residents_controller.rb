@@ -14,6 +14,7 @@ module Smartrent
     def index
       #@residents = current_user.managed_residents.paginate(:page => params[:page], :per_page => 15)
       filter_residents
+      @search = params[:search]
 
       respond_to do |format|
         format.html # index.html.erb

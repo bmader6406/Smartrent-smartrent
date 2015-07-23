@@ -32,6 +32,8 @@
   <% end %>
   </table>
   <%= will_paginate @residents, renderer: BootstrapPagination::Rails %>
+<% elsif @search == "1" %>
+  <div class="alert alert-warning">No Residents Found</div>
 <% else %>
-  <div class="alert alert-warning"> No residents available</div>
+  <div class="alert alert-warning"> No Residents Available</div>
 <% end %>

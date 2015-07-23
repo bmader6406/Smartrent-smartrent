@@ -10,7 +10,9 @@ module Smartrent
     # GET /admin/features
     # GET /admin/features.json
     def index
-      @admin_features = Feature.paginate(:page => params[:page], :per_page => 15)
+      #@admin_features = Feature.paginate(:page => params[:page], :per_page => 15)
+      filter_features
+      @search = params[:search]
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @admin_features }
@@ -98,6 +100,22 @@ module Smartrent
           else
             authorize! :read, Smartrent::Feature
         end
+      end
+      def filter_features(per_page = 15)
+        arr = []
+        hash = {}
+        
+        ["_id","name"].each do |k|
+          next if params[k].blank?
+          if k == "_id"
+            arr << "id = :id"
+            hash[:id] = "#{params[k]}"
+          else
+            arr << "#{k} LIKE :#{k}"
+            hash[k.to_sym] = "%#{params[k]}%"
+          end
+        end
+        @admin_features = Feature.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
       end
       
   end

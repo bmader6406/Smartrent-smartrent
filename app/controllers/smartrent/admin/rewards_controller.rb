@@ -14,6 +14,7 @@ module Smartrent
       #@rewards = current_user.managed_rewards
       #@rewards = @rewards.paginate(:page => params[:page], :per_page => 15).order(:created_at) if @rewards.present?
       filter_rewards
+      @search = params[:search]
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @rewards }

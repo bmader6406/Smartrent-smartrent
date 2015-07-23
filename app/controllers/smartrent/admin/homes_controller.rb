@@ -11,7 +11,9 @@ module Smartrent
     end
 
     def index
-      @homes = Home.paginate(:page => params[:page], :per_page => 10)
+      #@homes = Home.paginate(:page => params[:page], :per_page => 10)
+      filter_homes
+      @search = params[:search]
   
       respond_to do |format|
         format.html # index.html.erb
@@ -94,6 +96,26 @@ module Smartrent
     private
       def home_params
         params.require(:home).permit!
+      end
+      def filter_homes(per_page = 15)
+        arr = []
+        hash = {}
+        
+        ["_id", "title", "phone_number", "state", "latitude", "longitude"].each do |k|
+          next if params[k].blank?
+          case k
+            when "_id"
+              arr << "id = :id"
+              hash[:id] = "#{params[k]}"
+            when "latitude", "longitude"
+              arr << "#{k} = :#{k}"
+              hash[k.to_sym] = "#{params[k]}"
+            else
+              arr << "#{k} LIKE :#{k}"
+              hash[k.to_sym] = "%#{params[k]}%"
+          end
+        end
+        @homes = Home.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("title asc")
       end
       def set_home
         @home = Home.find_by_url(params[:id]) if params[:id].present?
