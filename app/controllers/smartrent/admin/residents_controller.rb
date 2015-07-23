@@ -13,13 +13,13 @@ module Smartrent
 
     def index
       @residents = current_user.managed_residents.paginate(:page => params[:page], :per_page => 15)
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @residents }
       end
     end
-  
+
     # GET /admin/residents/1
     # GET /admin/residents/1.json
     def show

@@ -15,7 +15,7 @@ module Smartrent
     end
   
     def new
-      @resident_property = ResidentProperty.new
+      @resident_property = ResidentProperty.new(:resident_id => params[:resident_id])
   
       respond_to do |format|
         format.html # new.html.erb
@@ -31,11 +31,9 @@ module Smartrent
   
       respond_to do |format|
         if @resident_property.save
-          format.html { redirect_to admin_property_path(@resident_property), notice: 'Property was successfully created.' }
-          format.json { render json: @resident_property, status: :created, location: @resident_property }
+          format.html { redirect_to properties_admin_resident_path(@resident_property.resident), notice: 'Property was successfully created.' }
         else
           format.html { render action: "new" }
-          format.json { render json: @resident_property.errors, status: :unprocessable_entity }
         end
       end
     end

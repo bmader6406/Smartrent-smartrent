@@ -141,7 +141,7 @@ module Smartrent
         end
       end
     end
-    def self.statuses
+    def self.smartrent_statuses
       {self.STATUS_ACTIVE => "Active", self.STATUS_INACTIVE => "Inactive", self.STATUS_EXPIRED => "Expired", self.STATUS_CHAMPION => "Champion", self.STATUS_ARCHIVE => "Archive"}
     end
     def self.STATUS_INACTIVE
@@ -163,7 +163,7 @@ module Smartrent
     def status_text
       self.class.statuses[self.status]
     end
-    def self.smartrent_statuses
+    def self.statuses
       {self.SMARTRENT_STATUS_CURRENT => "Current", self.SMARTRENT_STATUS_NOTICE => "Notice", self.SMARTRENT_STATUS_PAST => "Past"}
     end
     def self.SMARTRENT_STATUS_CURRENT

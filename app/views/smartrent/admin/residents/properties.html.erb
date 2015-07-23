@@ -1,4 +1,8 @@
 <h1>Listing Resident Properties</h1>
+<div class="links pull-right">
+  <%= link_to 'Add Property', new_admin_resident_property_path(:resident_id => @resident.id), :class => "btn btn-primary" %>
+</div>
+<br />
 <br />
 <br />
 <% if @resident_properties.present? %>
