@@ -145,7 +145,7 @@ module Smartrent
       end
     end
     def self.statuses
-      {self.SMARTRENT_STATUS_CURRENT => "Current", self.SMARTRENT_STATUS_NOTICE => "Notice", self.SMARTRENT_STATUS_PAST => "Past"}
+      {self.STATUS_CURRENT => "Current", self.STATUS_NOTICE => "Notice", self.STATUS_PAST => "Past"}
     end
     def self.STATUS_CURRENT
       "Current"
