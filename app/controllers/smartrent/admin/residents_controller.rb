@@ -12,7 +12,8 @@ module Smartrent
     end
 
     def index
-      @residents = current_user.managed_residents.paginate(:page => params[:page], :per_page => 15)
+      #@residents = current_user.managed_residents.paginate(:page => params[:page], :per_page => 15)
+      filter_residents
 
       respond_to do |format|
         format.html # index.html.erb
@@ -140,6 +141,22 @@ module Smartrent
 
     def resident_params
       params.require(:resident).permit!
+    end
+    def filter_residents(per_page = 15)
+      arr = []
+      hash = {}
+      
+      ["id","name", "email", "property_id", "status"].each do |k|
+        next if params[k].blank?
+        if k == "_id"
+          arr << "id = :id"
+          hash[:id] = "#{params[k]}"
+        else
+          arr << "#{k} LIKE :#{k}"
+          hash[k.to_sym] = "%#{params[k]}%"
+        end
+      end
+      @residents = current_user.managed_residents.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
     end
   end
 end

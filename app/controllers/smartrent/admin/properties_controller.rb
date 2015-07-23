@@ -3,14 +3,16 @@ require_dependency "smartrent/admin/admin_controller"
 module Smartrent
   class Admin::PropertiesController < Admin::AdminController
     before_filter :authenticate_admin!, :only => [:import, :import_page]
-    before_action :set_property
+    before_action :set_property, :except => [:index]
     before_action do 
       @active = "properties"
     end
     # GET /properties
     # GET /properties.json
     def index
-      @properties = current_user.managed_properties.paginate(:page => params[:page], :per_page => 15)
+      authorize! :read, ::Property
+      @properties = filter_properties#paginate(:page => params[:page], :per_page => 15)
+      @search = params[:search]
   
       respond_to do |format|
         format.html # index.html.erb
@@ -92,7 +94,7 @@ module Smartrent
     end
     private
       def property_params
-        params.require(:property).permit!
+        params.require(:property).permit! if params[:property].present?
       end
       def set_property
         @property = Property.find(params[:id]) if params[:id]
@@ -106,6 +108,22 @@ module Smartrent
           else
             authorize! :read, ::Property
         end
+      end
+      def filter_properties(per_page = 15)
+        arr = []
+        hash = {}
+        
+        ["_id","name", "city", "state", "zip", "website_url", "status"].each do |k|
+          next if params[k].blank?
+          if k == "_id"
+            arr << "id = :id"
+            hash[:id] = "#{params[k]}"
+          else
+            arr << "#{k} LIKE :#{k}"
+            hash[k.to_sym] = "%#{params[k]}%"
+          end
+        end
+        @properties = current_user.managed_properties.where(:is_smartrent => true).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
       end
   end
 end
