@@ -96,7 +96,7 @@ module Smartrent
         params.require(:home).permit!
       end
       def set_home
-        @home = Home.find(params[:id]) if params[:id].present?
+        @home = Home.find_by_url(params[:id]) if params[:id].present?
       end
   end
 end

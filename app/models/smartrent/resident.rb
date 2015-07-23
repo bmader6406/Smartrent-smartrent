@@ -94,8 +94,10 @@ module Smartrent
         resident_hash[:property_ids] = []
         resident_hash[:home_ids] = []
         #Setting status as active for the first time
-        resident_hash[:status] = self.STATUS_ACTIVE
+        #resident_hash[:status] = self.STATUS_ACTIVE
         #property = Property.find_by_title(property_name)
+        resident_hash[:status] = resident_hash[:smartrent_status]
+        resident_hash.delete(:smartrent_status)
         property = nil
         unit = nil
         home = nil
@@ -113,8 +115,8 @@ module Smartrent
         end
         property_id = nil
         property_id = property.id if property.present?
-        resident_properties_hash = {:status => resident_hash[:smartrent_status], :property_id => property_id, :move_in_date => nil}
-        resident_hash.delete(:smartrent_status)
+        #:status => resident_hash[:smartrent_status], 
+        resident_properties_hash = {:property_id => property_id, :move_in_date => nil}
         begin
           resident_properties_hash[:move_in_date] =  Date.parse(resident_hash[:move_in_date]) if resident_hash[:move_in_date].present?
         rescue Exception => e
