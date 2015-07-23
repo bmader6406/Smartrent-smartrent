@@ -7,7 +7,8 @@
       <div class="form-group">
         <%= f.label :property_id, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= f.collection_select :property_id, Smartrent::Property.all, :id, :name, {:include_blank => "--Select Property--"}, {:class => "form-control input-md"} %>
+          <%#= f.collection_select :property_id, Smartrent::Property.all, :id, :name, {:include_blank => "--Select Property--"}, {:class => "form-control input-md"} %>
+          <%= @resident_property.property.name %>
         </div>
       </div>
     </div>
@@ -15,7 +16,8 @@
       <div class="form-group">
         <%= f.label :resident_id, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= f.collection_select :resident_id, Smartrent::Resident.all, :id, :name, {:include_blank => "--Select Resident--"}, {:class => "form-control input-md"} %>
+          <%= @resident_property.resident.name %>
+          <%#= f.collection_select :resident_id, Smartrent::Resident.all, :id, :name, {:include_blank => "--Select Resident--"}, {:class => "form-control input-md"} %>
         </div>
       </div>
     </div>
