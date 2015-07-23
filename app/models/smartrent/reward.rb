@@ -20,6 +20,13 @@ module Smartrent
       end
     end
 
+    def self.residents
+      all.group(:resident_id).collect{|r| r.resident}
+    end
+    def self.properties
+      all.where.not(:property_id => nil).group(:property_id).collect{|r| r.property}
+    end
+
     def self.types
       {self.TYPE_SIGNUP_BONUS => "Sign Up", self.TYPE_MONTHLY_AWARDS => "Monthly Awards", self.TYPE_INITIAL_REWARD => "Initial Balance", self.TYPE_CHAMPION => "Champion"}
     end

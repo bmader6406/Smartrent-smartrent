@@ -10,8 +10,10 @@ module Smartrent
       @active = "rewards"
     end
     def index
-      @rewards = current_user.managed_rewards
-      @rewards = @rewards.paginate(:page => params[:page], :per_page => 15).order(:created_at) if @rewards.present?
+
+      #@rewards = current_user.managed_rewards
+      #@rewards = @rewards.paginate(:page => params[:page], :per_page => 15).order(:created_at) if @rewards.present?
+      filter_rewards
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @rewards }
@@ -119,11 +121,11 @@ module Smartrent
             arr << "id = :id"
             hash[:id] = "#{params[k]}"
           else
-            arr << "#{k} LIKE :#{k}"
-            hash[k.to_sym] = "%#{params[k]}%"
+            arr << "#{k} = :#{k}"
+            hash[k.to_sym] = "#{params[k]}"
           end
         end
-        @properties = current_user.managed_properties.where(:is_smartrent => true).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
+        @rewards = current_user.managed_rewards.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("created_at desc")
       end
 
       def reward_params

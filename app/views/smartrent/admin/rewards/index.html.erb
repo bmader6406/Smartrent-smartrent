@@ -3,6 +3,10 @@
   <%= link_to 'Import rewards', import_admin_rewards_path, :class => "btn btn-default" %>
   <%= link_to 'New reward', new_admin_reward_path, :class => "btn btn-primary" %>
 </div>
+<br />
+<br />
+<%= render partial: "filter_form" %>
+<br />
 <% if @rewards.present? %>
   <table class="table">
     <tr>

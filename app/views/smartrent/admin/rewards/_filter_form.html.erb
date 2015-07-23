@@ -1,0 +1,62 @@
+<h3>Filter Rewards</h3>
+<%= form_tag({}, {:method => "get", :class => "form-horizontal"}) do %>
+  <fieldset>
+    <div class="field">
+      <div class="form-group">
+        <%= label_tag "", "ID", :class => "col-md-1 control-label" %>
+        <div class="col-md-2">
+          <%= text_field_tag :_id, params[:_id], :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= label_tag "", :property_id, :class => "col-md-1 control-label" %>
+        <div class="col-md-2">
+          <%= text_field_tag :property_id, params[:property_id], :class => "form-control input-md" %>
+          <%#= select_tag :property_id, options_for_select(Smartrent::Reward.properties.collect{|p| [p.name, p.id]}, params[:property_id]), {:include_blank => "--Select Property--", :class => "form-control input-md"}%>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= label_tag "", :resident_id, :class => "col-md-1 control-label" %>
+        <div class="col-md-2">
+          <%= text_field_tag :resident_id, params[:resident_id], :class => "form-control input-md" %>
+          <%#= select_tag :resident_id, options_for_select(Smartrent::Reward.residents.collect{|r| [r.email, r.id]}, params[:resident_id]), {:include_blank => "--Select Resident--", :class => "form-control input-md"}%>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= label_tag "", "Type", :class => "col-md-1 control-label" %>
+        <div class="col-md-2">
+          <%= select_tag :type_, options_for_select(Smartrent::Reward.types.collect{|key,value| [value, key]}, params[:type_]), {:include_blank => "--Select Type--", :class => "form-control input-md"}%>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%#= label_tag "", "Period Start", :class => "col-md-1 control-label" %>
+        <div class="col-md-3">
+          <%#= date_select "", :period_start, :selected => params[:period_start], include_blank: true, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%#= label_tag "", "Period End", :class => "col-md-1 control-label" %>
+        <div class="col-md-3">
+          <%#= date_select "", :period_end, :selected => params[:period_end], include_blank: true, :class => "form-control input-md" %>
+        </div>
+      </div>
+    </div>
+    <%= hidden_field_tag "search", "1" %>
+    <div class="form-group">
+      <label class="col-md-1 control-label" for="singlebutton"></label>
+      <div class="col-md-2">
+        <%= submit_tag "Filter", :class => "btn btn-primary" %>
+      </div>
+    </div>
+    </fieldset>
+<% end %>
