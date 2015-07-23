@@ -152,7 +152,7 @@ module Smartrent
     def self.grouped_by_states(properties)
       states = {}
       properties.each do |property|
-        state = property.state.downcase if property.nil?
+        state = property.state.downcase if property.present?
         next if !state.present?
         states[state] ||= {}
         states[state]["cities"] ||= {}
@@ -181,7 +181,7 @@ module Smartrent
 
     def self.custom_ransack(q)
       if q
-        q.delete_if {|key, value| key == "studio_true" or key == "maximum_price" or key == "minimum_price" or key == "where_one_bed" or key == "where_two_bed" or key == "where_three_more_bed" or key == "where_penthouse"}
+        q.delete_if {|key, value| key == "studio_true" or key == "maximum_price" or key == "minimum_price" or key == "where_one_bed" or key == "where_two_bed" or key == "where_three_more_bed" or key == "where_penthouse" or key == "matches_all_features"}
       end
       super q
     end

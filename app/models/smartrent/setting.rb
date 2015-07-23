@@ -5,19 +5,7 @@ module Smartrent
     validates_uniqueness_of :key, :case_sensitive => true
 
     after_save do
-      if value.to_f >= 0
-        rewards = []
-        if key == "monthly_awards"
-          rewards = Reward.where(:type_ => Reward.TYPE_MONTHLY_AWARDS)
-        elsif key == "sign_up_bonus"
-          rewards = Reward.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
-        end
-        if rewards
-          rewards.each do |reward|
-            reward.update_attributes(:amount => value)
-          end
-        end
-      end
+      Resque.enqueue(::SettingsAmountUpdater, id)
     end
 
     def self.monthly_award

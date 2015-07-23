@@ -16,7 +16,7 @@ module Smartrent
       @q = Property.custom_ransack(q_params)
       properties = Property.unique_result(@q)
       q_params_copy[:price] = price if q_params.present?
-      q_params_copy.delete_if {|key, value| (key == "maximum_price" or key == "minimum_price" or key == "where_one_bed" or key == "where_two_bed" or key == "where_three_more_bed" or key == "where_penthouse") and value == "0"} if q_params.present?
+      q_params_copy.delete_if {|key, value| (key == "maximum_price" or key == "minimum_price" or key == "where_one_bed" or key == "where_two_bed" or key == "where_three_more_bed" or key == "where_penthouse" or key == "matches_all_features") and value == "0"} if q_params.present?
       properties = Property.custom_filters q_params_copy, properties
       @properties_grouped_by_states = Property.grouped_by_states(properties)
 
