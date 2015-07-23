@@ -109,6 +109,22 @@ module Smartrent
             authorize! :read, Smartrent::Reward
         end
       end
+      def filter_rewards(per_page = 15)
+        arr = []
+        hash = {}
+        
+        ["_id","property_id", "resident_id", "type_", "amount", "period_start", "period_end"].each do |k|
+          next if params[k].blank?
+          if k == "_id"
+            arr << "id = :id"
+            hash[:id] = "#{params[k]}"
+          else
+            arr << "#{k} LIKE :#{k}"
+            hash[k.to_sym] = "%#{params[k]}%"
+          end
+        end
+        @properties = current_user.managed_properties.where(:is_smartrent => true).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
+      end
 
       def reward_params
         params.require(:reward).permit!
