@@ -205,7 +205,7 @@ module Smartrent
       #Reward.create(:resident_id => self.id, :amount => Reward.INITIAL_REWARD, :type => Reward.TYPE_INITIAL_REWARD, :period_start => Time.now, :period_end =>  1.year.from_now)
     end
     def sign_up_bonus
-      reward = Reward.find_by_type_(Reward.TYPE_SIGNUP_BONUS)
+      reward = rewards.find_by_type_(Reward.TYPE_SIGNUP_BONUS)
       if reward
         reward.amount
       else
