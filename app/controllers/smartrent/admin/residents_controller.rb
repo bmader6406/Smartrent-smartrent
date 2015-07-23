@@ -146,7 +146,7 @@ module Smartrent
       arr = []
       hash = {}
       
-      ["id","name", "email", "property_id", "status"].each do |k|
+      ["_id","name", "email", "property_id", "status"].each do |k|
         next if params[k].blank?
         if k == "_id"
           arr << "id = :id"
