@@ -15,6 +15,7 @@ module Smartrent
       begin
         if property.present?
           Rails.cache.delete([::User.name, property.user_id, "managed_rewards"])
+          resident.flush_rewards_cache
         end
       rescue Exception => e
         puts e

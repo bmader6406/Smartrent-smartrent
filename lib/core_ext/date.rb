@@ -1,7 +1,8 @@
 class Date
-  def differnce_in_months(time)
-    if time.present? and self.present?
-      (self.year * 12 + self.month) - (time.year * 12 + month)
+  def difference_in_months(time)
+      now = self
+    if time.present? and now.present?
+      (now.year * 12 + now.month) - (time.year * 12 + time.month)
     else
       0
     end

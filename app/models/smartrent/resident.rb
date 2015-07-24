@@ -10,8 +10,9 @@ module Smartrent
     @@sign_up_bonus = nil
 
     validates_uniqueness_of :origin_id, :allow_nil => true
-    validates_presence_of :status
+    validates_presence_of :status, :smartrent_status
     validates_uniqueness_of :email, :allow_blank => true
+    validate :valid_smartrent_status
 
     #attr_accessor :original_password
     # #attr_accessible :title, :body
@@ -19,15 +20,29 @@ module Smartrent
     has_many :resident_properties, :dependent => :destroy
     has_many :properties, :through => :resident_properties
     has_many :resident_homes, :dependent => :destroy
-    has_many :homes, :through => :resident_homes
+    #has_many :homes, :through => :resident_homes
     has_many :rewards, :dependent => :destroy
     after_create :find_and_set_crm_resident
+    scope :active, -> {where(:smartrent_status => self.SMARTRENT_STATUS_ACTIVE)}
     before_validation do
       #Default Status
       self.status = self.class.STATUS_CURRENT if self.status.blank?
     end
+    after_commit :flush_rewards_cache
     #has_one :crm_resident, :class_name => "Resident", :foreign_key => :crm_resident_id
     #
+    #
+    def valid_smartrent_status
+      if self.class.smartrent_statuses[smartrent_status].nil?
+        errors.add(:smartrent_status, "is invalid")
+      end
+    end
+    
+    def flush_rewards_cache
+      Rails.cache.delete([self.class.name, id, "monthly_awards_amount"])
+      Rails.cache.delete([self.class.name, id, "total_rewards"])
+      Rails.cache.delete([self.class.name, id, "total_months"])
+    end
 
     def sign_up_bonus
       sign_up_reward = rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
@@ -132,8 +147,23 @@ module Smartrent
         end
       end
     end
+    def self.SMARTRENT_STATUS_ACTIVE
+      "Active"
+    end
+    def self.SMARTRENT_STATUS_INACTIVE
+      "InActive"
+    end
+    def self.SMARTRENT_STATUS_EXPIRED
+      "Expired"
+    end
+    def self.SMARTRENT_STATUS_CHAMPION
+      "Champion"
+    end
+    def self.SMARTRENT_STATUS_ARCHIVE
+      "Archive"
+    end
     def self.smartrent_statuses
-      {ResidentProperty.STATUS_ACTIVE => "Active", ResidentProperty.STATUS_INACTIVE => "Inactive", ResidentProperty.STATUS_EXPIRED => "Expired", ResidentProperty.STATUS_CHAMPION => "Champion", ResidentProperty.STATUS_ARCHIVE => "Archive"}
+      {self.SMARTRENT_STATUS_ACTIVE => "Active", self.SMARTRENT_STATUS_INACTIVE => "Inactive", self.SMARTRENT_STATUS_EXPIRED => "Expired", self.SMARTRENT_STATUS_CHAMPION => "Champion", self.SMARTRENT_STATUS_ARCHIVE => "Archive"}
     end
 
     def status_text
@@ -157,16 +187,6 @@ module Smartrent
       "Past"
     end
     def smartrent_status_text
-      smartrent_status = "None"
-      if resident_properties.present?
-        resident_properties.each do |resident_property|
-          if resident_property.move_out_date.nil?
-            smartrent_status = resident_property.status
-          elsif smartrent_status != ResidentProperty.STATUS_ACTIVE and resident_property.status.present?
-            smartrent_status = resident_property.status
-          end
-        end
-      end
       smartrent_status
     end
     def self.types
@@ -180,10 +200,6 @@ module Smartrent
       if !rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).present?
         rewards.create!(:amount => @@sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
       end
-      #if move_in_date.present? and !property.nil? and property.status == Property.STATUS_CURRENT and ((Time.now.month - move_in_date.month) >= 1 and (move_out_date.nil? or (move_out_date.month - Time.now.month) == 1))
-        #rewards.create!(:amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
-      #end
-      #Reward.create(:resident_id => self.id, :amount => Reward.INITIAL_REWARD, :type => Reward.TYPE_INITIAL_REWARD, :period_start => Time.now, :period_end =>  1.year.from_now)
     end
     def sign_up_bonus
       reward = rewards.find_by_type_(Reward.TYPE_SIGNUP_BONUS)
@@ -211,10 +227,33 @@ module Smartrent
       end
     end
     def monthly_awards_amount
-      self.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).sum(:amount).to_f
+      if smartrent_status == self.class.SMARTRENT_STATUS_CHAMPION or smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
+        monthly_amount = 0
+      else
+        monthly_amount = self.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).sum(:amount).to_f
+        if (sign_up_bonus + initial_reward + monthly_amount) > 10000
+          monthly_amount = monthly_amount - (sign_up_bonus + initial_reward)
+          monthly_amount > 0 ? monthly_amount : 0
+        end
+      end
+      monthly_amount
+    end
+    def cached_monthly_awards_amount
+      Rails.cache.fetch([self.class.name, id, "monthly_awards_amount"]) {
+        monthly_awards_amount
+      }
     end
     def total_rewards
-      sign_up_bonus + initial_reward + monthly_awards_amount
+      if smartrent_status == self.class.SMARTRENT_STATUS_CHAMPION or smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
+        0
+      else
+        sign_up_bonus + initial_reward + monthly_awards_amount
+      end
+    end
+    def cached_total_rewards
+      Rails.cache.fetch([self.class.name, id, "total_rewards"]) {
+        total_rewards
+      }
     end
 
     def balance
@@ -239,28 +278,25 @@ module Smartrent
 
 
     def total_months
-      #TODO cache this result
       months = 0
       move_in_date
       resident_properties.order("move_in_date asc").each_with_index do |resident_property, index|
         #Possible Case: When the move_in_date is present and there are more move_in_dates and move_out_date is nil in each case
         move_in_date = resident_property.move_in_date if move_in_date.nil?
         if resident_property.move_out_date.present?
-          months = resident_property.move_out_date.differnce_in_months(move_in_date) + months
+          months = resident_property.move_out_date.difference_in_months(move_in_date) + months
           move_in_date = nil
         elsif index == resident_properties.count - 1
           #the last element of the array and the move_out_date is still nil
-          months = Time.now.differnce_in_months(move_in_date) + months
+          months = Time.now.difference_in_months(move_in_date) + months
         end
       end
       months
-      #if self.move_in_date.nil?
-        #0
-      #elsif self.move_out_date.nil?
-        #(Time.now.year * 12 + Time.now.month) - (self.move_in_date.year * 12 + self.move_in_date.month)
-      #else
-        #(self.move_out_date.year * 12 + self.move_out_date.month) - (self.move_in_date.year * 12 + self.move_in_date.month)
-      #end
+    end
+    def cached_total_months
+      Rails.cache.fetch([self.class.name, id, "total_months"]) {
+        total_months
+      }
     end
 
     def update_password(attributes)
@@ -272,19 +308,37 @@ module Smartrent
       end
     end
     def self.monthly_awards_job
-      residents = Resident.where(:status => Resident.STATUS_ACTIVE)
-      residents = residents.where("move_out_date is null and property_id is not null") if residents.present?
-      residents = residents.includes(:property).where{property.status == Property.STATUS_CURRENT}
-      residents.each do |resident|
-        monthly_reward = resident.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).last
-        should_add_reward = true
-        if monthly_reward.present?
-          if (monthly_reward.period_start.year * 12 + monthly_reward.period_start.month) - (Time.now.year * 12 + Time.now.month) == 0
-            should_add_reward = false
+      all.each do |resident|
+        resident_properties = resident.resident_properties
+        if resident.smartrent_status == self.SMARTRENT_STATUS_ACTIVE
+          resident_properties = resident_properties.where(:move_out_date => nil)
+          if resident_properties.present?
+            resident_properties = resident_properties.select{|rp| rp.property.status == Property.STATUS_CURRENT}
+            #reisdent_properties = resident_properties.includes(:properties).where{property.status == Property.STATUS_CURRENT}
+            resident_properties.each do |resident_property|
+              resident = resident_property.resident
+              monthly_reward = resident.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).order("period_start desc").first
+              should_add_reward = true
+              #Check to ensure if this resident has not been awarded already this month
+              if monthly_reward.present? and (monthly_reward.period_start.difference_in_months(Time.now) == 0)
+                should_add_reward = false
+              end
+              if should_add_reward
+                resident.rewards.create(:amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
+              end
+            end
+          elsif resident_properties.empty?
+            resident.update_attributes(:smartrent_status => self.SMARTRENT_STATUS_INACTIVE)
+          else
+            resident_property = resident_properties.order("move_in_date desc").first
+            if Time.now.differnce_in_days(resident_property.move_in_date) > 60
+              resident.update_attributes(:smartrent_status => self.SMARTRENT_STATUS_EXPIRED)
+              Rails.cache.delete([self.class.name, property.user_id, "monthly_awards_amount"])
+              Rails.cache.delete([self.class.name, property.user_id, "total_rewards"])
+            else
+              resident.update_attributes(:smartrent_status => self.SMARTRENT_STATUS_INACTIVE)
+            end
           end
-        end
-        if should_add_reward
-          resident.rewards.create(:amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
         end
       end
     end
