@@ -112,6 +112,10 @@ module Smartrent
       "Current"
     end
 
+    def self.statuses
+      {"Active" => self.STATUS_ACTIVE, "InActive" => self.STATUS_INACTIVE, "Current" => self.STATUS_CURRENT}
+    end
+
     def self.import(file)
       if file.class.to_s == "ActionDispatch::Http::UploadedFile"
         f = File.open(file.path, "r:bom|utf-8")

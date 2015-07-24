@@ -3,40 +3,40 @@
   <fieldset>
     <div class="field">
       <div class="form-group">
-        <%= label_tag "", "ID", :class => "col-md-1 control-label" %>
-        <div class="col-md-2">
+        <%= label_tag "", "ID", :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
           <%= text_field_tag :_id, params[:_id], :class => "form-control input-md" %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= label_tag "", :name, :class => "col-md-1 control-label" %>
-        <div class="col-md-2">
+        <%= label_tag "", :name, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
           <%= text_field_tag :name, params[:name], :class => "form-control input-md" %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= label_tag "", :status, :class => "col-md-1 control-label" %>
-        <div class="col-md-2">
-          <%= text_field_tag :status, params[:status], :class => "form-control input-md" %>
+        <%= label_tag "", :status, :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
+          <%= select_tag :status, options_for_select(Smartrent::Property.statuses.collect{|key,value| [value, key]}, params[:status]), {:include_blank => "--Select Status--", :class => "form-control input-md"}%>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= label_tag "", "Website Url", :class => "col-md-1 control-label" %>
-        <div class="col-md-2">
+        <%= label_tag "", "Website Url", :class => "col-md-2 control-label" %>
+        <div class="col-md-4">
           <%= text_field_tag :website_url, params[:website_url], :class => "form-control input-md" %>
         </div>
       </div>
     </div>
     <%= hidden_field_tag "search", "1" %>
     <div class="form-group">
-      <label class="col-md-1 control-label" for="singlebutton"></label>
-      <div class="col-md-2">
+      <label class="col-md-2 control-label" for="singlebutton"></label>
+      <div class="col-md-4">
         <%= submit_tag "Filter", :class => "btn btn-primary" %>
       </div>
     </div>

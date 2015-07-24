@@ -118,6 +118,9 @@ module Smartrent
           if k == "_id"
             arr << "id = :id"
             hash[:id] = "#{params[k]}"
+          elsif k == "status"
+            arr << "#{k} = :#{k}"
+            hash[k.to_sym] = "#{params[k]}"
           else
             arr << "#{k} LIKE :#{k}"
             hash[k.to_sym] = "%#{params[k]}%"

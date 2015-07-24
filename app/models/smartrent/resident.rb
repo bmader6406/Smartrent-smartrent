@@ -22,7 +22,7 @@ module Smartrent
     has_many :homes, :through => :resident_homes
     has_many :rewards, :dependent => :destroy
     after_create :find_and_set_crm_resident
-    before_create do
+    before_validation do
       #Default Status
       self.status = self.class.STATUS_CURRENT if self.status.blank?
     end
