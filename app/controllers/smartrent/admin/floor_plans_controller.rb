@@ -11,7 +11,9 @@ module Smartrent
     # GET /admin/floor_plans
     # GET /admin/floor_plans.json
     def index
-      @admin_floor_plans = FloorPlan.paginate(:page => params[:page], :per_page => 15)
+      #@admin_floor_plans = FloorPlan.paginate(:page => params[:page], :per_page => 15)
+      filter_floor_plans
+      @search = params[:search]
   
       respond_to do |format|
         format.html # index.html.erb
@@ -107,6 +109,29 @@ module Smartrent
           else
             authorize! :read, Smartrent::FloorPlan
         end
+      end
+      def filter_floor_plans(per_page = 15)
+        arr = []
+        hash = {}
+        ["_id", "origin_id", "name", "url", "sq_feet_max", "sq_feet_min", "beds", "baths", "rent_min", "rent_max", "penthouse"].each do |k|
+          next if params[k].blank?
+          case k
+            when "_id"
+              arr << "id = :id"
+              hash[:id] = "#{params[k]}"
+            when "sq_feet_max", "sq_feet_min", "beds", "baths", "rent_min", "rent_max", "origin_id"
+              arr << "#{k} = :#{k}"
+              hash[k.to_sym] = "#{params[k]}"
+            when "penthouse"
+              value = params[k] == "true" ? true : false
+              arr << "#{k} = :#{k}"
+              hash[k.to_sym] = value
+            else
+              arr << "#{k} LIKE :#{k}"
+              hash[k.to_sym] = "%#{params[k]}%"
+          end
+        end
+        @admin_floor_plans = FloorPlan.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
       end
   end
 end

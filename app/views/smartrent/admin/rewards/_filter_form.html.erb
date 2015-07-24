@@ -13,8 +13,7 @@
       <div class="form-group">
         <%= label_tag "", :property_id, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= text_field_tag :property_id, params[:property_id], :class => "form-control input-md" %>
-          <%#= select_tag :property_id, options_for_select(Smartrent::Reward.properties.collect{|p| [p.name, p.id]}, params[:property_id]), {:include_blank => "--Select Property--", :class => "form-control input-md"}%>
+          <%= select_tag :property_id, options_for_select(Smartrent::Reward.properties.collect{|p| [p.name, p.id]}, params[:property_id]), {:include_blank => "--Select Property--", :class => "form-control input-md"}%>
         </div>
       </div>
     </div>
@@ -22,8 +21,7 @@
       <div class="form-group">
         <%= label_tag "", :resident_id, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= text_field_tag :resident_id, params[:resident_id], :class => "form-control input-md" %>
-          <%#= select_tag :resident_id, options_for_select(Smartrent::Reward.residents.collect{|r| [r.email, r.id]}, params[:resident_id]), {:include_blank => "--Select Resident--", :class => "form-control input-md"}%>
+          <%= select_tag :resident_id, options_for_select(Smartrent::Reward.residents.collect{|r| [r.email, r.id]}, params[:resident_id]), {:include_blank => "--Select Resident--", :class => "form-control input-md"}%>
         </div>
       </div>
     </div>

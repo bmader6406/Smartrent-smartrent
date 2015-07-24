@@ -5,6 +5,7 @@
 </div>
 <br />
 <br />
+<%= render partial: "filter_form"%>
 <br />
 <% if @admin_floor_plans.present? %>
   <table class="table">
@@ -41,6 +42,8 @@
 <% end %>
 </table>
   <%= will_paginate @admin_floor_plans, renderer: BootstrapPagination::Rails %>
+<% elsif @search == "1" %>
+  <div class="alert alert-warning"> No Floor Plans Found</div>
 <% else %>
   <div class="alert alert-warning"> No Floor Plans available</div>
 <% end %>

@@ -21,7 +21,7 @@
       <div class="form-group">
         <%= label_tag "", :status, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= select_tag :status, options_for_select(Smartrent::Resident.statuses.collect{|key,value| [value, key]}, params[:status]), {:include_blank => "--Select Status--", :class => "form-control input-md"}%>
+          <%= select_tag :status, options_for_select(Smartrent::Resident.smartrent_statuses.collect{|key,value| [value, key]}, params[:status]), {:include_blank => "--Select Status--", :class => "form-control input-md"}%>
         </div>
       </div>
     </div>

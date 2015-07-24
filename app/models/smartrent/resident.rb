@@ -162,7 +162,7 @@ module Smartrent
         resident_properties.each do |resident_property|
           if resident_property.move_out_date.nil?
             smartrent_status = resident_property.status
-          elsif smartrent_status != self.class.SMARTRENT_STATUS_ACTIVE and resident_property.status.present?
+          elsif smartrent_status != ResidentProperty.STATUS_ACTIVE and resident_property.status.present?
             smartrent_status = resident_property.status
           end
         end
