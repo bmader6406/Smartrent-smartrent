@@ -4,9 +4,6 @@ module Smartrent
     # :confirmable, :lockable, :timeoutable and :omniauthable
     devise :database_authenticatable, :registerable,
            :recoverable, :rememberable, :trackable, :validatable, :lockable
-    # Setup accessible (or protected) attributes for your model
-    #attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :address, :zip, :state, :move_in_date, :move_out_date, :home_phone, :work_phone, :cell_phone, :company, :house_hold_size, :pets_count, :contract_signing_date, :type_, :status, :current_community, :city, :state, :country, :current_password, :origin_id, :property_id, :home_id, :sign_up_bonus
-    #attr_reader :sign_up_bonus
     @@sign_up_bonus = nil
 
     validates_uniqueness_of :origin_id, :allow_nil => true
@@ -14,9 +11,6 @@ module Smartrent
     validates_uniqueness_of :email, :allow_blank => true
     validate :valid_smartrent_status
 
-    #attr_accessor :original_password
-    # #attr_accessible :title, :body
-    #belongs_to :property
     has_many :resident_properties, :dependent => :destroy
     has_many :properties, :through => :resident_properties
     has_many :resident_homes, :dependent => :destroy
@@ -30,14 +24,13 @@ module Smartrent
     end
     after_commit :flush_rewards_cache
     #has_one :crm_resident, :class_name => "Resident", :foreign_key => :crm_resident_id
-    #
-    #
+
     def valid_smartrent_status
       if self.class.smartrent_statuses[smartrent_status].nil?
         errors.add(:smartrent_status, "is invalid")
       end
     end
-    
+
     def flush_rewards_cache
       Rails.cache.delete([self.class.name, id, "monthly_awards_amount"])
       Rails.cache.delete([self.class.name, id, "total_rewards"])
@@ -120,7 +113,7 @@ module Smartrent
         property_id = nil
         property_id = property.id if property.present?
         #:status => resident_hash[:smartrent_status], 
-        resident_properties_hash = {:property_id => property_id, :move_in_date => nil}
+        resident_properties_hash = {:property_id => property_id, :move_in_date => nil, :status => ResidentProperty.STATUS_CURRENT}
         begin
           resident_properties_hash[:move_in_date] =  Date.parse(resident_hash[:move_in_date]) if resident_hash[:move_in_date].present?
         rescue Exception => e

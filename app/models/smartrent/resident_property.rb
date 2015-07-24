@@ -12,20 +12,17 @@ module Smartrent
         end
       end
     end
-    def self.STATUS_ACTIVE
-      "Active"
+    def self.STATUS_CURRENT
+      "Current"
     end
-    def self.STATUS_INACTIVE
-      "InActive"
+    def self.STATUS_PAST
+      "Past"
     end
-    def self.STATUS_EXPIRED
-      "Expired"
+    def self.STATUS_NOTICE
+      "Notice"
     end
-    def self.STATUS_CHAMPION
-      "Champion"
-    end
-    def self.STATUS_ARCHIVE
-      "Archive"
+    def self.statuses
+      {self.STATUS_CURRENT => "Current", self.STATUS_PAST => "Past", self.STATUS_NOTICE => "Notice"}
     end
   end
 end

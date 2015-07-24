@@ -54,7 +54,7 @@
     <div class="form-group">
       <%= f.label :status, :class => "col-md-2 control-label" %>
       <div class="col-md-4">
-        <%= f.select :status, Smartrent::Resident.smartrent_statuses.collect{|key,value| [value, key]}, {:include_blank => "--Select Status"}, {:class => "form-control input-md"} %>
+        <%= f.select :status, Smartrent::ResidentProperty.statuses.collect{|key,value| [value, key]}, {:include_blank => "--Select Status--"}, {:class => "form-control input-md"} %>
       </div>
     </div>
     <div class="form-group">
