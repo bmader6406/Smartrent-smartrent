@@ -35,6 +35,7 @@ module Smartrent
       Rails.cache.delete([self.class.name, id, "monthly_awards_amount"])
       Rails.cache.delete([self.class.name, id, "total_rewards"])
       Rails.cache.delete([self.class.name, id, "total_months"])
+      Rails.cache.delete([self.class.name, id, "champion_amount"])
     end
 
     def sign_up_bonus
@@ -194,6 +195,15 @@ module Smartrent
         rewards.create!(:amount => @@sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
       end
     end
+    def self.move_all_rewards_to_initial_balance(residents)
+      residents.each do |resident|
+        if resident.rewards.present?
+          resident.rewards.where.not(:type_ => Reward.TYPE_INITIAL_REWARD).each do |reward|
+            reward.update_attributes(:type_ => Reward.TYPE_INITIAL_REWARD)
+          end
+        end
+      end
+    end
     def sign_up_bonus
       reward = rewards.find_by_type_(Reward.TYPE_SIGNUP_BONUS)
       if reward
@@ -210,22 +220,13 @@ module Smartrent
         0.0
       end
     end
-    def self.move_all_rewards_to_initial_balance(residents)
-      residents.each do |resident|
-        if resident.rewards.present?
-          resident.rewards.where.not(:type_ => Reward.TYPE_INITIAL_REWARD).each do |reward|
-            reward.update_attributes(:type_ => Reward.TYPE_INITIAL_REWARD)
-          end
-        end
-      end
-    end
     def monthly_awards_amount
-      if smartrent_status == self.class.SMARTRENT_STATUS_CHAMPION or smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
+      if smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
         monthly_amount = 0
       else
         monthly_amount = self.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).sum(:amount).to_f
-        if (sign_up_bonus + initial_reward + monthly_amount) > 10000
-          monthly_amount = monthly_amount - (sign_up_bonus + initial_reward)
+        if (sign_up_bonus + initial_reward + monthly_amount - champion_amount) > 10000
+          monthly_amount = monthly_amount - (sign_up_bonus + initial_reward - champion_amount)
           monthly_amount > 0 ? monthly_amount : 0
         end
       end
@@ -236,11 +237,19 @@ module Smartrent
         monthly_awards_amount
       }
     end
+    def champion_amount
+      self.rewards.where(:type_ => Reward.TYPE_CHAMPION).sum(:amount).to_f
+    end
+    def cached_champion_amount
+      Rails.cache.fetch([self.class.name, id, "champion_amount"]) {
+        champion_amount
+      }
+    end
     def total_rewards
-      if smartrent_status == self.class.SMARTRENT_STATUS_CHAMPION or smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
+      if smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
         0
       else
-        sign_up_bonus + initial_reward + monthly_awards_amount
+        sign_up_bonus + initial_reward + monthly_awards_amount - champion_amount
       end
     end
     def cached_total_rewards
@@ -300,6 +309,8 @@ module Smartrent
         errors.add(:current_password, "is incorrect")
       end
     end
+
+    #The Monthly Cron Job
     def self.monthly_awards_job
       all.each do |resident|
         resident_properties = resident.resident_properties

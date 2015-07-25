@@ -48,8 +48,8 @@
     </div>
     <% if @resident.is_smartrent? %>
       <div class="smartrent resident-box">
-        <b>Total:</b> <%= @resident.total_rewards  %><br />
-        <b>Monthly Awards:</b> <%= @resident.monthly_awards_amount %><br />
+        <b>Total:</b> <%= @resident.cached_total_rewards  %><br />
+        <b>Monthly Awards:</b> <%= @resident.cached_monthly_awards_amount %><br />
         <b>Sign-Up Bonus:</b> <%= @resident.sign_up_bonus_ %><br />
         <b>Initial Reward:</b> <%= @resident.initial_reward %><br />
         <%= link_to "View Details", rewards_admin_resident_path(@resident), :class => "btn btn-primary" %>
@@ -62,11 +62,11 @@
       <b>SmartRent Balance</b><br />
       <div class="col-md-5">
         <div class="resident-amount-box">
-          <%= number_to_currency @resident.total_rewards %>
+          <%= number_to_currency @resident.cached_total_rewards %>
         </div>
       </div>
       <div class="col-md-7">
-        <b>Monthly Total:</b> <%= number_to_currency @resident.monthly_awards_amount %><br />
+        <b>Monthly Total:</b> <%= number_to_currency @resident.cached_monthly_awards_amount %><br />
         <b>Sign-Up Bonus:</b> <%= number_to_currency @resident.sign_up_bonus_ %><br />
         <b>Initial Reward:</b> <%= number_to_currency @resident.initial_reward %>
       </div>
@@ -83,7 +83,7 @@
         </div>
         <div class="col-md-7">
           <b>Move-in Date:</b> <%= @resident.move_in_date.to_s(:year_month_day) if @resident.move_in_date.present? %><br />
-          <b>SmartRent Months:</b> <%= @resident.total_months.to_i %>
+          <b>SmartRent Months:</b> <%= @resident.cached_total_months.to_i %>
         </div>
       </div>
       <div class="clearfix"></div>
