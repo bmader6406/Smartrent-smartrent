@@ -1,18 +1,18 @@
 <%= form_for([:admin, @setting], html: {:class => "form-horizontal"}) do |f| %>
   <% if @setting.errors.any? %>
-    <%= render partial: "shared/form_errors", :locals => {:errors => @setting.errors} %>
+    <%= render "shared/form_errors", :locals => {:errors => @setting.errors} %>
   <% end %>
   <fieldset>
     <div class="form-group">
       <%= f.label :key, :class => "col-md-2 control-label" %>
       <div class="col-md-4">
-        <%= f.text_field :key, :class => "form-control input-md" %>
+        <%= f.text_field :key, :class => "form-control" %>
       </div>
     </div>
     <div class="form-group">
       <%= f.label :value, :class => "col-md-2 control-label" %>
       <div class="col-md-4">
-        <%= f.text_field :value, :class => "form-control input-md" %>
+        <%= f.text_field :value, :class => "form-control" %>
       </div>
     </div>
     <div class="form-group">

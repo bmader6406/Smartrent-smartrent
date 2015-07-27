@@ -1,29 +1,50 @@
-<h1>Listing Settings</h1>
-<div class="links pull-right">
-  <%= link_to 'New Setting', new_admin_setting_path, :class => "btn btn-primary" %>
-  <%= link_to 'Run Monthly Awards Job Manually', run_monthly_awards_job_admin_settings_path, :class => "btn btn-default" %>
-</div>
-<br />
-<br />
-<br />
-
-<% if @settings.present? %>
-<table class="table">
-  <tr>
-    <th>Key</th>
-    <th>Value</th>
-    <th>Actions</th>
-  </tr>
-
-<% @settings.each do |setting| %>
-  <tr>
-    <td><%= setting.key.humanize %></td>
-    <td><%= setting.value %></td>
-    <td><%= link_to 'Show', admin_setting_path(setting) %> | <%= link_to 'Edit', edit_admin_setting_path(setting) %> | <%= link_to 'Destroy', admin_setting_path(setting), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
+<% content_for(:ui_west) do %>
+  Setting Search
 <% end %>
-</table>
-  <%= will_paginate @settings, renderer: BootstrapPagination::Rails %>
-<% else %>
-  <div class="alert alert-warning"> No Settings available</div>
+
+<% content_for(:ui_center) do %>
+  <div class="listing">
+    <div class="links pull-right">
+      <%= link_to 'New Setting', new_admin_setting_path, :class => "btn btn-primary" %>
+      <%= link_to 'Run Monthly Awards Job Manually', run_monthly_awards_job_admin_settings_path, :class => "btn btn-default" %>
+    </div>
+    <h3>Listing Settings</h3>
+    <% if @settings.present? %>
+      <table class="table">
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+          <th>Actions</th>
+        </tr>
+        <% @settings.each do |setting| %>
+          <tr>
+            <td><%= setting.key.humanize %></td>
+            <td><%= setting.value %></td>
+            <td>
+              <%= link_to 'Show', admin_setting_path(setting) %> | 
+              <%= link_to 'Edit', edit_admin_setting_path(setting) %> | 
+              <%= link_to 'Destroy', admin_setting_path(setting), method: :delete, data: { confirm: 'Are you sure?' } %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+      <div class="paging-info">
+        <%= page_entries_info @settings %>
+        <%= page_navigation_links @settings %>
+      </div>
+      
+    <% elsif @search == "1" %>
+      <div class="alert alert-warning">No Settings found</div>
+      
+    <% else %>
+      <div class="alert alert-warning">No Settings have been added yet.</div>
+    <% end %>
+  </div>
 <% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout();
+  });
+</script>

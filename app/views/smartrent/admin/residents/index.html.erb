@@ -1,39 +1,61 @@
-<h1>Listing Residents</h1>
-<div class="links pull-right">
-  <%#= link_to 'Make all Rewards Initial Reward', move_all_rewards_to_initial_balance_admin_residents_path, :class => "btn btn-primary", data: {confirm: "This action is irreversible and will make all rewards initial reward; Continue?"} %>
-  <%= link_to 'Import Residents', import_admin_residents_path, :class => "btn btn-default" %>
-  <%= link_to 'New Resident', new_admin_resident_path, :class => "btn btn-primary" %>
-</div>
-<br />
-<br />
-<%= render partial: "filter_form" %>
-<br />
-<% if @residents.present? %>
-  <table class="table">
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Unit ID</th>
-      <th>Properties</th>
-      <th>Status</th>
-      <th>Actions</th>
-    </tr>
-
-  <% @residents.each do |resident| %>
-    <tr>
-      <td><%= resident.name %></td>
-      <td><%= resident.email %></td>
-      <td><%= resident.unit_id %></td>
-      <td><%= link_to "Properties", properties_admin_resident_path(resident) %></td>
-      <td><%= resident.status %></td>
-      <td><%= link_to 'Show', admin_resident_path(resident) %> <% if can? :update, @resident %>| <%= link_to 'Edit', edit_admin_resident_path(resident) %> <% end %> <% if can? :destroy, @resident %> | <%= link_to 'Destroy', admin_resident_path(resident), method: :delete, data: { confirm: 'Are you sure?' } %><% end %></td>
-      <%  %>
-    </tr>
-  <% end %>
-  </table>
-  <%= will_paginate @residents, renderer: BootstrapPagination::Rails %>
-<% elsif @search == "1" %>
-  <div class="alert alert-warning">No Residents Found</div>
-<% else %>
-  <div class="alert alert-warning"> No Residents Available</div>
+<% content_for(:ui_west) do %>
+  <%= render "filter_form" %>
 <% end %>
+
+<% content_for(:ui_center) do %>
+  <div class="listing">
+    <div class="links pull-right">
+      <%#= link_to 'Make all Rewards Initial Reward', move_all_rewards_to_initial_balance_admin_residents_path, :class => "btn btn-primary", data: {confirm: "This action is irreversible and will make all rewards initial reward; Continue?"} %>
+      <%= link_to 'Import Residents', import_admin_residents_path, :class => "btn btn-default" %>
+      <%= link_to 'New Resident', new_admin_resident_path, :class => "btn btn-primary" %>
+    </div>
+    <h3>Listing residents</h3>
+
+    <% if @residents.present? %>
+      <table class="table">
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Unit ID</th>
+          <th>residents</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+
+        <% @residents.each do |resident| %>
+          <tr>
+            <td><%= resident.name %></td>
+            <td><%= resident.email %></td>
+            <td><%= resident.unit_id %></td>
+            <td><%= link_to "residents", residents_admin_resident_path(resident) %></td>
+            <td><%= resident.status %></td>
+            <td>
+              <%= link_to 'Show', admin_resident_path(resident) %> 
+              <% if can? :update, @resident %>
+                | <%= link_to 'Edit', edit_admin_resident_path(resident) %> 
+              <% end %> 
+              <% if can? :destroy, @resident %> 
+                | <%= link_to 'Destroy', admin_resident_path(resident), method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+      <div class="paging-info">
+        <%= page_entries_info @residents %>
+        <%= page_navigation_links @residents %>
+      </div>
+    <% elsif @search == "1" %>
+      <div class="alert alert-warning">No residents found</div>
+    <% else %>
+      <div class="alert alert-warning">No residents have been added yet.</div>
+    <% end %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout();
+  });
+</script>

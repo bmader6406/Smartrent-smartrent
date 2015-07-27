@@ -1,32 +1,47 @@
-<h1>Listing Properties</h1>
-<div class="links pull-right">
-  <%= link_to 'Import Properties', import_admin_properties_path, :class => "btn btn-default" %>
-  <%= link_to 'New Property', new_admin_property_path, :class => "btn btn-primary" %>
-</div>
-<br />
-<br />
-<%= render partial: "filter_form" %>
-<br />
-<% if @properties.present? %>
-  <table class="table">
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Website</th>
-      <th>Actions</th>
-    </tr>
-  <% @properties.each do |property| %>
-    <tr>
-      <td><%= property.name %></td>
-      <td><%= strip_tags(property.description).truncate(27) if property.description %></td>
-      <td><%= link_to "Website Url", property.website_url, :target => "_blank" %></td>
-      <td><%= link_to 'Show', admin_property_path(property) %> | <%= link_to 'Edit', edit_admin_property_path(property) %> | <%= link_to 'Destroy', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-    </tr>
-  <% end %>
-  </table>
-  <%= will_paginate @properties, renderer: BootstrapPagination::Rails %>
-<% elsif @search == "1" %>
-  <div class="alert alert-warning">No Properties found</div>
-<% else %>
-  <div class="alert alert-warning">No Properties have been added yet.</div>
+<% content_for(:ui_west) do %>
+  <%= render "filter_form" %>
 <% end %>
+
+<% content_for(:ui_center) do %>
+  <div class="listing">
+    <div class="links pull-right">
+      <%= link_to 'Import Properties', import_admin_properties_path, :class => "btn btn-default" %>
+      <%= link_to 'New Property', new_admin_property_path, :class => "btn btn-primary" %>
+    </div>
+    <h3>Listing Properties</h3>
+
+    <% if @properties.present? %>
+      <table class="table">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Website</th>
+          <th>Actions</th>
+        </tr>
+      <% @properties.each do |property| %>
+        <tr>
+          <td><%= property.name %></td>
+          <td><%= strip_tags(property.description).truncate(27) if property.description %></td>
+          <td><%= link_to "Website Url", property.website_url, :target => "_blank" %></td>
+          <td><%= link_to 'Show', admin_property_path(property) %> | <%= link_to 'Edit', edit_admin_property_path(property) %> | <%= link_to 'Destroy', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+      </table>
+      <div class="paging-info">
+        <%= page_entries_info @properties %>
+        <%= page_navigation_links @properties %>
+      </div>
+    <% elsif @search == "1" %>
+      <div class="alert alert-warning">No Properties found</div>
+    <% else %>
+      <div class="alert alert-warning">No Properties have been added yet.</div>
+    <% end %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout();
+  });
+</script>

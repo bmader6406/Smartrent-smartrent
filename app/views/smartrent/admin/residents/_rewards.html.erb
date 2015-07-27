@@ -21,7 +21,10 @@
     </tr>
   <% end %>
   </table>
-  <%= will_paginate @resident_rewards, renderer: BootstrapPagination::Rails %>
+  <div class="paging-info">
+    <%= page_entries_info @resident_rewards %>
+    <%= page_navigation_links @resident_rewards %>
+  </div>
 <% else %>
   <div class="alert alert-warning">No rewards available</div>
 <% end %>

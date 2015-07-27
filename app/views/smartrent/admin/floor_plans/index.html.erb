@@ -1,49 +1,64 @@
-<h1>Listing Floor Plans</h1>
-<div class="links pull-right">
-  <%= link_to 'Import Floor Plans', import_admin_floor_plans_path, :class => "btn btn-default" %>
-  <%= link_to 'New Floor Plan', new_admin_floor_plan_path, :class => "btn btn-primary" %>
-</div>
-<br />
-<br />
-<%= render partial: "filter_form"%>
-<br />
-<% if @admin_floor_plans.present? %>
-  <table class="table">
-  <tr>
-    <th>Property</th>
-    <th>Origin</th>
-    <th>Name</th>
-    <th>Url</th>
-    <th>Sq feet max</th>
-    <th>Sq feet min</th>
-    <th>Beds</th>
-    <th>Baths</th>
-    <th>Rent min</th>
-    <th>Rent max</th>
-    <th>Penthouse</th>
-    <th>Actions</th>
-  </tr>
+<% content_for(:ui_west) do %>
+  <%= render "filter_form"%>
+<% end %>
 
-<% @admin_floor_plans.each do |admin_floor_plan| %>
-  <tr>
-    <td><%= admin_floor_plan.property.name %></td>
-    <td><%= admin_floor_plan.origin_id %></td>
-    <td><%= admin_floor_plan.name %></td>
-    <td><%= admin_floor_plan.url %></td>
-    <td><%= admin_floor_plan.sq_feet_max %></td>
-    <td><%= admin_floor_plan.sq_feet_min %></td>
-    <td><%= admin_floor_plan.beds %></td>
-    <td><%= admin_floor_plan.baths %></td>
-    <td><%= admin_floor_plan.rent_min %></td>
-    <td><%= admin_floor_plan.rent_max %></td>
-    <td><%= admin_floor_plan.penthouse %></td>
-    <td><%= link_to 'Show', admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Edit', edit_admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Destroy', admin_floor_plan_path(admin_floor_plan), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
+<% content_for(:ui_center) do %>
+  <div class="listing">
+    <div class="links pull-right">
+      <%= link_to 'Import Floor Plans', import_admin_floor_plans_path, :class => "btn btn-default" %>
+      <%= link_to 'New Floor Plan', new_admin_floor_plan_path, :class => "btn btn-primary" %>
+    </div>
+    <h3>Listing admin_floor_plans</h3>
+
+    <% if @admin_floor_plans.present? %>
+      <table class="table">
+        <tr>
+          <th>Property</th>
+          <th>Origin</th>
+          <th>Name</th>
+          <th>Url</th>
+          <th>Sq feet max</th>
+          <th>Sq feet min</th>
+          <th>Beds</th>
+          <th>Baths</th>
+          <th>Rent min</th>
+          <th>Rent max</th>
+          <th>Penthouse</th>
+          <th>Actions</th>
+        </tr>
+
+        <% @admin_floor_plans.each do |admin_floor_plan| %>
+          <tr>
+            <td><%= admin_floor_plan.property.name %></td>
+            <td><%= admin_floor_plan.origin_id %></td>
+            <td><%= admin_floor_plan.name %></td>
+            <td><%= admin_floor_plan.url %></td>
+            <td><%= admin_floor_plan.sq_feet_max %></td>
+            <td><%= admin_floor_plan.sq_feet_min %></td>
+            <td><%= admin_floor_plan.beds %></td>
+            <td><%= admin_floor_plan.baths %></td>
+            <td><%= admin_floor_plan.rent_min %></td>
+            <td><%= admin_floor_plan.rent_max %></td>
+            <td><%= admin_floor_plan.penthouse %></td>
+            <td><%= link_to 'Show', admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Edit', edit_admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Destroy', admin_floor_plan_path(admin_floor_plan), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </table>
+      <div class="paging-info">
+        <%= page_entries_info @admin_floor_plans %>
+        <%= page_navigation_links @admin_floor_plans %>
+      </div>
+    <% elsif @search == "1" %>
+      <div class="alert alert-warning">No admin_floor_plans found</div>
+    <% else %>
+      <div class="alert alert-warning">No admin_floor_plans have been added yet.</div>
+    <% end %>
+  </div>
 <% end %>
-</table>
-  <%= will_paginate @admin_floor_plans, renderer: BootstrapPagination::Rails %>
-<% elsif @search == "1" %>
-  <div class="alert alert-warning"> No Floor Plans Found</div>
-<% else %>
-  <div class="alert alert-warning"> No Floor Plans available</div>
-<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout();
+  });
+</script>

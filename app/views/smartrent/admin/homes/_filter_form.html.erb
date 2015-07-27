@@ -1,44 +1,19 @@
-<h3>Filter Homes</h3>
-<%= form_tag({}, {:method => "get", :class => "form-horizontal"}) do %>
-  <fieldset>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "ID", :class => "col-md-1 control-label" %>
-        <div class="col-md-2">
-          <%= text_field_tag :_id, params[:_id], :class => "form-control input-md" %>
-        </div>
-      </div>
+<div id="home-search">
+  <h3>Home Search</h3>
+  <%= form_tag({}, {:method => "get"}) do %>
+    <div class="form-group">
+      <%= text_field_tag :_id, params[:_id], :class => "form-control", :placeholder => "ID" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", :title, :class => "col-md-1 control-label" %>
-        <div class="col-md-2">
-          <%= text_field_tag :title, params[:title], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :title, params[:title], :class => "form-control", :placeholder => "Title" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Phone Number", :class => "col-md-1 control-label" %>
-        <div class="col-md-2">
-          <%= text_field_tag :phone_number, params[:phone_number], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :phone_number, params[:phone_number], :class => "form-control", :placeholder => "Phone Number" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", :State, :class => "col-md-1 control-label" %>
-        <div class="col-md-2">
-          <%= text_field_tag :state, params[:state], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :state, params[:state], :class => "form-control", :placeholder => "State" %>
     </div>
     <%= hidden_field_tag "search", "1" %>
-    <div class="form-group">
-      <label class="col-md-1 control-label" for="singlebutton"></label>
-      <div class="col-md-2">
-        <%= submit_tag "Filter", :class => "btn btn-primary" %>
-      </div>
-    </div>
-    </fieldset>
-<% end %>
+    <%= submit_tag "Search", :class => "btn btn-default btn-block search" %>
+  <% end %>
+</div>

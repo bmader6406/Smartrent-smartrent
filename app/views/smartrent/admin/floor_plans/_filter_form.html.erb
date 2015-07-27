@@ -1,100 +1,44 @@
-<h3>Filter Floor Plans</h3>
-<%= form_tag({}, {:method => "get", :class => "form-horizontal"}) do %>
-  <fieldset>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "ID", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :_id, params[:_id], :class => "form-control input-md" %>
-        </div>
-      </div>
+<div id="floor-plan-search">
+  <h3>Floor Plan Search</h3>
+  <%= form_tag({}, {:method => "get"}) do %>
+    <div class="form-group">
+      <%= text_field_tag :_id, params[:_id], :class => "form-control", :placeholder => "ID" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Origin ID", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= number_field_tag :origin_id, params[:origin_id], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= number_field_tag :origin_id, params[:origin_id], :class => "form-control", :placeholder => "Origin ID" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Name", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :name, params[:name], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :name, params[:name], :class => "form-control", :placeholder => "Name" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Url", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :url, params[:url], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :url, params[:url], :class => "form-control", :placeholder => "URL" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Sq Feet Max", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :sq_feet_max, params[:sq_feet_max], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :sq_feet_max, params[:sq_feet_max], :class => "form-control", :placeholder => "Sq Feet Max" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Sq Feet Min", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :sq_feet_min, params[:sq_feet_min], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :sq_feet_min, params[:sq_feet_min], :class => "form-control", :placeholder => "Sq Feet Min" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Beds", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :beds, params[:beds], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :beds, params[:beds], :class => "form-control", :placeholder => "Beds" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Baths", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :baths, params[:baths], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :baths, params[:baths], :class => "form-control", :placeholder => "Baths" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Rent Min", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :rent_min, params[:rent_min], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :rent_min, params[:rent_min], :class => "form-control", :placeholder => "Rent Min" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Rent Max", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :rent_max, params[:rent_max], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :rent_max, params[:rent_max], :class => "form-control", :placeholder => "Rent Max" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "Penthouse", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= check_box_tag :penthouse, true, params[:penthouse], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <label>
+        <%= check_box_tag :penthouse, true, params[:penthouse] %>
+        Penthouse
+      </label>
     </div>
     <%= hidden_field_tag "search", "1" %>
-    <div class="form-group">
-      <label class="col-md-2 control-label" for="singlebutton"></label>
-      <div class="col-md-4">
-        <%= submit_tag "Filter", :class => "btn btn-primary" %>
-      </div>
-    </div>
-    </fieldset>
-<% end %>
+    <%= submit_tag "Search", :class => "btn btn-default btn-block search" %>
+  <% end %>
+</div>
+

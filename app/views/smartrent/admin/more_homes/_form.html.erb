@@ -1,13 +1,13 @@
 <%= form_for([:admin, @more_home], html: {:class => "form-horizontal"}) do |f| %>
   <% if @more_home.errors.any? %>
-    <%= render partial: "shared/form_errors", :locals => {:errors => @more_home.errors} %>
+    <%= render "shared/form_errors", :locals => {:errors => @more_home.errors} %>
   <% end %>
   <fieldset>
     <div class="field">
       <div class="form-group">
         <%= f.label :name, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= f.text_field :name, :class => "form-control input-md" %>
+          <%= f.text_field :name, :class => "form-control" %>
         </div>
       </div>
     </div>
@@ -15,7 +15,7 @@
       <div class="form-group">
         <%= f.label :beds, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= f.number_field :beds, :class => "form-control input-md" %>
+          <%= f.number_field :beds, :class => "form-control" %>
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@
       <div class="form-group">
         <%= f.label :baths, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= f.text_field :baths, :class => "form-control input-md" %>
+          <%= f.text_field :baths, :class => "form-control" %>
         </div>
       </div>
     </div>
@@ -31,7 +31,7 @@
       <div class="form-group">
         <%= f.label :sq_ft, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= f.text_field :sq_ft, :class => "form-control input-md" %>
+          <%= f.text_field :sq_ft, :class => "form-control" %>
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@
       <div class="form-group">
         <%= f.label :featured, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= f.check_box :featured, :class => "form-control input-md" %>
+          <%= f.check_box :featured, :class => "form-control" %>
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
       <div class="form-group">
         <%= f.label :home_id, :class => "col-md-2 control-label" %>
         <div class="col-md-4">
-          <%= f.collection_select :home_id, Smartrent::Home.all, :id, :title, {:include_blank => "--Select Home--"},{:class => "form-control input-md"}  %>
+          <%= f.collection_select :home_id, Smartrent::Home.all, :id, :title, {:include_blank => "--Select Home--"},{:class => "form-control"}  %>
         </div>
       </div>
     </div>

@@ -1,0 +1,32 @@
+<% if current_user.is_admin? || current_user.is_property_manager? %>
+  <li>
+    <a href="<%= raw admin_properties_path %>"> <i class="fa fa-home fa-fw"></i> Properties </a>
+  </li>
+<% end %>
+<% if current_user.is_admin? %>
+  <li>
+    <a href="<%= raw admin_features_path %>"> <i class="fa fa-star fa-fw"></i> Features </a>
+  </li>
+  <li>
+    <a href="<%= raw import_admin_property_features_path %>"> <i class="fa fa-plus fa-fw"></i> Import Features </a>
+  </li>
+  <li>
+    <a href="<%= raw admin_floor_plans_path %>"> <i class="fa fa-info-circle fa-fw"></i> Floor Plans </a>
+  </li>
+  <li>
+    <a href="<%= raw admin_floor_plan_images_path %>"> <i class="fa fa-picture-o fa-fw"></i> Floor Plan Images </a>
+  </li>
+  <li>
+    <a href="<%= raw admin_homes_path %>"> <i class="fa fa-home fa-fw"></i> Homes </a>
+  </li>
+  <li>
+    <a href="<%= raw admin_more_homes_path %>"> <i class="fa fa-home fa-fw"></i> More Homes </a>
+  </li>
+<% end %>
+
+<li>
+  <a href="<%= raw admin_rewards_path %>"> <i class="fa fa-trophy fa-fw"></i> Rewards </a>
+</li>
+<li>
+  <a href="<%= raw root_path %>"> <i class="fa fa-globe fa-fw"></i> Smartrent Website </a>
+</li>

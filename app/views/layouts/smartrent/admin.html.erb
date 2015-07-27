@@ -1,28 +1,56 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <%= stylesheet_link_tag    "smartrent/admin", media: "all" %>
-    <%= javascript_include_tag "smartrent/admin" %>
-    <%= csrf_meta_tags %>
-    <link rel="canonical" href="http://www.bozzutosmartrent.com/">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:type" content="website">
-    <link rel="icon" href="http://nagalskiy-evgeniy.com/favicon.png" type="image/png">
-    <link rel="icon" href="http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/assets/images/favicon.png" type="image/png">
-    <link rel="shortcut icon" href="http://nagalskiy-evgeniy.com/chermash-igor/bozzuto/bozzutosmartrent-wip/assets/images/favicon.ico">
-    <title>SmartRent Admin Panel | SmartRent Bozzuto</title>
-  </head>
-  <body>
-    <%= render partial: "layouts/smartrent/admin_header" %>
-    <div class="clearfix"></div>
-    <div class="container">
-      <% if notice %>
-        <%= render partial: "shared/success_message", :locals => {:message => notice}  %>
-      <% end %>
-      <%= yield %>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  
+  <title> <%= @page_title || "SmartRent Admin Panel | SmartRent Bozzuto" %> </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+  <![endif]-->
+  
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= stylesheet_link_tag    'smartrent/admin', media: 'all' %>
+  
+  <%= javascript_include_tag 'application' %>
+  <%= javascript_include_tag 'smartrent/admin' %>
+  <%= csrf_meta_tags %>
+  
+  <%= yield :css %>
+  <%= yield :js %>
+</head>
+<body>
+  <%= render "layouts/left_nav" %>
+  
+  <div id="viewport">
+    <%= render "layouts/top_nav" %>
+    
+    <div class="hidden-pane ui-layout-west">
+      <div class="ui-layout-content" id="west"><%= yield :ui_west %></div>
     </div>
-    <%= render partial: "layouts/smartrent/admin_footer" %>
-  </body>
+    <div class="hidden-pane ui-layout-center">
+      <div class="ui-layout-content" id="center"><%= yield :ui_center %></div>
+    </div>
+    <div class="hidden-pane ui-layout-east">
+      <div class="ui-layout-content" #id="east"><%= yield :ui_east %></div>
+    </div>
+    <div id="mask"></div>
+  </div>
+
+  <%= yield %>
+  
+  <%= render "layouts/flash" %>
+  <%= render "layouts/modal" %>
+  
+  <div id="spinner"> <%= image_tag("circle_loading.gif") %> Loading... </div>
+  
+  <script type="text/javascript">
+    var authenticity_token = "<%= form_authenticity_token %>";
+  </script>
+</body>
 </html>

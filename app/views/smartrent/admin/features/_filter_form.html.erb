@@ -1,28 +1,13 @@
-<h3>Filter Features</h3>
-<%= form_tag({}, {:method => "get", :class => "form-horizontal"}) do %>
-  <fieldset>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", "ID", :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :_id, params[:_id], :class => "form-control input-md" %>
-        </div>
-      </div>
+<div id="feature-search">
+  <h3>Feature Search</h3>
+  <%= form_tag({}, {:method => "get"}) do %>
+    <div class="form-group">
+      <%= text_field_tag :_id, params[:_id], :class => "form-control", :placeholder => "ID" %>
     </div>
-    <div class="field">
-      <div class="form-group">
-        <%= label_tag "", :name, :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= text_field_tag :name, params[:name], :class => "form-control input-md" %>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= text_field_tag :name, params[:name], :class => "form-control", :placeholder => "Name" %>
     </div>
     <%= hidden_field_tag "search", "1" %>
-    <div class="form-group">
-      <label class="col-md-2 control-label" for="singlebutton"></label>
-      <div class="col-md-4">
-        <%= submit_tag "Filter", :class => "btn btn-primary" %>
-      </div>
-    </div>
-    </fieldset>
-<% end %>
+    <%= submit_tag "Search", :class => "btn btn-default btn-block search" %>
+  <% end %>
+</div>

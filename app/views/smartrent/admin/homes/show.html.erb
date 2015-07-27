@@ -30,10 +30,10 @@
         <% more_homes = @home.more_homes  %>
         <div class="more_homes">
         <div class="title">Homes</div>
-          <%= render partial: "more_homes_table", :locals => {:more_homes => more_homes} %>
+          <%= render "more_homes_table", :locals => {:more_homes => more_homes} %>
         </div>
         <div class="fpImageHolder">
-          <%= render partial: "more_home_floor_plan_images", :collection => more_homes, :as => :more_home  %>
+          <%= render "more_home_floor_plan_images", :collection => more_homes, :as => :more_home  %>
           <div class="clear"></div>
         </div>
         <% featured_home = more_homes.where(:featured => true).first %>
@@ -42,7 +42,7 @@
             <div class="title">
               Featured Home
             </div>
-            <%= render partial: "featured_more_home_table", :locals => {:more_home => featured_home} %>
+            <%= render "featured_more_home_table", :locals => {:more_home => featured_home} %>
           </div>
         <% end %>
       <% end %>

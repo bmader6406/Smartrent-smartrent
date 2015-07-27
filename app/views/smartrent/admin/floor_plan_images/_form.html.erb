@@ -1,24 +1,24 @@
 <%= form_for([:admin, @floor_plan_image], html: {:class => "form-horizontal"}) do |f| %>
   <% if @floor_plan_image.errors.any? %>
-    <%= render partial: "shared/form_errors", :locals => {:errors => @floor_plan_image.errors} %>
+    <%= render "shared/form_errors", :locals => {:errors => @floor_plan_image.errors} %>
   <% end %>
   <fieldset>
     <div class="form-group">
       <%= f.label :image, :class => "col-md-2 control-label" %>
       <div class="col-md-4">
-        <%= f.file_field :image, :class => "form-control input-md" %>
+        <%= f.file_field :image, :class => "form-control" %>
       </div>
     </div>
     <div class="form-group">
       <%= f.label :caption, :class => "col-md-2 control-label" %>
       <div class="col-md-4">
-        <%= f.text_field :caption, :class => "form-control input-md" %>
+        <%= f.text_field :caption, :class => "form-control" %>
       </div>
     </div>
     <div class="form-group">
       <%= f.label :more_home_id, :class => "col-md-2 control-label" %>
       <div class="col-md-4">
-        <%= f.collection_select :more_home_id, Smartrent::MoreHome.all, :id, :name, {:include_blank => "--Select Home--"}, {:class => "form-control input-md"} %>
+        <%= f.collection_select :more_home_id, Smartrent::MoreHome.all, :id, :name, {:include_blank => "--Select Home--"}, {:class => "form-control"} %>
       </div>
     </div>
     <div class="form-group">

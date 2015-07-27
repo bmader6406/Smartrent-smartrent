@@ -11,19 +11,29 @@
       <th>Actions</th>
     </tr>
 
-  <% @rewards.each do |reward| %>
-    <tr>
-      <td><%= reward.resident.email %></td>
-      <td><%= number_to_currency reward.amount %></td>
-      <td><%= reward.property.name if reward.property %></td>
-      <td><%= reward.period_start.to_s(:year_month_day) if reward.period_start %></td>
-      <td><%= reward.period_end.to_s(:year_month_day) if reward.period_end %></td>
-      <td><%= Smartrent::Reward.types[reward.type_] %></td>
-      <td><%= link_to 'Show', admin_reward_path(reward) %> | <%= link_to 'Edit', edit_admin_reward_path(reward) %> | <%= link_to 'Destroy', admin_reward_path(reward), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-    </tr>
-  <% end %>
+    <% @rewards.each do |reward| %>
+      <tr>
+        <td><%= reward.resident.email %></td>
+        <td><%= number_to_currency reward.amount %></td>
+        <td><%= reward.property.name if reward.property %></td>
+        <td><%= reward.period_start.to_s(:year_month_day) if reward.period_start %></td>
+        <td><%= reward.period_end.to_s(:year_month_day) if reward.period_end %></td>
+        <td><%= Smartrent::Reward.types[reward.type_] %></td>
+        <td><%= link_to 'Show', admin_reward_path(reward) %> | <%= link_to 'Edit', edit_admin_reward_path(reward) %> | <%= link_to 'Destroy', admin_reward_path(reward), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
   </table>
-  <%= will_paginate @rewards, renderer: BootstrapPagination::Rails %>
+  <div class="paging-info">
+    <%= page_entries_info @rewards %>
+    <%= page_navigation_links @rewards %>
+  </div>
 <% else %>
   <div class="alert alert-warning">No Rewards available</div>
 <% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout();
+  });
+</script>
