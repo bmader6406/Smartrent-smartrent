@@ -4,9 +4,7 @@ module Smartrent
     validates_presence_of :key, :value
     validates_uniqueness_of :key, :case_sensitive => true
 
-    after_save do
-      Resque.enqueue(::SettingsAmountUpdater, id)
-    end
+    after_save :update_rewards
 
     def self.monthly_award
       setting = Setting.find_by_key("monthly_awards")
@@ -16,6 +14,7 @@ module Smartrent
         0.0
       end
     end
+    
     def self.sign_up_bonus
       setting = Setting.find_by_key("sign_up_bonus")
       if setting
@@ -24,5 +23,11 @@ module Smartrent
         0.0
       end
     end
+    
+    private
+    
+      def update_rewards
+        Resque.enqueue(::SettingsAmountUpdater, id)
+      end
   end
 end

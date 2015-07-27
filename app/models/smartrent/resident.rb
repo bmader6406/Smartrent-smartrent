@@ -1,11 +1,15 @@
+# this table is maintained by resque
+# when the resident change on CRM, resque will update the smartrent residents appropriately
+
+# resident can reset password herself
+
 module Smartrent
   class Resident < ActiveRecord::Base
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
     devise :database_authenticatable, :registerable,
            :recoverable, :rememberable, :trackable, :validatable, :lockable
-    @@sign_up_bonus = nil
-
+    
     validates_uniqueness_of :origin_id, :allow_nil => true
     validates_presence_of :status, :smartrent_status
     validates_uniqueness_of :email, :allow_blank => true
@@ -16,131 +20,9 @@ module Smartrent
     has_many :resident_homes, :dependent => :destroy
     #has_many :homes, :through => :resident_homes
     has_many :rewards, :dependent => :destroy
-    after_create :find_and_set_crm_resident
-    scope :active, -> {where(:smartrent_status => self.SMARTRENT_STATUS_ACTIVE)}
-    before_validation do
-      #Default Status
-      self.status = self.class.STATUS_CURRENT if self.status.blank?
-    end
-    after_commit :flush_rewards_cache
-    #has_one :crm_resident, :class_name => "Resident", :foreign_key => :crm_resident_id
 
-    def valid_smartrent_status
-      if self.class.smartrent_statuses[smartrent_status].nil?
-        errors.add(:smartrent_status, "is invalid")
-      end
-    end
-
-    def flush_rewards_cache
-      Rails.cache.delete([self.class.name, id, "monthly_awards_amount"])
-      Rails.cache.delete([self.class.name, id, "total_rewards"])
-      Rails.cache.delete([self.class.name, id, "total_months"])
-      Rails.cache.delete([self.class.name, id, "champion_amount"])
-    end
-
-    def sign_up_bonus
-      sign_up_reward = rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
-      if sign_up_reward.present?
-        sign_up_reward.first.amount.to_f
-      else
-        0.0
-      end
-    end
-
-    def crm_resident
-      ::Resident::where(:smartrent_resident_id => id)
-    end
-
-    def find_and_set_crm_resident
-      resident = ::Resident.where(:email => self.email).first
-      update_columns(:crm_resident_id => resident.id) if resident
-    end
-
-    #Some problem with the above method, always returning 0
-    def sign_up_bonus_
-      sign_up_reward = rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS)
-      if sign_up_reward.present?
-        sign_up_reward.first.amount.to_f
-      else
-        0.0
-      end
-    end
-
-    def sign_up_bonus=(bonus)
-      @@sign_up_bonus = bonus
-    end
-
-    def self.import(file)
-      if file.class.to_s == "ActionDispatch::Http::UploadedFile"
-        f = File.open(file.path, "r:bom|utf-8")
-      else
-        f = File.open(Smartrent::Engine.root.to_path + "/data/residents.csv")
-      end
-      residents = SmarterCSV.process(f)
-      properties = Smartrent::Property.keyed_by_name
-      units = ::Unit.keyed_by_code
-      homes = Home.keyed_by_title
-      residents.each do |resident_hash|
-        #resident_hash = {:origin_id => 10, :property_id => "asf", :apartment_id => 10, :name => "asdf", :email => "yo@yo.com"}
-        generated_password = Devise.friendly_token.first(8)
-        resident_hash[:password] = generated_password
-        property_name = resident_hash[:property_id]
-        unit_code = resident_hash[:unit_id]
-        home_name = resident_hash[:home_id]
-        resident_hash.delete(:property_id)
-        resident_hash.delete(:home_id)
-        resident_hash[:property_ids] = []
-        resident_hash[:home_ids] = []
-        #Setting status as active for the first time
-        #resident_hash[:status] = self.STATUS_ACTIVE
-        #property = Property.find_by_title(property_name)
-        resident_hash[:status] = resident_hash[:smartrent_status]
-        resident_hash.delete(:smartrent_status)
-        property = nil
-        unit = nil
-        home = nil
-        if properties[property_name].present?
-          property = properties[property_name]
-        end
-        if homes[home_name].present?
-          home = homes[home_name]
-        end
-        if units[unit_code].present?
-          unit = units[unit_code]
-          resident_hash[:unit_id] = unit.id
-        else
-          resident_hash[:unit_id] = unit_code
-        end
-        property_id = nil
-        property_id = property.id if property.present?
-        #:status => resident_hash[:smartrent_status], 
-        resident_properties_hash = {:property_id => property_id, :move_in_date => nil, :status => ResidentProperty.STATUS_CURRENT}
-        begin
-          resident_properties_hash[:move_in_date] =  Date.parse(resident_hash[:move_in_date]) if resident_hash[:move_in_date].present?
-        rescue Exception => e
-          puts "Yo!..there was an exception while parsing date #{resident_hash[:move_in_date]}"
-          puts e
-        end
-        #byebug
-        #To cater multiple properties belonging to a resident
-        if resident = Resident.find_by_email(resident_hash[:email])
-          resident.resident_properties.create(resident_properties_hash) if property.present?
-          resident.resident_homes.create!({:home_id => home.id}) if home.present?
-        else
-          resident = new(resident_hash)
-          if resident.save
-            #For an imported resident the sign-up bonus be 0
-            reward = resident.rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).first
-            reward.update_attributes(:amount => 0)
-            resident.resident_properties.create(resident_properties_hash) if property.present?
-            resident.resident_homes.create!({:home_id => home.id}) if home.present?
-            puts "Resident has been Saved"
-          else
-            puts resident.errors.to_a
-          end
-        end
-      end
-    end
+    after_create :create_reward
+    
     def self.SMARTRENT_STATUS_ACTIVE
       "Active"
     end
@@ -160,41 +42,82 @@ module Smartrent
       {self.SMARTRENT_STATUS_ACTIVE => "Active", self.SMARTRENT_STATUS_INACTIVE => "Inactive", self.SMARTRENT_STATUS_EXPIRED => "Expired", self.SMARTRENT_STATUS_CHAMPION => "Champion", self.SMARTRENT_STATUS_ARCHIVE => "Archive"}
     end
 
-    def status_text
-      text = self.class.statuses[self.status]
-      if text.nil?
-        self.class.STATUS_CURRENT
-      else
-        text
-      end
-    end
-    def self.statuses
-      {self.STATUS_CURRENT => "Current", self.STATUS_NOTICE => "Notice", self.STATUS_PAST => "Past"}
-    end
-    def self.STATUS_CURRENT
-      "Current"
-    end
-    def self.STATUS_NOTICE
-      "Notice"
-    end
-    def self.STATUS_PAST
-      "Past"
-    end
     def smartrent_status_text
       smartrent_status
     end
+    
     def self.types
       {0 => "First Type"}
     end
+    
+    def crm_resident
+      @crm_resident ||= ::Resident::where(:id => crm_resident_id).first
+    end
+    
+    def move_in_date
+      if resident_properties.present?
+        resident_properties.order("move_in_date desc").first.move_in_date
+      else
+        nil
+      end
+    end
+    
+    def move_out_date
+      if resident_properties.present?
+        resident_properties.order("move_in_date desc").first.move_out_date
+      else
+        nil
+      end
+    end
+    
+    def update_password(attributes)
+      if self.valid_password?(attributes[:current_password])
+        attributes.delete(:current_password)
+        update_attributes(attributes)
+      else
+        errors.add(:current_password, "is incorrect")
+      end
+    end
+    
+    def is_smartrent?
+      if properties.present?
+      properties.each do |property|
+        return true if property.is_smartrent
+      end
+      else
+        false
+      end
+    end
+    
+    #### Rewards ####
+    
     def archive
       update_attributes(:status => self.class.STATUS_ARCHIVE)
     end
-    after_create do
-      @@sign_up_bonus ||= Setting.sign_up_bonus
-      if !rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).present?
-        rewards.create!(:amount => @@sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
+
+    def sign_up_bonus=(bonus)
+      @sign_up_bonus = bonus
+    end
+    
+    def sign_up_bonus
+      reward = rewards.find_by_type_(Reward.TYPE_SIGNUP_BONUS)
+      if reward
+        reward.amount
+      else
+        0.0
       end
     end
+    
+    def initial_reward
+      rewards = self.rewards.where(:type_ => Reward.TYPE_INITIAL_REWARD)
+      if rewards.present?
+        rewards.first.amount
+      else
+        0.0
+      end
+    end
+    
+    # TODO: check spreadsheet logic
     def self.move_all_rewards_to_initial_balance(residents)
       residents.each do |resident|
         if resident.rewards.present?
@@ -204,22 +127,7 @@ module Smartrent
         end
       end
     end
-    def sign_up_bonus
-      reward = rewards.find_by_type_(Reward.TYPE_SIGNUP_BONUS)
-      if reward
-        reward.amount
-      else
-        0.0
-      end
-    end
-    def initial_reward
-      rewards = self.rewards.where(:type_ => Reward.TYPE_INITIAL_REWARD)
-      if rewards.present?
-        rewards.first.amount
-      else
-        0.0
-      end
-    end
+    
     def monthly_awards_amount
       if smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
         monthly_amount = 0
@@ -232,19 +140,11 @@ module Smartrent
       end
       monthly_amount
     end
-    def cached_monthly_awards_amount
-      Rails.cache.fetch([self.class.name, id, "monthly_awards_amount"]) {
-        monthly_awards_amount
-      }
-    end
+
     def champion_amount
       self.rewards.where(:type_ => Reward.TYPE_CHAMPION).sum(:amount).to_f
     end
-    def cached_champion_amount
-      Rails.cache.fetch([self.class.name, id, "champion_amount"]) {
-        champion_amount
-      }
-    end
+
     def total_rewards
       if smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
         0
@@ -252,33 +152,11 @@ module Smartrent
         sign_up_bonus + initial_reward + monthly_awards_amount - champion_amount
       end
     end
-    def cached_total_rewards
-      Rails.cache.fetch([self.class.name, id, "total_rewards"]) {
-        total_rewards
-      }
-    end
 
     def balance
       total_rewards
     end
-    def move_in_date
-      #TODO Cache this result
-      if resident_properties.present?
-        resident_properties.order("move_in_date desc").first.move_in_date
-      else
-        nil
-      end
-    end
-    def move_out_date
-      #TODO Cache this result
-      if resident_properties.present?
-        resident_properties.order("move_in_date desc").first.move_out_date
-      else
-        nil
-      end
-    end
-
-
+    
     def total_months
       months = 0
       move_in_date
@@ -294,20 +172,6 @@ module Smartrent
         end
       end
       months
-    end
-    def cached_total_months
-      Rails.cache.fetch([self.class.name, id, "total_months"]) {
-        total_months
-      }
-    end
-
-    def update_password(attributes)
-      if self.valid_password?(attributes[:current_password])
-        attributes.delete(:current_password)
-        update_attributes(attributes)
-      else
-        errors.add(:current_password, "is incorrect")
-      end
     end
 
     #The Monthly Cron Job
@@ -337,8 +201,6 @@ module Smartrent
             resident_property = resident_properties.order("move_in_date desc").first
             if Time.now.differnce_in_days(resident_property.move_in_date) > 60
               resident.update_attributes(:smartrent_status => self.SMARTRENT_STATUS_EXPIRED)
-              Rails.cache.delete([self.class.name, property.user_id, "monthly_awards_amount"])
-              Rails.cache.delete([self.class.name, property.user_id, "total_rewards"])
             else
               resident.update_attributes(:smartrent_status => self.SMARTRENT_STATUS_INACTIVE)
             end
@@ -346,14 +208,21 @@ module Smartrent
         end
       end
     end
-    def is_smartrent?
-      if properties.present?
-      properties.each do |property|
-        return true if property.is_smartrent
+    
+    
+    private
+      
+      def valid_smartrent_status
+        if self.class.smartrent_statuses[smartrent_status].nil?
+          errors.add(:smartrent_status, "is invalid")
+        end
       end
-      else
-        false
+      
+      def create_reward
+        @sign_up_bonus ||= Setting.sign_up_bonus
+        if !rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).present?
+          rewards.create!(:amount => @sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
+        end
       end
-    end
   end
 end

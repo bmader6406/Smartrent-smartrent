@@ -7,20 +7,6 @@ module Smartrent
     validates_numericality_of :amount , :greater_than_equal_to => 0
     validate :period_start_greater_than_period_end
     validate :valid_type
-    after_commit :flush_cache
-
-
-
-    def flush_cache
-      begin
-        if property.present?
-          Rails.cache.delete([::User.name, property.user_id, "managed_rewards"])
-        end
-        resident.flush_rewards_cache
-      rescue Exception => e
-        puts e
-      end
-    end
 
     def period_start_greater_than_period_end
       if period_start.present? and period_end.present?

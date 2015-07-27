@@ -29,15 +29,10 @@ Smartrent::Engine.routes.draw do
 
   namespace :admin do
     root :to => "residents#index"
-    devise_for :users, {
-      class_name: 'Smartrent::User',
-      module: :devise,
-        :controllers => { :sessions => "smartrent/admin/sessions" }
-    }
+
     resources :residents do
       member do
         get "archive"
-        get "send-password-reset-information", :to => "residents#send_password_reset_information", :as => "send_password_reset_information"
         get "properties"
         get "rewards"
       end

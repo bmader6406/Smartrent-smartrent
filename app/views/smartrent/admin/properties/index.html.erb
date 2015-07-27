@@ -22,7 +22,7 @@
         <tr>
           <td><%= property.name %></td>
           <td><%= strip_tags(property.description).truncate(27) if property.description %></td>
-          <td><%= link_to "Website Url", property.website_url, :target => "_blank" %></td>
+          <td><%= link_to truncate(property.website_url, :length => 35), property.website_url, :target => "_blank" %></td>
           <td><%= link_to 'Show', admin_property_path(property) %> | <%= link_to 'Edit', edit_admin_property_path(property) %> | <%= link_to 'Destroy', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
       <% end %>

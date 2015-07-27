@@ -107,13 +107,6 @@ module Smartrent
       end
     end
 
-    def send_password_reset_information
-      @resident.send_reset_password_instructions
-      respond_to do |format|
-        format.html {redirect_to admin_resident_path(@resident), :notice => "The password reset information have been sent to the email"}
-        format.js {}
-      end
-    end
 
     def import_page
       render :import

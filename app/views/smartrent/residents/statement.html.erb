@@ -45,7 +45,7 @@
     <h3>Monthly Awards Amount</h3>
 
     <div class="v">
-      <%= @resident.cached_monthly_awards_amount %>
+      <%= @resident.monthly_awards_amount %>
     </div>
 
     <h3>Months Earned</h3>
@@ -57,7 +57,7 @@
     <h3>Total Earned</h3>
 
     <div class="v">
-      <%= @resident.cached_total_rewards %>
+      <%= @resident.total_rewards %>
     </div>
 
     <h3>Sign-Up Bonus</h3>
@@ -69,7 +69,7 @@
     <h3>Combined Total</h3>
 
     <div class="v total">
-      <%= number_to_currency @resident.cached_total_rewards %>
+      <%= number_to_currency @resident.total_rewards %>
     </div>
   </div>
 </div>

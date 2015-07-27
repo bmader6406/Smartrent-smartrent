@@ -1,9 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
-one:
-  feature_id: 1
-  apartment_id: 1
-
-two:
-  feature_id: 1
-  apartment_id: 1
