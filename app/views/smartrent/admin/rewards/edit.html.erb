@@ -1,6 +1,17 @@
-<h1>Editing Resident</h1>
+<% content_for(:ui_center) do %>
+  <div class="main">
+    <h3>Editing Resident</h3>
 
-<%= render 'form' %>
+    <%= render 'form' %>
 
-<%= link_to 'Show', admin_reward_path(@reward) %> |
-<%= link_to 'Back', admin_rewards_path %>
+    <%= link_to 'Show', admin_reward_path(@reward) %> |
+    <%= link_to 'Back', admin_rewards_path %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+  });
+</script>

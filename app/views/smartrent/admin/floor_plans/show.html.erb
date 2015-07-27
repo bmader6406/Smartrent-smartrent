@@ -1,60 +1,69 @@
-<p id="notice"><%= notice %></p>
+<% content_for(:ui_center) do %>
+  <div class="main">
+    <p>
+      <b>Property:</b>
+      <%= @admin_floor_plan.property_id %>
+    </p>
 
-<p>
-  <b>Property:</b>
-  <%= @admin_floor_plan.property_id %>
-</p>
+    <p>
+      <b>Origin:</b>
+      <%= @admin_floor_plan.origin_id %>
+    </p>
 
-<p>
-  <b>Origin:</b>
-  <%= @admin_floor_plan.origin_id %>
-</p>
+    <p>
+      <b>Name:</b>
+      <%= @admin_floor_plan.name %>
+    </p>
 
-<p>
-  <b>Name:</b>
-  <%= @admin_floor_plan.name %>
-</p>
+    <p>
+      <b>Url:</b>
+      <%= @admin_floor_plan.url %>
+    </p>
 
-<p>
-  <b>Url:</b>
-  <%= @admin_floor_plan.url %>
-</p>
+    <p>
+      <b>Sq feet max:</b>
+      <%= @admin_floor_plan.sq_feet_max %>
+    </p>
 
-<p>
-  <b>Sq feet max:</b>
-  <%= @admin_floor_plan.sq_feet_max %>
-</p>
+    <p>
+      <b>Sq feet min:</b>
+      <%= @admin_floor_plan.sq_feet_min %>
+    </p>
 
-<p>
-  <b>Sq feet min:</b>
-  <%= @admin_floor_plan.sq_feet_min %>
-</p>
+    <p>
+      <b>Beds:</b>
+      <%= @admin_floor_plan.beds %>
+    </p>
 
-<p>
-  <b>Beds:</b>
-  <%= @admin_floor_plan.beds %>
-</p>
+    <p>
+      <b>Baths:</b>
+      <%= @admin_floor_plan.baths %>
+    </p>
 
-<p>
-  <b>Baths:</b>
-  <%= @admin_floor_plan.baths %>
-</p>
+    <p>
+      <b>Rent min:</b>
+      <%= @admin_floor_plan.rent_min %>
+    </p>
 
-<p>
-  <b>Rent min:</b>
-  <%= @admin_floor_plan.rent_min %>
-</p>
+    <p>
+      <b>Rent max:</b>
+      <%= @admin_floor_plan.rent_max %>
+    </p>
 
-<p>
-  <b>Rent max:</b>
-  <%= @admin_floor_plan.rent_max %>
-</p>
-
-<p>
-  <b>Penthouse:</b>
-  <%= @admin_floor_plan.penthouse %>
-</p>
+    <p>
+      <b>Penthouse:</b>
+      <%= @admin_floor_plan.penthouse %>
+    </p>
 
 
-<%= link_to 'Edit', edit_admin_floor_plan_path(@admin_floor_plan) %> |
-<%= link_to 'Back', admin_floor_plans_path %>
+    <%= link_to 'Edit', edit_admin_floor_plan_path(@admin_floor_plan) %> |
+    <%= link_to 'Back', admin_floor_plans_path %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+  });
+</script>

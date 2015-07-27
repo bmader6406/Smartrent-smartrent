@@ -1,6 +1,17 @@
-<h1>Editing More Home</h1>
+<% content_for(:ui_center) do %>
+  <div class="main">
+    <h3>Editing More Home</h3>
 
-<%= render 'form' %>
+    <%= render 'form' %>
 
-<%= link_to 'Show', admin_more_home_path(@more_home) %> |
-<%= link_to 'Back', admin_more_homes_path %>
+    <%= link_to 'Show', admin_more_home_path(@more_home) %> |
+    <%= link_to 'Back', admin_more_homes_path %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+  });
+</script>

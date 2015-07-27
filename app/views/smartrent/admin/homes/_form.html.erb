@@ -1,123 +1,121 @@
 <%= form_for([:admin, @home], :html => {:class => "form-horizontal"}) do |f| %>
-  <% if @home.errors.any? %>
-    <%= render "shared/form_errors", :locals => {:errors => @home.errors} %>
-  <% end %>
+  <%= render "layouts/error_messages", :target => @home %>
   <fieldset>
   <div class="field">
     <div class="form-group">
-      <%= f.label :title, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :title, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :title, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :video_url, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :video_url, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.url_field :video_url, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :phone_number, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :phone_number, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :phone_number, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :address, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :address, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :address, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :city, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :city, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :city, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :state, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :state, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :state, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :website, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :website, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.url_field :website, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :home_page_desc, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :home_page_desc, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :home_page_desc, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :search_page_description, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
-        <%= f.text_area :search_page_description, :class => "form-control" %>
+      <%= f.label :search_page_description, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
+        <%= f.text_area :search_page_description, :class => "form-control", :rows => 8 %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :description, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
-        <%= f.text_area :description, :class => "form-control" %>
+      <%= f.label :description, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
+        <%= f.text_area :description, :class => "form-control", :rows => 8 %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :latitude, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :latitude, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :latitude, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :longitude, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :longitude, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :longitude, :class => "form-control" %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :image, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
-        <%= f.file_field :image, :class => "form-control" %>
+      <%= f.label :image, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
+        <%= f.file_field :image %>
       </div>
     </div>
   </div>
   <div class="field">
     <div class="form-group">
-      <%= f.label :image_description, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :image_description, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :image_description, :class => "form-control" %>
       </div>
     </div>
   </div>
     <div class="form-group">
-      <label class="col-md-2 control-label" for="singlebutton"></label>
-      <div class="col-md-4">
+      <label class="col-md-4 control-label" for="singlebutton"></label>
+      <div class="col-md-7">
         <%= f.submit :class => "btn btn-primary" %>
       </div>
     </div>

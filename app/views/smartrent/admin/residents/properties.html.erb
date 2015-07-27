@@ -1,5 +1,7 @@
 <% content_for(:ui_west) do %>
-  search form
+  <div>
+    search form
+  </div>
 <% end %>
 
 <% content_for(:ui_center) do %>
@@ -20,7 +22,7 @@
           <th>Move In Date</th>
           <th>Move Out Date</th>
           <th>Created At</th>
-          <th>Actions</th>
+          <th width="160px">Actions</th>
         </tr>
         <% @resident_resident_properties.each do |resident_property| %>
           <% property = resident_property.property %>

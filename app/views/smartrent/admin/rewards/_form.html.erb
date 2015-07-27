@@ -1,47 +1,45 @@
 <%= form_for([:admin, @reward], html: {:class => "form-horizontal"}) do |f| %>
-  <% if @reward.errors.any? %>
-    <%= render "shared/form_errors", :locals => {:errors => @reward.errors} %>
-  <% end %>
+  <%= render "layouts/error_messages", :target => @reward %>
   <fieldset>
     <div class="form-group">
-      <%= f.label :resident_id, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :resident_id, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.collection_select :resident_id, Smartrent::Resident.all, :id, :email, {:include_blank => "--Select Resident"}, {:class => "form-control"} %>
       </div>
     </div>
     <div class="form-group">
-      <%= f.label :property_id, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :property_id, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.collection_select :property_id, Smartrent::Property.all, :id, :name, {:include_blank => "--Select Property"}, {:class => "form-control"} %>
       </div>
     </div>
     <div class="form-group">
-      <%= f.label :type_, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :type_, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.select :type_, Smartrent::Reward.types.collect{|key,value| [value, key]}, {:include_blank => "--Select Type"}, {:class => "form-control"} %>
       </div>
     </div>
     <div class="form-group">
-      <%= f.label :period_start, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :period_start, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.date_select :period_start, :class => "form-control" %>
       </div>
     </div>
     <div class="form-group">
-      <%= f.label :period_end, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :period_end, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.date_select :period_end, :class => "form-control" %>
       </div>
     </div>
     <div class="form-group">
-      <%= f.label :amount, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :amount, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :amount, :class => "form-control" %>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-2 control-label" for="singlebutton"></label>
-      <div class="col-md-4">
+      <label class="col-md-4 control-label" for="singlebutton"></label>
+      <div class="col-md-7">
         <%= f.submit :class => "btn btn-primary" %>
       </div>
     </div>

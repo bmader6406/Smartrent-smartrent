@@ -8,13 +8,13 @@
       <%= link_to 'Import Features', import_admin_features_path, :class => "btn btn-default" %>
       <%= link_to 'New Feature', new_admin_feature_path, :class => "btn btn-primary" %>
     </div>
-    <h3>Listing admin_features</h3>
+    <h3>Listing Features</h3>
 
     <% if @admin_features.present? %>
       <table class="table">
         <tr>
           <th>Name</th>
-          <th>Actions</th>
+          <th width="160px">Actions</th>
         </tr>
 
         <% @admin_features.each do |admin_feature| %>

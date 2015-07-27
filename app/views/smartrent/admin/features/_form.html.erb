@@ -1,17 +1,16 @@
 <%= form_for([:admin, @admin_feature], html: {:class => "form-horizontal"}) do |f| %>
-  <% if @admin_feature.errors.any? %>
-    <%= render "shared/form_errors", :locals => {:errors => @admin_feature.errors} %>
-  <% end %>
+  <%= render "layouts/error_messages", :target => @admin_feature %>
+  
   <fieldset>
     <div class="form-group">
-      <%= f.label :name, :class => "col-md-2 control-label" %>
-      <div class="col-md-4">
+      <%= f.label :name, :class => "col-md-4 control-label" %>
+      <div class="col-md-7">
         <%= f.text_field :name, :class => "form-control" %>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-2 control-label" for="singlebutton"></label>
-      <div class="col-md-4">
+      <label class="col-md-4 control-label" for="singlebutton"></label>
+      <div class="col-md-7">
         <%= f.submit :class => "btn btn-primary" %>
       </div>
     </div>

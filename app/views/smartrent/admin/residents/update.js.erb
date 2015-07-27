@@ -1,5 +1,5 @@
 <% if @resident.errors.any? %>
-  $('.password-change-form-box').unblock().prepend('<%= j render "shared/form_errors", :locals => {:errors => @resident.errors} %>')
+  $('.password-change-form-box').unblock().prepend('<%= j render "layouts/error_messages", :target => @resident %>')
 <% else %>
-    $('.password-change-form-box').unblock().prepend('<%= j render "shared/success_message", :locals => {:message => "Your password has been updated successfully"} %>')
+  $('.password-change-form-box').unblock().prepend('<%= j render "shared/success_message", :locals => {:message => "Your password has been updated successfully"} %>')
 <% end %>

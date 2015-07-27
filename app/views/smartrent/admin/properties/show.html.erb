@@ -1,103 +1,112 @@
-<p id="notice"><%= notice %></p>
+<% content_for(:ui_center) do %>
+  <div class="main">
+    <p>
+      <b>Name:</b>
+      <%= @property.name %>
+    </p>
 
-<p>
-  <b>Name:</b>
-  <%= @property.name %>
-</p>
-
-<p>
-  <b>Phone number:</b>
-  <%= @property.phone %>
-</p>
-<p>
-  <%= image_tag @property.image %>
-</p>
-
-
-<p>
-  <b>Website:</b>
-  <%= link_to @property.website_url, @property.website_url, :target => "_blank" %>
-</p>
-
-<p>
-  <b>Description:</b>
-  <%= @property.description.html_safe if @property.description.present? %>
-</p>
-
-<p>
-  <b>State:</b>
-  <%= @property.state.upcase if @property.state.present? %>
-</p>
-
-<p>
-  <b>County:</b>
-  <%= @property.county.capitalize if @property.county.present? %>
-</p>
-
-<p>
-  <b>City:</b>
-  <%= @property.city.capitalize if @property.city.present? %>
-</p>
-
-<p>
-  <b>Address:</b>
-  <%= @property.address_line1 %>
-</p>
-<p>
-  <b>Zip Code:</b>
-  <%= @property.zip %>
-</p>
-
-<p>
-  <b>Latitude:</b>
-  <%= @property.latitude %>
-</p>
-
-<p>
-  <b>Longitude:</b>
-  <%= @property.longitude %>
-</p>
-
-<p>
-  <b>Studio price:</b>
-  <%= @property.studio_price %>
-</p>
-
-  <b>Property Features</b>
-  <% if @property.features %>
-    <ul>
-    <% @property.features.each do |feature| %>
-      <li><%= feature.name %></li>
-    <% end %>
-    </ul>
-  <% end  %>
-</p>
-
-<p>
-  <b>Special promotion:</b>
-  <%= @property.special_promotion %>
-</p>
-<p>
-  <b>Promotion Title:</b>
-  <%= @property.promotion_title %>
-</p>
-<p>
-  <b>Promotion Sub-Title:</b>
-  <%= @property.promotion_subtitle %>
-</p>
-<p>
-  <b>Promotion Expiration Date:</b>
-  <%= @property.promotion_expiration_date.to_s(:year_month_year) if @property.promotion_expiration_date %>
-</p>
-<p>
-  <b>Promotion Url:</b>
-  <%= link_to @property.promotion_url, @property.promotion_url if @property.promotion_url %>
-</p>
-<p>
-  <b>Status:</b>
-  <%= @property.status %>
-</p>
+    <p>
+      <b>Phone number:</b>
+      <%= @property.phone %>
+    </p>
+    <p>
+      <%= image_tag @property.image %>
+    </p>
 
 
-<%= link_to 'Edit', edit_admin_property_path(@property) %> |
-<%= link_to 'Back', admin_properties_path %>
+    <p>
+      <b>Website:</b>
+      <%= link_to @property.website_url, @property.website_url, :target => "_blank" %>
+    </p>
+
+    <p>
+      <b>Description:</b>
+      <%= @property.description.html_safe if @property.description.present? %>
+    </p>
+
+    <p>
+      <b>State:</b>
+      <%= @property.state.upcase if @property.state.present? %>
+    </p>
+
+    <p>
+      <b>County:</b>
+      <%= @property.county.capitalize if @property.county.present? %>
+    </p>
+
+    <p>
+      <b>City:</b>
+      <%= @property.city.capitalize if @property.city.present? %>
+    </p>
+
+    <p>
+      <b>Address:</b>
+      <%= @property.address_line1 %>
+    </p>
+    <p>
+      <b>Zip Code:</b>
+      <%= @property.zip %>
+    </p>
+
+    <p>
+      <b>Latitude:</b>
+      <%= @property.latitude %>
+    </p>
+
+    <p>
+      <b>Longitude:</b>
+      <%= @property.longitude %>
+    </p>
+
+    <p>
+      <b>Studio price:</b>
+      <%= @property.studio_price %>
+    </p>
+
+      <b>Property Features</b>
+      <% if @property.features %>
+        <ul>
+        <% @property.features.each do |feature| %>
+          <li><%= feature.name %></li>
+        <% end %>
+        </ul>
+      <% end  %>
+    </p>
+
+    <p>
+      <b>Special promotion:</b>
+      <%= @property.special_promotion %>
+    </p>
+    <p>
+      <b>Promotion Title:</b>
+      <%= @property.promotion_title %>
+    </p>
+    <p>
+      <b>Promotion Sub-Title:</b>
+      <%= @property.promotion_subtitle %>
+    </p>
+    <p>
+      <b>Promotion Expiration Date:</b>
+      <%= @property.promotion_expiration_date.to_s(:year_month_year) if @property.promotion_expiration_date %>
+    </p>
+    <p>
+      <b>Promotion Url:</b>
+      <%= link_to @property.promotion_url, @property.promotion_url if @property.promotion_url %>
+    </p>
+    <p>
+      <b>Status:</b>
+      <%= @property.status %>
+    </p>
+
+
+    <%= link_to 'Edit', edit_admin_property_path(@property) %> |
+    <%= link_to 'Back', admin_properties_path %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+  });
+</script>

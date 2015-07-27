@@ -1,60 +1,58 @@
 <%= form_for([:admin, @more_home], html: {:class => "form-horizontal"}) do |f| %>
-  <% if @more_home.errors.any? %>
-    <%= render "shared/form_errors", :locals => {:errors => @more_home.errors} %>
-  <% end %>
+  <%= render "layouts/error_messages", :target => @more_home %>
   <fieldset>
     <div class="field">
       <div class="form-group">
-        <%= f.label :name, :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
+        <%= f.label :name, :class => "col-md-4 control-label" %>
+        <div class="col-md-7">
           <%= f.text_field :name, :class => "form-control" %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :beds, :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
+        <%= f.label :beds, :class => "col-md-4 control-label" %>
+        <div class="col-md-7">
           <%= f.number_field :beds, :class => "form-control" %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :baths, :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
+        <%= f.label :baths, :class => "col-md-4 control-label" %>
+        <div class="col-md-7">
           <%= f.text_field :baths, :class => "form-control" %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :sq_ft, :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
+        <%= f.label :sq_ft, :class => "col-md-4 control-label" %>
+        <div class="col-md-7">
           <%= f.text_field :sq_ft, :class => "form-control" %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :featured, :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
-          <%= f.check_box :featured, :class => "form-control" %>
+        <%= f.label :featured, :class => "col-md-4 control-label" %>
+        <div class="col-md-7">
+          <%= f.check_box :featured %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :home_id, :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
+        <%= f.label :home_id, :class => "col-md-4 control-label" %>
+        <div class="col-md-7">
           <%= f.collection_select :home_id, Smartrent::Home.all, :id, :title, {:include_blank => "--Select Home--"},{:class => "form-control"}  %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :floor_plan_images, :class => "col-md-2 control-label" %>
-        <div class="col-md-4">
+        <%= f.label :floor_plan_images, :class => "col-md-4 control-label" %>
+        <div class="col-md-7">
           <%= f.fields_for :floor_plan_images do |builder| %>
             <div class="col-md-12">
               <%= builder.file_field :image, :class => "col-md-12 control-label" %>
@@ -66,8 +64,8 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-md-2 control-label" for="singlebutton"></label>
-      <div class="col-md-4">
+      <label class="col-md-4 control-label" for="singlebutton"></label>
+      <div class="col-md-7">
         <%= f.submit :class => "btn btn-primary" %>
       </div>
     </div>

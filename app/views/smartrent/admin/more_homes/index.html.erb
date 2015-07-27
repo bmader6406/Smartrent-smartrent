@@ -1,10 +1,16 @@
+<% content_for(:ui_west) do %>
+  <div>
+    search form
+  </div>
+<% end %>
+
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
       <%= link_to 'Import More Homes', import_admin_more_homes_path, :class => "btn btn-default" %>
       <%= link_to 'New More Home', new_admin_more_home_path, :class => "btn btn-primary" %>
     </div>
-    <h3>Listing more_homes</h3>
+    <h3>Listing More Homes</h3>
 
     <% if @more_homes.present? %>
       <table class="table">
@@ -15,7 +21,7 @@
           <th>Sq ft</th>
           <th>Featured</th>
           <th>Home</th>
-          <th>Actions</th>
+          <th width="160px">Actions</th>
         </tr>
         <% @more_homes.each do |more_home| %>
           <tr>

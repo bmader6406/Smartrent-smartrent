@@ -1,19 +1,28 @@
-<p id="notice"><%= notice %></p>
+<% content_for(:ui_center) do %>
+  <div class="main">
+    <p>
+    <%= image_tag @floor_plan_image.image, :width => "100" %>
+    </p>
 
-<p>
-<%= image_tag @floor_plan_image.image, :width => "100" %>
-</p>
+    <p>
+      <b>Caption:</b>
+      <%= @floor_plan_image.caption %>
+    </p>
 
-<p>
-  <b>Caption:</b>
-  <%= @floor_plan_image.caption %>
-</p>
-
-<p>
-  <b>Home:</b>
-  <%= @floor_plan_image.more_home.name %>
-</p>
+    <p>
+      <b>Home:</b>
+      <%= @floor_plan_image.more_home.name %>
+    </p>
 
 
-<%= link_to 'Edit', edit_admin_floor_plan_image_path(@floor_plan_image) %> |
-<%= link_to 'Back', admin_floor_plan_images_path %>
+    <%= link_to 'Edit', edit_admin_floor_plan_image_path(@floor_plan_image) %> |
+    <%= link_to 'Back', admin_floor_plan_images_path %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+  });
+</script>

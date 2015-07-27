@@ -1,5 +1,16 @@
-<h1>New Feature</h1>
+<% content_for(:ui_center) do %>
+  <div class="main">
+    <h3>New Feature</h3>
 
-<%= render 'form' %>
+    <%= render 'form' %>
 
-<%= link_to 'Back', admin_features_path %>
+    <%= link_to 'Back', admin_features_path %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+  });
+</script>

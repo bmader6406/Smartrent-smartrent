@@ -1,51 +1,59 @@
-<%= render layout: "layout" do %>
-<p id="notice"><%= notice %></p>
-  <div class="propDetails clearfix">
-    <div class="propPhoto">
-      <%= image_tag @home.image %>
-      <div>
-        <%= @home.image_description %>
-      </div>
-    </div>
-
-    <div class="details">
-      <h1><%= @home.title %></h1>
-
-      <div class="address">
-        <%= @home.address %>, <%= @home.city %>, <%= @home.state %>
-      </div>
-      <div class="links">
-        <% if @home.website.present? %>
-          <%= link_to "Visit the Website", @home.website %>
-        <% end %>
-        <% if @home.video_url.present? %>
-          <br /><%= link_to "View Community Video", @home.video_url, :target => "_blank" %>
-        <% end %>
-      </div>
-
-      <div class="desc">
-        <%= @home.description.html_safe %>
-      </div>
-      <% if @home.more_homes.present? %>
-        <% more_homes = @home.more_homes  %>
-        <div class="more_homes">
-        <div class="title">Homes</div>
-          <%= render "more_homes_table", :locals => {:more_homes => more_homes} %>
+<% content_for(:ui_center) do %>
+  <div class="main">
+    <div class="propDetails clearfix">
+      <div class="propPhoto">
+        <%= image_tag @home.image %>
+        <div>
+          <%= @home.image_description %>
         </div>
-        <div class="fpImageHolder">
-          <%= render "more_home_floor_plan_images", :collection => more_homes, :as => :more_home  %>
-          <div class="clear"></div>
+      </div>
+
+      <div class="details">
+        <h3><%= @home.title %></h3>
+
+        <div class="address">
+          <%= @home.address %>, <%= @home.city %>, <%= @home.state %>
         </div>
-        <% featured_home = more_homes.where(:featured => true).first %>
-        <% if featured_home %>
-          <div class="featuredHome">
-            <div class="title">
-              Featured Home
-            </div>
-            <%= render "featured_more_home_table", :locals => {:more_home => featured_home} %>
+        <div class="links">
+          <% if @home.website.present? %>
+            <%= link_to "Visit the Website", @home.website %>
+          <% end %>
+          <% if @home.video_url.present? %>
+            <br /><%= link_to "View Community Video", @home.video_url, :target => "_blank" %>
+          <% end %>
+        </div>
+
+        <div class="desc">
+          <%= @home.description.html_safe %>
+        </div>
+        <% if @home.more_homes.present? %>
+          <% more_homes = @home.more_homes  %>
+          <div class="more_homes">
+          <div class="title">Homes</div>
+            <%= render "more_homes_table", :locals => {:more_homes => more_homes} %>
           </div>
+          <div class="fpImageHolder">
+            <%= render "more_home_floor_plan_images", :collection => more_homes, :as => :more_home  %>
+            <div class="clear"></div>
+          </div>
+          <% featured_home = more_homes.where(:featured => true).first %>
+          <% if featured_home %>
+            <div class="featuredHome">
+              <div class="title">
+                Featured Home
+              </div>
+              <%= render "featured_more_home_table", :locals => {:more_home => featured_home} %>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
+      </div>
     </div>
   </div>
-<% end%>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+  });
+</script>

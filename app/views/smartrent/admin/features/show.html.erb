@@ -1,5 +1,14 @@
-<p id="notice"><%= notice %></p>
+<% content_for(:ui_center) do %>
+  <div class="main">
+    <%= link_to 'Edit', edit_admin_feature_path(@admin_feature) %> |
+    <%= link_to 'Back', admin_features_path %>
+    
+  </div>
+<% end %>
 
 
-<%= link_to 'Edit', edit_admin_feature_path(@admin_feature) %> |
-<%= link_to 'Back', admin_features_path %>
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+  });
+</script>
