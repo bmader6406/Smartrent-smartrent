@@ -1,12 +1,13 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 var pois = {};
-var categories = [];
+var categories = ["all"];
 var cat_counter = 1;
 var mapIcon = "homeIcon"
 $(function(){
   $('.property_listing input, .property_listing select').change(function(){
     $.blockUI();
+    Property.reset();
     $('.property_listing').submit();
   });
   $(".search-property-item").click(function(){
@@ -36,14 +37,19 @@ $(function(){
 
 Property = {
   cities: function(state, city){
-    $('#q_state_eq').val(state)
-    $('#q_city_eq').val(city)
+    $('#q_state_eq').val(state);
+    $('#q_city_eq').val(city);
     $('.property_listing').submit();
   },
   counties: function(state, county){
-    $('#q_state_eq').val(state)
-    $('#q_county_eq').val(county)
+    $('#q_state_eq').val(state);
+    $('#q_county_eq').val(county);
     $('.property_listing').submit();
+  },
+  reset: function(){
+    $('#q_state_eq').val("");
+    $('#q_city_eq').val("");
+    $('#q_county_eq').val("");
   },
   toggleCities: function(state) {
     state = state.replace(" ", "_")
@@ -76,22 +82,15 @@ Property = {
     }
   },
   loadMap: function() {
-    properties_path = Routes.smartrent_properties_path({format: "json"}) + location.search
+    properties_path = Routes.smartrent_properties_path({format: "json"}) + "?" + $('.property_listing').serialize(); //+ location.search;
     $.get(properties_path, function(data){
       properties = data;
       pois['all'] = {'show':true,'points':[]};
       for(var x in properties) {
-        var property = properties[x]
-        pois['all']['points'].push({
-            title: property.title,
-            description: property.short_description,
-            address: property.address + ',' + property.city + ',' + property.state,
-            lat: property.lat,
-            lon: property.lng,
-            image: property.image,
-            image_link: property.image
-        });
+        pois['all']['points'].push(properties[x]);
       }
+      //TODO: make marker display "A" intead of "H" icon
+      //mapIcon = "mapIcon";
       mapStart();
     });
   },

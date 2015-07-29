@@ -10,16 +10,16 @@ module Smartrent
     devise :database_authenticatable, :registerable,
            :recoverable, :rememberable, :trackable, :validatable, :lockable
     
-    validates_uniqueness_of :origin_id, :allow_nil => true
-    validates_presence_of :status, :smartrent_status
-    validates_uniqueness_of :email, :allow_blank => true
-    validate :valid_smartrent_status
-
     has_many :resident_properties, :dependent => :destroy
     has_many :properties, :through => :resident_properties
     has_many :resident_homes, :dependent => :destroy
     #has_many :homes, :through => :resident_homes
     has_many :rewards, :dependent => :destroy
+    
+    
+    validates :smartrent_status, :presence => true
+    validates :email, :uniqueness => true
+    validate :valid_smartrent_status
 
     after_create :create_reward
     
@@ -91,10 +91,6 @@ module Smartrent
     
     #### Rewards ####
     
-    def archive
-      update_attributes(:status => self.class.STATUS_ARCHIVE)
-    end
-
     def sign_up_bonus=(bonus)
       @sign_up_bonus = bonus
     end

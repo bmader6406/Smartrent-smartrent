@@ -1,10 +1,22 @@
 module Smartrent
   class FloorPlanImage < ActiveRecord::Base
-    #attr_accessible :caption, :more_home_id, :image
-    has_attached_file :image
-    validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
-    validates_presence_of :more_home_id, :image, :caption
     belongs_to :more_home
+    
+    validates :more_home_id, :image, :caption, :presence => true
+    
+    has_attached_file :image,
+      :storage => :s3,
+      :processors => [:cropper],
+      :s3_credentials => "#{Rails.root.to_s}/config/s3.yml",
+      :path => ":class/:attachment/:id/:style/:filename"
+  
+    validates_attachment :image,
+       :size => {:less_than => 10.megabytes, :message => "file size must be less than 10 megabytes" },
+       :content_type => {
+         :content_type => ['image/pjpeg', 'image/jpeg', 'image/png', 'image/x-png', 'image/gif'],
+         :message => "must be either a JPEG, PNG or GIF image"
+        }
+    
     def self.import(file)
       f = File.open(file.path, "r:bom|utf-8")
       floor_plan_images = SmarterCSV.process(f)
@@ -19,5 +31,6 @@ module Smartrent
         end
       end
     end
+    
   end
 end

@@ -1,7 +1,7 @@
 <div class="member clearfix">
   <div class="memberStatementLeft">
     <div class="saveTitle">
-      <span class="lightBlue"><%= @resident.name %>,</span> You have <span class="lightBlue"><%= number_to_currency @resident.total_rewards %></span> Saved.
+      <span class="lightBlue"><%= @resident.name %>,</span> You have <span class="lightBlue"><%= number_to_currency @resident.total_rewards, :precision => 0 %></span> Saved.
     </div>
 
     <div class="saveSubTitle">
@@ -63,13 +63,13 @@
     <h3>Sign-Up Bonus</h3>
 
     <div class="v">
-      <%= number_to_currency @resident.sign_up_bonus %>
+      <%= number_to_currency @resident.sign_up_bonus, :precision => 0 %>
     </div>
 
     <h3>Combined Total</h3>
 
     <div class="v total">
-      <%= number_to_currency @resident.total_rewards %>
+      <%= number_to_currency @resident.total_rewards, :precision => 0 %>
     </div>
   </div>
 </div>

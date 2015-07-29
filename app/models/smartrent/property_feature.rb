@@ -2,8 +2,8 @@ module Smartrent
   class PropertyFeature < ActiveRecord::Base
     belongs_to :feature
     belongs_to :property
-    #attr_accessible :property_id, :feature_id
-    validates_uniqueness_of :feature_id, scope: :property_id
+
+    validates :feature_id, scope: :property_id, :uniqueness => true
 
     def self.import(file)
       f = File.open(file.path, "r:bom|utf-8")
@@ -20,5 +20,6 @@ module Smartrent
         end
       end
     end
+    
   end
 end

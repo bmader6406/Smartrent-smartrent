@@ -9,20 +9,44 @@ module Smartrent
     end
     def index
       q_params = params[:q]
-      q_params.delete_if {|key, value| key == "price"} if q_params.present?
-      price = Property.get_price(q_params) if q_params.present?
-      #Doing this to cater new ransack issue of not allowing custom params in q
-      q_params_copy = q_params.clone if q_params.present?
-      @q = Property.custom_ransack(q_params)
-      properties = Property.unique_result(@q)
-      q_params_copy[:price] = price if q_params.present?
-      q_params_copy.delete_if {|key, value| (key == "maximum_price" or key == "minimum_price" or key == "where_one_bed" or key == "where_two_bed" or key == "where_three_more_bed" or key == "where_penthouse" or key == "matches_all_features") and value == "0"} if q_params.present?
-      properties = Property.custom_filters q_params_copy, properties
-      @properties_grouped_by_states = Property.grouped_by_states(properties)
+      q_params_copy = nil
+      
+      if q_params
+        q_params.delete_if {|key, value| key == "price"}
+        price = Property.get_price(q_params)
+        
+        #Doing this to cater new ransack issue of not allowing custom params in q
+        q_params_copy = q_params.clone
+        
+        q_params_copy[:price] = price
+        q_params_copy.delete_if {|key, value| 
+          [ "maximum_price", "minimum_price", "where_one_bed", "where_two_bed", 
+            "where_three_more_bed", "where_penthouse", "matches_all_features" ].include?(key) &&  value == "0"
+        }
+      end
+      
+      @q = Property.smartrent.custom_ransack(q_params)
+      
+      properties = Property.custom_filters(q_params_copy, @q.result.uniq)
+      
+      @properties_grouped_by_states = grouped_by_states(properties)
 
       respond_to do |format|
         format.html # index.html.erb
         format.js {}
+        format.json {
+          render :json => properties.collect{|p|
+            {
+              title: p.name,
+              description: p.short_description,
+              address: [p.address_line1, p.city, p.state].join(", "),
+              lat: p.latitude,
+              lon: p.longitude,
+              image: p.image,
+              image_link: p.image
+            }
+          }
+        }
       end
     end
 
@@ -34,76 +58,30 @@ module Smartrent
         format.json { render json: @property }
       end
     end
-
-    # GET /properties/new
-    # GET /properties/new.json
-    def new
-      @property = Property.new
-
-      respond_to do |format|
-        format.html # new.html.erb
-        format.json { render json: @property }
-      end
-    end
-
-    # GET /properties/1/edit
-    def edit
-    end
-
-    # POST /properties
-    # POST /properties.json
-    def create
-      @property = Property.new(property_params)
-      respond_to do |format|
-        if @property.save
-          format.html { redirect_to @property, notice: 'Property was successfully created.' }
-          format.json { render json: @property, status: :created, location: @property }
-        else
-          format.html { render action: "new" }
-          format.json { render json: @property.errors, status: :unprocessable_entity }
+    
+    protected
+    
+      def grouped_by_states(properties)
+        states = {}
+        properties.each do |property|
+          state = property.state #.to_s.downcase
+          next if !state
+          states[state] ||= {}
+          states[state]["cities"] ||= {}
+          states[state]["cities"][property.city] ||= 0
+          states[state]["cities"][property.city] +=1
+          states[state]["counties"] ||= {}
+          if property.county
+            states[state]["counties"][property.county] ||= 0
+            states[state]["counties"][property.county] +=1
+          end
+          states[state]["properties"] ||= []
+          states[state]["properties"].push property
+          states[state]["total"] ||= 0
+          states[state]["total"] +=1
         end
+        states
       end
-    end
 
-    # PUT /properties/1
-    # PUT /properties/1.json
-    def update
-      respond_to do |format|
-        if @property.update_attributes(property_params)
-          format.html { redirect_to @property, notice: 'Property was successfully updated.' }
-          format.json { head :no_content }
-        else
-          format.html { render action: "edit" }
-          format.json { render json: @property.errors, status: :unprocessable_entity }
-        end
-      end
-    end
-
-    # DELETE /properties/1
-    # DELETE /properties/1.json
-    def destroy
-      @property.destroy
-      respond_to do |format|
-        format.html { redirect_to properties_url }
-        format.json { head :no_content }
-      end
-    end
-
-    private
-      def set_property
-        @property = Property.find(params[:id])
-        case action
-          when "create"
-            authorize! :cud, ::Property
-
-          when "edit", "update", "destroy"
-            authorize! :cud, @property
-          else
-            authorize! :read, @property
-        end
-      end
-      def property_params
-        params.require(:property).permit!
-      end
   end
 end

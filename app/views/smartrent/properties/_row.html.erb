@@ -2,11 +2,11 @@
   <% state_formatted = state.gsub(" ", "_") %>
   <div class="stateBox" id="state<%= state_formatted %>" onclick="Property.showState('<%= state %>')" style="background: url() 0% 0% repeat-x rgb(215, 218, 221);">
     <div class="state">
-      <%= state %>
+      <%= US_STATES[state] || state %>
     </div>
 
     <div class="resultTotal">
-      <%= property["count"] %>
+      <%= pluralize(property["properties"].length, "Apartment Community", "Apartment Communities") %>
     </div>
 
     <div class="plusMinus" id="plusMinus<%= state_formatted %>" style="font-size: 2em; background: url() 0% 0% repeat-x rgb(223, 225, 228);">
@@ -28,7 +28,7 @@
       <div class="clear"></div>
     </div>
     <ul id="citiesList<%= state_formatted %>" style="display: table;">
-      <% property["cities"].each do |city, count| %>
+      <% property["cities"].sort{|a, b| a.to_s <=> b.to_s }.each do |city, count| %>
         <li>
           <a href="javascript:Property.cities('<%= state %>','<%= city %>')"><%= city %></a>
           <div class="count">
@@ -53,7 +53,7 @@
     </div>
 
     <ul id="countiesList<%= state_formatted %>" style="display: table;">
-      <% property["counties"].each do |county, count| %>
+      <% property["counties"].sort{|a, b| a.to_s <=> b.to_s }.each do |county, count| %>
         <li>
         <a href="javascript:Property.counties('<%= state_formatted %>','<%= county %>');"><%= county %></a>
           <div class="count">
@@ -64,8 +64,10 @@
     </ul>
   </div>
 </div>
+
 <div class="results hidden" id="results-<%= state %>">
-  <% property["properties"].each do |property_| %>
+  <% fp_dict = floor_plan_dict(property["properties"]) %>
+  <% property["properties"].sort{|a, b| a.name.to_s <=> b.name.to_s }.each do |property_| %>
   <div class="propertyListing">
     <div class="photo">
       <%= image_tag property_.image(:search_page) %>
@@ -82,22 +84,49 @@
         <% if property_.studio %>
           <li><span class="bold">Studio</span> from <%= number_to_currency property_.studio_price %></li>
         <% end %>
-
-        <% if property_.one_bedroom.present? %>
-          <li><span class="bold">1 Bedroom</span> from <%= number_to_currency property_.one_bedroom.first.rent_min %></li>
-        <% end%>
-
-        <% if property_.two_bedrooms.present? %>
-          <li><span class="bold">2 Bedrooms</span> from <%= number_to_currency property_.two_bedrooms.first.rent_min %></li>
-        <% end%>
-        <% if property_.three_bedrooms.present? %>
-          <li><span class="bold">3 Bedrooms</span> from <%= number_to_currency property_.three_bedrooms.first.rent_min %></li>
-        <% end%>
-        <% if property_.four_bedrooms.present? %>
-          <li><span class="bold">4 Bedrooms or more</span> from <%= number_to_currency property_.four_bedrooms.first.rent_min %></li>
-        <% end %>
-        <% if property_.penthouses.present? %>
-          <li><span class="bold">Penthouses</span> from <%= number_to_currency property_.penthouses.first.rent_min %></li>
+        
+        <% if fp_dict[property_.id] %>
+          <% 
+            one_bedroom = []
+            two_bedrooms = []
+            three_bedrooms = [] 
+            four_bedrooms = []
+            penthouse = []
+            
+            fp_dict[property_.id].each do |fp|
+              case fp.beds
+                when 1
+                  one_bedroom << fp
+                when 2
+                  two_bedrooms << fp
+                when 3
+                  three_bedrooms << fp
+                else
+                  four_bedrooms << fp
+              end
+              
+              penthouse << fp if fp.penthouse?
+            end
+          %>
+          <% if !one_bedroom.empty? %>
+            <li><span class="bold">1 Bedroom</span> from <%= number_to_currency one_bedroom.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
+          <% end %>
+          
+          <% if !two_bedrooms.empty? %>
+            <li><span class="bold">2 Bedrooms</span> from <%= number_to_currency two_bedrooms.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
+          <% end %>
+          
+          <% if !three_bedrooms.empty? %>
+            <li><span class="bold">3 Bedrooms</span> from <%= number_to_currency three_bedrooms.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
+          <% end %>
+          
+          <% if !four_bedrooms.empty? %>
+            <li><span class="bold">4 Bedrooms or more</span> from <%= number_to_currency four_bedrooms.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
+          <% end %>
+          
+          <% if !penthouse.empty? %>
+            <li><span class="bold">Penthouses</span> from <%= number_to_currency penthouse.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
+          <% end %>
         <% end %>
       </ul>
 

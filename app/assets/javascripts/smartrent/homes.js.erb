@@ -1,10 +1,10 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 var pois = {};
-var categories = [];
+var categories = ['all'];
 var cat_counter = 1;
-var mapIcon = "homeIcon"
-categories.push('all');
+var mapIcon = "homeIcon";
+
 pois['all'] = {'show':true,'points':[]};
 $(function(){
   $(".search-item").click(function(){
@@ -27,22 +27,15 @@ $(function(){
           page = 1
           if (queryString.page)
             page = queryString.page
-          homes_path = Routes.smartrent_homes_path({format: "json", page: page})
+          homes_path = Routes.smartrent_homes_path({format: "json", page: page});
+          
           $.get(homes_path, function(data){
             homes = data;
             pois['all'] = {'show':true,'points':[]};
             for(var x in homes) {
-              var home = homes[x]
-              pois['all']['points'].push({
-                  title: home.title,
-                  description: home.description,
-                  address: home.street_address + ',' + home.city + ',' + home.state + ' ' + home.postal_code,
-                  lat: home.latitude,
-                  lon: home.longitude,
-                  //image: home.left_image,
-                  //image_link: home.left_image
-              });
+              pois['all']['points'].push(homes[x]);
             }
+            mapIcon = "homeIcon";
             mapStart();
           });
         }

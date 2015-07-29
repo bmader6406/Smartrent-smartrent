@@ -1,21 +1,35 @@
 #encoding: utf-8
 module Smartrent
   class Home < ActiveRecord::Base
-    #attr_accessible :address, :description, :latitude, :image, :image_description, :longitude, :title, :website, :video_url, :phone_number, :home_page_desc, :city, :state, :search_page_description, :origin_id, :url, :county
-    has_attached_file :image, :styles => {:home_page => "195x145>", :search_page => "149x112>"}
-    validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
-    validates_presence_of :title
-    validates_uniqueness_of :title, :case_sensitive => false
     has_many :resident_homes, :dependent => :destroy
     #has_many :residents, :through => :resident_homes
     has_many :more_homes, :dependent => :destroy
     #process_in_background :image
     #geocoded_by :complete_street_address
     #after_validation :geocode
+    
+    has_attached_file :image, 
+      :styles => {
+        :home_page => "195x145>",
+        :search_page => "149x112>"
+      },
+      :storage => :s3,
+      :processors => [:cropper],
+      :s3_credentials => "#{Rails.root.to_s}/config/s3.yml",
+      :path => ":class/:attachment/:id/:style/:filename"
 
-    before_save do
-      self.url = self.to_param
-    end
+    validates_attachment :image,
+      :size => {:less_than => 10.megabytes, :message => "file size must be less than 10 megabytes" },
+      :content_type => {
+        :content_type => ['image/pjpeg', 'image/jpeg', 'image/png', 'image/x-png', 'image/gif'],
+        :message => "must be either a JPEG, PNG or GIF image"
+      }
+    
+    validates :title, :presence => true, :uniqueness => true
+    
+    
+    before_save :set_url
+    
     def to_param
       title.parameterize
     end
@@ -32,12 +46,11 @@ module Smartrent
         create! home_hash
       end
     end
-    def self.keyed_by_title
-      homes = {}
-      all.each do |home|
-        homes[home.title] = home
+    
+    private
+    
+      def set_url
+        self.url = self.to_param
       end
-      homes
-    end
   end
 end

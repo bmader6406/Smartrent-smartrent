@@ -126,7 +126,7 @@ module Smartrent
             hash[k.to_sym] = "%#{params[k]}%"
           end
         end
-        @properties = current_user.managed_properties.where(:is_smartrent => true).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
+        @properties = current_user.managed_properties.smartrent.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
       end
   end
 end

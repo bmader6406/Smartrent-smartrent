@@ -10,7 +10,7 @@
       <%= link_to 'Import Floor Plan Images', import_admin_floor_plan_images_path, :class => "btn btn-default" %>
       <%= link_to 'New Floor Plan Image', new_admin_floor_plan_image_path, :class => "btn btn-primary" %>
     </div>
-    <h3>Listing floor_plan_images</h3>
+    <h3>Listing Floor Plan Images</h3>
 
     <% if @floor_plan_images.present? %>
       <table class="table">
@@ -18,7 +18,7 @@
           <th>Image</th>
           <th>Caption</th>
           <th>More Home</th>
-          <th>Action</th>
+          <th width="160px">Actions</th>
         </tr>
 
         <% @floor_plan_images.each do |floor_plan_image| %>

@@ -1,3 +1,8 @@
 $('.listing-results').html('<%= j( render partial: "search_results" ) %>')
-$('.map-results').html('')
+$('.map-results').html('');
+
+if($('#mapResults.mapOn')[0]){
+  Property.loadMap();
+}
+
 $.unblockUI();

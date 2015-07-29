@@ -5,8 +5,9 @@ module Smartrent
   class ResidentProperty < ActiveRecord::Base
     belongs_to :property
     belongs_to :resident
-    validates_presence_of :property, :resident, :move_in_date
-    validates_uniqueness_of :move_in_date, :scope => [:resident_id, :property_id]
+    
+    validates :property, :resident, :move_in_date, :presence => true
+    #validates :move_in_date, :uniqueness => true, :scope => [:resident_id, :property_id]
     
     after_create :create_reward
     

@@ -1,10 +1,11 @@
 module Smartrent
   class Reward < ActiveRecord::Base
-    #attr_accessible :amount, :period_end, :period_start, :property_id, :type_, :resident_id
     belongs_to :resident
     belongs_to :property
-    validates_presence_of :amount, :resident_id, :type_, :period_start
+    
+    validates :amount, :resident_id, :type_, :period_start, :presence => true
     validates_numericality_of :amount , :greater_than_equal_to => 0
+    
     validate :period_start_greater_than_period_end
     validate :valid_type
 
@@ -51,6 +52,7 @@ module Smartrent
     def self.MONTHLY_AWARDS
       350
     end
+    
     def self.import(file)
       f = File.open(file.path, "r:bom|utf-8")
       rewards = SmarterCSV.process(f)
@@ -75,5 +77,6 @@ module Smartrent
         end
       end
     end
+    
   end
 end
