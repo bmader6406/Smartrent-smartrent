@@ -89,8 +89,7 @@ Property = {
       for(var x in properties) {
         pois['all']['points'].push(properties[x]);
       }
-      //TODO: make marker display "A" intead of "H" icon
-      //mapIcon = "mapIcon";
+      mapIcon = "mapIcon";
       mapStart();
     });
   },
