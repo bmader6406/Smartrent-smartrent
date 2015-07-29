@@ -7,7 +7,7 @@ module Smartrent
     belongs_to :resident
     
     validates :property, :resident, :move_in_date, :presence => true
-    #validates :move_in_date, :uniqueness => true, :scope => [:resident_id, :property_id]
+    #validates :move_in_date, :uniqueness => {:scope => [:resident_id, :property_id]}
     
     after_create :create_reward
     

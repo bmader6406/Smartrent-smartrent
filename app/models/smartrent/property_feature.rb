@@ -3,7 +3,7 @@ module Smartrent
     belongs_to :feature
     belongs_to :property
 
-    validates :feature_id, scope: :property_id, :uniqueness => true
+    validates :feature_id, :uniqueness => {:scope => :property_id}
 
     def self.import(file)
       f = File.open(file.path, "r:bom|utf-8")
