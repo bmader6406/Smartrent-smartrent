@@ -39,7 +39,13 @@ module Smartrent
       "Archive"
     end
     def self.smartrent_statuses
-      {self.SMARTRENT_STATUS_ACTIVE => "Active", self.SMARTRENT_STATUS_INACTIVE => "Inactive", self.SMARTRENT_STATUS_EXPIRED => "Expired", self.SMARTRENT_STATUS_CHAMPION => "Champion", self.SMARTRENT_STATUS_ARCHIVE => "Archive"}
+      {
+        self.SMARTRENT_STATUS_ACTIVE => "Active", 
+        self.SMARTRENT_STATUS_INACTIVE => "Inactive", 
+        self.SMARTRENT_STATUS_EXPIRED => "Expired", 
+        self.SMARTRENT_STATUS_CHAMPION => "Champion", 
+        self.SMARTRENT_STATUS_ARCHIVE => "Archive"
+      }
     end
 
     def smartrent_status_text

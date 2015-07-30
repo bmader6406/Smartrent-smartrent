@@ -29,7 +29,7 @@ module Smartrent
     
       def create_reward
         if move_in_date.present? && property.status == Property.STATUS_CURRENT && (Time.now.difference_in_months(move_in_date)) >= 1 && 
-            (move_out_date.nil? || (move_out_date.difference_in_months(Time.now.month)) == 1)
+            (move_out_date.nil? || move_out_date.difference_in_months(Time.now.month) == 1)
             
           (1..(Time.now.difference_in_months(move_in_date))).each do |month|
             period_start = move_in_date.to_time.advance(:months => month).to_date
