@@ -128,20 +128,22 @@ module Smartrent
     end
     
     def total_months
-      months = 0
-      move_in_date
-      resident_properties.order("move_in_date asc").each_with_index do |resident_property, index|
-        #Possible Case: When the move_in_date is present and there are more move_in_dates and move_out_date is nil in each case
-        move_in_date = resident_property.move_in_date if move_in_date.nil?
-        if resident_property.move_out_date.present?
-          months = resident_property.move_out_date.difference_in_months(move_in_date) + months
-          move_in_date = nil
-        elsif index == resident_properties.count - 1
-          #the last element of the array and the move_out_date is still nil
-          months = Time.now.difference_in_months(move_in_date) + months
-        end
-      end
-      months
+      # months = 0
+      # move_in_date
+      # resident_properties.order("move_in_date asc").each_with_index do |resident_property, index|
+      #   #Possible Case: When the move_in_date is present and there are more move_in_dates and move_out_date is nil in each case
+      #   move_in_date = resident_property.move_in_date if move_in_date.nil?
+      #   if resident_property.move_out_date.present?
+      #     months = resident_property.move_out_date.difference_in_months(move_in_date) + months
+      #     move_in_date = nil
+      #   elsif index == resident_properties.count - 1
+      #     #the last element of the array and the move_out_date is still nil
+      #     months = Time.now.difference_in_months(move_in_date) + months
+      #   end
+      # end
+      # months
+      
+      rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).count
     end
 
     private
