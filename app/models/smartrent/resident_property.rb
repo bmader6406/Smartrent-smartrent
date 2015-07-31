@@ -9,7 +9,7 @@ module Smartrent
     validates :property, :resident, :move_in_date, :presence => true
     #validates :move_in_date, :uniqueness => {:scope => [:resident_id, :property_id]}
     
-    after_create :create_reward
+    after_create :create_rewards
     
     def self.STATUS_CURRENT
       "Current"
@@ -27,19 +27,20 @@ module Smartrent
     
     private
     
-      def create_reward
-        if move_in_date.present? && property.status == Property.STATUS_CURRENT && (Time.now.difference_in_months(move_in_date)) >= 1 && 
-            (move_out_date.nil? || move_out_date.difference_in_months(Time.now.month) == 1)
-            
-          (1..(Time.now.difference_in_months(move_in_date))).each do |month|
+      def create_rewards
+        move_in_diff = Time.now.difference_in_months(move_in_date) rescue 0
+        move_out_diff = move_out_date.difference_in_months(Time.now.month) rescue 1
+        
+        if property.status == Property.STATUS_CURRENT && move_in_diff >= 1 &&  move_out_diff == 1
+          (1..move_in_diff).each do |month|
             period_start = move_in_date.to_time.advance(:months => month).to_date
             Reward.create!({
               :property_id => property.id, 
               :resident_id => resident.id, 
               :amount => Setting.monthly_award, 
               :type_ => Reward.TYPE_MONTHLY_AWARDS, 
-              :period_start => period_start, 
-              :period_end => 1.year.from_now
+              :period_start => period_start.beginning_of_month, 
+              :period_end => period_start.end_of_month
             })
           end
         end

@@ -6,7 +6,6 @@
   <div class="listing">
     <div class="links pull-right">
       <%= link_to 'New Setting', new_admin_setting_path, :class => "btn btn-primary" %>
-      <%= link_to 'Run Monthly Awards Job Manually', run_monthly_awards_job_admin_settings_path, :class => "btn btn-default" %>
     </div>
     <h3>Listing Settings</h3>
     <% if @settings.present? %>
@@ -45,6 +44,6 @@
 
 <script type="text/javascript">
   $(function(){
-    App.initPageLayout();
+    App.initPageLayout(null, null, null, true);
   });
 </script>

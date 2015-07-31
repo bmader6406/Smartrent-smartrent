@@ -21,7 +21,7 @@ module Smartrent
     validates :email, :uniqueness => true
     validate :valid_smartrent_status
 
-    after_create :create_reward
+    after_create :create_rewards
     
     def self.SMARTRENT_STATUS_ACTIVE
       "Active"
@@ -61,19 +61,11 @@ module Smartrent
     end
     
     def move_in_date
-      if resident_properties.present?
-        resident_properties.order("move_in_date desc").first.move_in_date
-      else
-        nil
-      end
+      resident_properties.order("move_in_date desc").first.move_in_date
     end
     
     def move_out_date
-      if resident_properties.present?
-        resident_properties.order("move_in_date desc").first.move_out_date
-      else
-        nil
-      end
+      resident_properties.order("move_in_date desc").first.move_out_date
     end
     
     def update_password(attributes)
@@ -86,48 +78,17 @@ module Smartrent
     end
     
     def is_smartrent?
-      if properties.present?
-      properties.each do |property|
-        return true if property.is_smartrent
-      end
-      else
-        false
-      end
+      properties.any?{|p| p.is_smartrent? }
     end
     
     #### Rewards ####
     
-    def sign_up_bonus=(bonus)
-      @sign_up_bonus = bonus
-    end
-    
     def sign_up_bonus
-      reward = rewards.find_by_type_(Reward.TYPE_SIGNUP_BONUS)
-      if reward
-        reward.amount
-      else
-        0.0
-      end
+      rewards.find_by_type_(Reward.TYPE_SIGNUP_BONUS).amount rescue 0.0
     end
     
     def initial_reward
-      rewards = self.rewards.where(:type_ => Reward.TYPE_INITIAL_REWARD)
-      if rewards.present?
-        rewards.first.amount
-      else
-        0.0
-      end
-    end
-    
-    # TODO: check spreadsheet logic
-    def self.move_all_rewards_to_initial_balance(residents)
-      residents.each do |resident|
-        if resident.rewards.present?
-          resident.rewards.where.not(:type_ => Reward.TYPE_INITIAL_REWARD).each do |reward|
-            reward.update_attributes(:type_ => Reward.TYPE_INITIAL_REWARD)
-          end
-        end
-      end
+      rewards.where(:type_ => Reward.TYPE_INITIAL_REWARD).first.amount rescue 0.0
     end
     
     def monthly_awards_amount
@@ -144,7 +105,7 @@ module Smartrent
     end
 
     def champion_amount
-      self.rewards.where(:type_ => Reward.TYPE_CHAMPION).sum(:amount).to_f
+      rewards.where(:type_ => Reward.TYPE_CHAMPION).sum(:amount).to_f
     end
 
     def total_rewards
@@ -176,42 +137,6 @@ module Smartrent
       months
     end
 
-    #The Monthly Cron Job
-    def self.monthly_awards_job
-      all.each do |resident|
-        resident_properties = resident.resident_properties
-        if resident.smartrent_status == self.SMARTRENT_STATUS_ACTIVE
-          resident_properties = resident_properties.where(:move_out_date => nil)
-          if resident_properties.present?
-            resident_properties = resident_properties.select{|rp| rp.property.status == Property.STATUS_CURRENT}
-            #reisdent_properties = resident_properties.includes(:properties).where{property.status == Property.STATUS_CURRENT}
-            resident_properties.each do |resident_property|
-              resident = resident_property.resident
-              monthly_reward = resident.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).order("period_start desc").first
-              should_add_reward = true
-              #Check to ensure if this resident has not been awarded already this month
-              if monthly_reward.present? and (monthly_reward.period_start.difference_in_months(Time.now) == 0)
-                should_add_reward = false
-              end
-              if should_add_reward
-                resident.rewards.create(:amount => Setting.monthly_award, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => Time.now, :period_end => 1.year.from_now)
-              end
-            end
-          elsif resident_properties.empty?
-            resident.update_attributes(:smartrent_status => self.SMARTRENT_STATUS_INACTIVE)
-          else
-            resident_property = resident_properties.order("move_in_date desc").first
-            if Time.now.differnce_in_days(resident_property.move_in_date) > 60
-              resident.update_attributes(:smartrent_status => self.SMARTRENT_STATUS_EXPIRED)
-            else
-              resident.update_attributes(:smartrent_status => self.SMARTRENT_STATUS_INACTIVE)
-            end
-          end
-        end
-      end
-    end
-    
-    
     private
       
       def valid_smartrent_status
@@ -220,11 +145,9 @@ module Smartrent
         end
       end
       
-      def create_reward
-        @sign_up_bonus ||= Setting.sign_up_bonus
-        if !rewards.where(:type_ => Reward.TYPE_SIGNUP_BONUS).present?
-          rewards.create!(:amount => @sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now, :period_end => 1.year.from_now)
-        end
+      def create_rewards
+        rewards.create!(:amount => 0, :type_ => Reward.TYPE_INITIAL_REWARD, :period_start => Time.now)
+        rewards.create!(:amount => Setting.sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now)
       end
   end
 end

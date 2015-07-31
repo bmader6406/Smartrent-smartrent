@@ -20,34 +20,25 @@ module Smartrent
         errors[:type_] << "is invalid" if type_.to_i < 0 or type_.to_i > 3
       end
     end
-
-    def self.TYPE_SIGNUP_BONUS
+    
+    def self.TYPE_INITIAL_REWARD
       0
     end
-    def self.TYPE_MONTHLY_AWARDS
+    def self.TYPE_SIGNUP_BONUS
       1
     end
-    def self.TYPE_INITIAL_REWARD
+    def self.TYPE_MONTHLY_AWARDS
       2
     end
     def self.TYPE_CHAMPION
       3
     end
-    def self.SIGNUP_BONUS
-      100
-    end
-    def self.INITIAL_REWARD
-      1200
-    end
-    def self.MONTHLY_AWARDS
-      350
-    end
-    
+
     def self.types
       {
+        self.TYPE_INITIAL_REWARD => "Initial Balance",
         self.TYPE_SIGNUP_BONUS => "Sign Up", 
         self.TYPE_MONTHLY_AWARDS => "Monthly Awards", 
-        self.TYPE_INITIAL_REWARD => "Initial Balance", 
         self.TYPE_CHAMPION => "Champion"
       }
     end

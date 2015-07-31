@@ -1,12 +1,75 @@
 Smartrent::Engine.routes.draw do
-  root :to => "pages#home"
+  
+  # website content management
+  namespace :admin do
+    resources :properties do
+      collection do
+        get "import", :to => "properties#import_page"
+        post "import"
+      end
+    end
+    
+    resources :features do
+      collection do
+        get "import", :to => "features#import_page"
+        post "import"
+      end
+    end
+    resources :property_features do
+      collection do
+        get "import", :to => "property_features#import_page"
+        post "import"
+      end
+    end
+    
+    resources :homes do
+      collection do
+        get "import", :to => "homes#import_page"
+        post "import"
+      end
+    end
+    
+    resources :more_homes do
+      collection do
+        get "import", :to => "more_homes#import_page"
+        post "import"
+      end
+    end
+    
+    resources :floor_plans do
+      collection do
+        get "import", :to => "floor_plans#import_page"
+        post "import"
+      end
+    end
+    
+    resources :floor_plan_images do
+      collection do
+        get "import", :to => "floor_plan_images#import_page"
+        post "import"
+      end
+    end
+    
+    resources :rewards do
+      collection do
+        get "import", :to => "rewards#import_page"
+        post "import"
+      end
+    end
+    
+    resources :settings
+  end
+  
+  # smartrent website
   resources :homes
   resources :properties
+  
   devise_for :residents, {
      class_name: 'Smartrent::Resident',
      module: :devise,
      :controllers => { :sessions => "smartrent/sessions" }
    }
+   
   resource :residents do
     collection do
       get "change_password"
@@ -26,80 +89,6 @@ Smartrent::Engine.routes.draw do
   get "/460-new-york-avenue", :to => "pages#ny_avenue", :as => "ny_avenue"
   get "/member-profile", :to => "residents#profile", :as => "member_profile"
   get "/member-statement", :to => "residents#statement", :as => "member_statement"
-
-  namespace :admin do
-    root :to => "residents#index"
-
-    resources :residents do
-      member do
-        get "archive"
-        get "properties"
-        get "rewards"
-      end
-      collection do
-        get "import", :to => "residents#import_page"
-        post "import", :to => "residents#import"
-        get "move-all-rewards-to-initial-balance", :to => "residents#move_all_rewards_to_initial_balance", :as => "move_all_rewards_to_initial_balance"
-      end
-    end
-    resources :resident_properties do
-    end
-
-    resources :rewards do
-      collection do
-        get "import", :to => "rewards#import_page"
-        post "import", :to => "rewards#import"
-      end
-    end
-    resources :more_homes do
-      collection do
-        get "import", :to => "more_homes#import_page"
-        post "import", :to => "more_homes#import"
-      end
-    end
-    resources :homes do
-      collection do
-        get "import", :to => "homes#import_page"
-        post "import", :to => "homes#import"
-      end
-    end
-    resources :properties do
-      collection do
-        get "import", :to => "properties#import_page"
-        post "import", :to => "properties#import"
-      end
-    end
-    resources :floor_plan_images do
-      collection do
-        get "import", :to => "floor_plan_images#import_page"
-        post "import", :to => "floor_plan_images#import"
-      end
-    end
-    resources :features do
-      collection do
-        get "import", :to => "features#import_page"
-        post "import", :to => "features#import"
-      end
-    end
-    resources :property_features do
-      collection do
-        get "import", :to => "property_features#import_page"
-        post "import", :to => "property_features#import"
-      end
-    end
-    resources :floor_plans do
-      collection do
-        get "import", :to => "floor_plans#import_page"
-        post "import", :to => "floor_plans#import"
-      end
-    end
-    resources :settings do
-      collection do
-        get "run-monthly-awards-job", :to => "settings#run_monthly_awards_job", :as => "run_monthly_awards_job"
-      end
-    end
-
-  end
-
-
+  
+  root :to => "pages#home"
 end
