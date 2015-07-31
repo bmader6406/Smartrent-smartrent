@@ -11,7 +11,7 @@ module Smartrent
     end
     
     def self.initial_reward
-      Setting.find_by_key("initial_reward").value.to_f rescue 3500.0
+      Setting.find_by_key("initial_reward").value.to_f rescue 1200.0
     end
     
     def self.monthly_award

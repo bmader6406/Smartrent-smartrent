@@ -21,8 +21,6 @@ module Smartrent
     validates :email, :uniqueness => true
     validate :valid_smartrent_status
 
-    after_create :create_rewards
-    
     def self.SMARTRENT_STATUS_ACTIVE
       "Active"
     end
@@ -79,6 +77,15 @@ module Smartrent
     
     def is_smartrent?
       properties.any?{|p| p.is_smartrent? }
+    end
+    
+    def current_community
+      rp = resident_properties.detect{|p| p.status == "Current" }
+      if rp
+        rp.name
+      else
+        "N/A"
+      end
     end
     
     #### Rewards ####
@@ -143,11 +150,6 @@ module Smartrent
         if self.class.smartrent_statuses[smartrent_status].nil?
           errors.add(:smartrent_status, "is invalid")
         end
-      end
-      
-      def create_rewards
-        rewards.create!(:amount => 0, :type_ => Reward.TYPE_INITIAL_REWARD, :period_start => Time.now)
-        rewards.create!(:amount => Setting.sign_up_bonus, :type_ => Reward.TYPE_SIGNUP_BONUS, :period_start => Time.now)
       end
   end
 end

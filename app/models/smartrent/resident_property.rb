@@ -14,36 +14,82 @@ module Smartrent
     def self.STATUS_CURRENT
       "Current"
     end
+    
     def self.STATUS_PAST
       "Past"
     end
+    
     def self.STATUS_NOTICE
       "Notice"
     end
     
+    def self.STATUS_FUTURE
+      "Future"
+    end
+    
     def self.statuses
-      {self.STATUS_CURRENT => "Current", self.STATUS_PAST => "Past", self.STATUS_NOTICE => "Notice"}
+      {
+        self.STATUS_CURRENT => "Current", 
+        self.STATUS_PAST => "Past", 
+        self.STATUS_NOTICE => "Notice",
+        self.STATUS_FUTURE => "Future"
+      }
     end
     
     private
     
       def create_rewards
-        move_in_diff = Time.now.difference_in_months(move_in_date) rescue 0
-        move_out_diff = move_out_date.difference_in_months(Time.now.month) rescue 1
+        # create inital, signup rewards
+        creation_date = move_in_date.blank? ? created_at : move_in_date
         
-        if property.status == Property.STATUS_CURRENT && move_in_diff >= 1 &&  move_out_diff == 1
+        rewards = resident.rewards.all
+        
+        if !rewards.detect{|r| r.type_ == Reward.TYPE_INITIAL_REWARD }
+          Reward.create!({
+            :property_id => property.id, 
+            :resident_id => resident.id, 
+            :amount => 0, 
+            :type_ => Reward.TYPE_INITIAL_REWARD, 
+            :period_start => creation_date
+          })
+        end
+        
+        if !rewards.detect{|r| r.type_ == Reward.TYPE_SIGNUP_BONUS }
+          Reward.create!({
+            :property_id => property.id, 
+            :resident_id => resident.id, 
+            :amount => Setting.sign_up_bonus, 
+            :type_ => Reward.TYPE_SIGNUP_BONUS, 
+            :period_start => creation_date
+          })
+        end
+        
+        # create monthly rewards
+        if move_out_date.blank? || move_out_date && move_out_date > Time.now
+          move_in_diff = (Time.now.difference_in_months(move_in_date) - 1) rescue 0
+          
+        else
+          move_in_diff = (move_out_date.difference_in_months(move_in_date) - 1) rescue 0
+        end
+        
+        if property.status.to_s.include?(Property.STATUS_CURRENT) && move_in_diff >= 1
           (1..move_in_diff).each do |month|
             period_start = move_in_date.to_time.advance(:months => month).to_date
-            Reward.create!({
-              :property_id => property.id, 
-              :resident_id => resident.id, 
-              :amount => Setting.monthly_award, 
-              :type_ => Reward.TYPE_MONTHLY_AWARDS, 
-              :period_start => period_start.beginning_of_month, 
-              :period_end => period_start.end_of_month
-            })
+            
+            if !rewards.detect{|r| r.type_ == Reward.TYPE_MONTHLY_AWARDS && r.property_id ==  property.id && r.period_start == period_start.beginning_of_month }
+              Reward.create!({
+                :property_id => property.id, 
+                :resident_id => resident.id, 
+                :amount => Setting.monthly_award, 
+                :type_ => Reward.TYPE_MONTHLY_AWARDS, 
+                :period_start => period_start.beginning_of_month, 
+                :period_end => period_start.end_of_month
+              })
+            end
           end
         end
+      
       end
+      
   end
 end

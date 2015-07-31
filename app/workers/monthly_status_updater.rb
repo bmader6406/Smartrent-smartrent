@@ -19,7 +19,7 @@ module Smartrent
           if !live_in_properties.empty?
             
             # get smartrent eligible property
-            live_in_properties.select{|rp| rp.property.status == Property.STATUS_CURRENT }.each do |rp|
+            live_in_properties.select{|rp| rp.property.status.to_s.include?(Property.STATUS_CURRENT) }.each do |rp|
               
               # create monthly reward if not created for this month
               if r.rewards.where(:property_id => rp.property_id, :type_ => Reward.TYPE_MONTHLY_AWARDS, :period_start => [period_start, period_start.end_of_month]).count == 0
