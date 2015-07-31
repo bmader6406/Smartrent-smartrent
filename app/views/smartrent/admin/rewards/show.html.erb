@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-10">
     <b>Resident Email: </b><%= @reward.resident.email %><br />
-    <b>Amount: </b><%= number_to_currency @reward.amount %><br />
+    <b>Amount: </b><%= number_to_currency @reward.amount, :precision => 0 %><br />
     <b>Period Start: </b><%= @reward.period_start.to_s(:year_month_day) %><br />
     <% if @reward.period_end %>
       <b>Period End: </b><%= @reward.period_end.to_s(:year_month_day) %><br />

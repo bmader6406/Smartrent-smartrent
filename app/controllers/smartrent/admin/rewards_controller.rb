@@ -6,13 +6,12 @@ module Smartrent
     # GET /admin/rewards.json
     #
     before_action :set_reward
+    
     before_action do
       @active = "rewards"
     end
+    
     def index
-
-      #@rewards = current_user.managed_rewards
-      #@rewards = @rewards.paginate(:page => params[:page], :per_page => 15).order(:created_at) if @rewards.present?
       filter_rewards
       @search = params[:search]
       respond_to do |format|
@@ -126,7 +125,8 @@ module Smartrent
             hash[k.to_sym] = "#{params[k]}"
           end
         end
-        @rewards = current_user.managed_rewards.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("created_at desc")
+        
+        @rewards = current_user.managed_rewards.includes(:resident, :property).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("created_at desc")
       end
 
       def reward_params

@@ -5,7 +5,7 @@
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
-      <%= link_to 'Import Homes', import_admin_homes_path, :class => "btn btn-default" %>
+      <%= link_to 'Import Homes', import_admin_homes_path, :class => "btn btn-default", :style => "display:none" %>
       <%= link_to 'New Home', new_admin_home_path, :class => "btn btn-primary" %>
     </div>
     <h3>Listing homes</h3>
@@ -23,7 +23,7 @@
             <td><%= home.title %></td>
             <td><%= home.home_page_desc %></td>
             <td><%= link_to(home.url, home.url, :target => "_blank") if home.url  %></td>
-            <td><%= link_to 'Show', admin_home_path(home) %> | <%= link_to 'Edit', edit_admin_home_path(home) %> | <%= link_to 'Destroy', admin_home_path(home), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td><%= link_to 'Show', admin_home_path(home) %> | <%= link_to 'Edit', edit_admin_home_path(home) %> | <%= link_to 'Delete', admin_home_path(home), method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>
         <% end %>
       </table>

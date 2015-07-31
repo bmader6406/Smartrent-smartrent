@@ -10,23 +10,25 @@
       </div>
     </div>
     <% if current_user.has_role? :admin, Property %>
-    <div class="field">
-      <div class="form-group">
-        <%= f.label :is_smartrent, :class => "col-md-4 control-label" %>
-        <div class="col-md-7">
-          <%= f.check_box :is_smartrent %>
+      <div class="field">
+        <div class="form-group">
+          <%= f.label :is_smartrent, :class => "col-md-4 control-label" %>
+          <div class="col-md-7">
+            <%= f.check_box :is_smartrent %>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="field">
-      <div class="form-group">
-        <%= f.label :is_crm, :class => "col-md-4 control-label" %>
-        <div class="col-md-7">
-          <%= f.check_box :is_crm %>
+      <% if false %> <!-- property always visible in CRM -->
+        <div class="field">
+          <div class="form-group">
+            <%= f.label :is_crm, :class => "col-md-4 control-label" %>
+            <div class="col-md-7">
+              <%= f.check_box :is_crm %>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  <% end %>
+      <% end %>
+    <% end %>
     <div class="field">
       <div class="form-group">
         <%= f.label :phone, :class => "col-md-4 control-label" %>

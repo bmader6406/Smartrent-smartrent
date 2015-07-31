@@ -5,7 +5,7 @@
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
-      <%= link_to 'Import Floor Plans', import_admin_floor_plans_path, :class => "btn btn-default" %>
+      <%= link_to 'Import Floor Plans', import_admin_floor_plans_path, :class => "btn btn-default", :style => "display:none" %>
       <%= link_to 'New Floor Plan', new_admin_floor_plan_path, :class => "btn btn-primary" %>
     </div>
     <h3>Listing Floor Plan</h3>
@@ -40,7 +40,7 @@
             <td><%= admin_floor_plan.rent_min %></td>
             <td><%= admin_floor_plan.rent_max %></td>
             <td><%= admin_floor_plan.penthouse %></td>
-            <td><%= link_to 'Show', admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Edit', edit_admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Destroy', admin_floor_plan_path(admin_floor_plan), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td><%= link_to 'Show', admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Edit', edit_admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Delete', admin_floor_plan_path(admin_floor_plan), method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>
         <% end %>
       </table>

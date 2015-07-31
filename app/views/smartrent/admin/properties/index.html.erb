@@ -5,7 +5,7 @@
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
-      <%= link_to 'Import Properties', import_admin_properties_path, :class => "btn btn-default" %>
+      <%= link_to 'Import Properties', import_admin_properties_path, :class => "btn btn-default", :style => "display:none" %>
       <%= link_to 'New Property', new_admin_property_path, :class => "btn btn-primary" %>
     </div>
     <h3>Listing Properties</h3>
@@ -16,14 +16,19 @@
           <th>Name</th>
           <th>Description</th>
           <th>Website</th>
-          <th width="160px">Actions</th>
+          <th width="230px">Actions</th>
         </tr>
       <% @properties.each do |property| %>
         <tr>
           <td><%= property.name %></td>
           <td><%= strip_tags(property.description).truncate(27) if property.description %></td>
           <td><%= link_to truncate(property.website_url, :length => 35), property.website_url, :target => "_blank" %></td>
-          <td><%= link_to 'Show', admin_property_path(property) %> | <%= link_to 'Edit', edit_admin_property_path(property) %> | <%= link_to 'Destroy', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td>
+            <%= link_to 'Residents', main_app.property_residents_path(property) %> |
+            <%= link_to 'Show', admin_property_path(property) %> | 
+            <%= link_to 'Edit', edit_admin_property_path(property) %> | 
+            <%= link_to 'Delete', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %>
+          </td>
         </tr>
       <% end %>
       </table>

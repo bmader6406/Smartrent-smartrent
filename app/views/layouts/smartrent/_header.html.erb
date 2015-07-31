@@ -40,10 +40,10 @@
             <div class="loginForm">
               <%= form_for(:resident, url: session_path(:resident)) do |f| %>
                 <div class="form-group">
-                  <%= f.email_field :email, autofocus: false , :class => "form-control"%>
+                  <%= f.email_field :email, autofocus: false , :class => "form-control", :placeholder => "EMAIL (MUST MATCH YOUR LEASE)" %>
                 </div>
                 <div class="form-group">
-                  <%= f.password_field :password, autocomplete: "off", :class => "form-control"  %>
+                  <%= f.password_field :password, autocomplete: "off", :class => "form-control", :placeholder => "PASSWORD" %>
                 </div>
 
                 <div class="actions">

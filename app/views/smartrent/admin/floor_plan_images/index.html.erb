@@ -7,7 +7,7 @@
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
-      <%= link_to 'Import Floor Plan Images', import_admin_floor_plan_images_path, :class => "btn btn-default" %>
+      <%= link_to 'Import Floor Plan Images', import_admin_floor_plan_images_path, :class => "btn btn-default", :style => "display:none" %>
       <%= link_to 'New Floor Plan Image', new_admin_floor_plan_image_path, :class => "btn btn-primary" %>
     </div>
     <h3>Listing Floor Plan Images</h3>
@@ -26,7 +26,7 @@
             <td><%= image_tag floor_plan_image.image, :width => 50 %></td>
             <td><%= floor_plan_image.caption %></td>
             <td><%= floor_plan_image.more_home.name %></td>
-            <td><%= link_to 'Show', admin_floor_plan_image_path(floor_plan_image) %> | <%= link_to 'Edit', edit_admin_floor_plan_image_path(floor_plan_image) %> | <%= link_to 'Destroy', admin_floor_plan_image_path(floor_plan_image), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td><%= link_to 'Show', admin_floor_plan_image_path(floor_plan_image) %> | <%= link_to 'Edit', edit_admin_floor_plan_image_path(floor_plan_image) %> | <%= link_to 'Delete', admin_floor_plan_image_path(floor_plan_image), method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>
         <% end %>
       </table>
@@ -45,6 +45,6 @@
 
 <script type="text/javascript">
   $(function(){
-    App.initPageLayout();
+    App.initPageLayout(null, null, null, true);
   });
 </script>

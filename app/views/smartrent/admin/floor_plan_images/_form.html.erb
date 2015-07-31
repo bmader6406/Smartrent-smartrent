@@ -16,7 +16,7 @@
     <div class="form-group">
       <%= f.label :more_home_id, :class => "col-md-4 control-label" %>
       <div class="col-md-7">
-        <%= f.collection_select :more_home_id, Smartrent::MoreHome.all, :id, :name, {:include_blank => "--Select Home--"}, {:class => "form-control"} %>
+        <%= f.collection_select :more_home_id, Smartrent::MoreHome.order("name asc").all, :id, :name, {:include_blank => "--Select Home--"}, {:class => "form-control"} %>
       </div>
     </div>
     <div class="form-group">

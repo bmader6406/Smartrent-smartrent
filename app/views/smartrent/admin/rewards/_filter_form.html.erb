@@ -5,26 +5,22 @@
       <%= text_field_tag :_id, params[:_id], :class => "form-control", :placeholder => "ID" %>
     </div>
     <div class="form-group">
-      <%= select_tag :property_id, options_for_select(Smartrent::Reward.properties.collect{|p| [p.name, p.id]}, params[:property_id]), {:include_blank => "--Select Property--", :class => "form-control"}%>
+      <%= text_field_tag :resident_id, params[:resident_id], :class => "form-control", :placeholder => "Resident ID" %>
     </div>
     <div class="form-group">
-      <%= select_tag :resident_id, options_for_select(Smartrent::Reward.residents.collect{|r| [r.email, r.id]}, params[:resident_id]), {:include_blank => "--Select Resident--", :class => "form-control"}%>
+      <%= select_tag :property_id, options_for_select(Property.smartrent.order("name asc").all.collect{|p| [p.name, p.id]}, params[:property_id]), {:include_blank => "--Select Property--", :class => "form-control"}%>
     </div>
     <div class="form-group">
       <%= select_tag :type_, options_for_select(Smartrent::Reward.types.collect{|key,value| [value, key]}, params[:type_]), {:include_blank => "--Select Type--", :class => "form-control"}%>
     </div>
     <% if false %>
       <div class="form-group">
-        <%#= label_tag "", "Period Start", :class => "col-md-4 control-label" %>
-        <div class="col-md-3">
-          <%#= date_select "", :period_start, :selected => params[:period_start], include_blank: true, :class => "form-control" %>
-        </div>
+        <%= label_tag "", "Period Start", :class => "col-md-4 control-label" %>
+        <%= date_select "", :period_start, :selected => params[:period_start], include_blank: true, :class => "form-control" %>
       </div>
       <div class="form-group">
-        <%#= label_tag "", "Period End", :class => "col-md-4 control-label" %>
-        <div class="col-md-3">
-          <%#= date_select "", :period_end, :selected => params[:period_end], include_blank: true, :class => "form-control" %>
-        </div>
+        <%= label_tag "", "Period End", :class => "col-md-4 control-label" %>
+        <%= date_select "", :period_end, :selected => params[:period_end], include_blank: true, :class => "form-control" %>
       </div>
     <% end %>
     
