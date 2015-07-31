@@ -25,7 +25,7 @@ module Smartrent
       "Active"
     end
     def self.SMARTRENT_STATUS_INACTIVE
-      "InActive"
+      "Inactive"
     end
     def self.SMARTRENT_STATUS_EXPIRED
       "Expired"
@@ -66,6 +66,33 @@ module Smartrent
       resident_properties.order("move_in_date desc").first.move_out_date
     end
     
+    # share crm info
+    def name
+      crm_resident.full_name
+    end
+    
+    def address
+      crm_resident.street
+    end
+    
+    def city
+      crm_resident.city
+    end
+    
+    def state
+      crm_resident.state
+    end
+    
+    def zip
+      crm_resident.zip
+    end
+    
+    def email
+      crm_resident.email
+    end
+    
+    ###
+    
     def update_password(attributes)
       if self.valid_password?(attributes[:current_password])
         attributes.delete(:current_password)
@@ -80,9 +107,9 @@ module Smartrent
     end
     
     def current_community
-      rp = resident_properties.detect{|p| p.status == "Current" }
-      if rp
-        rp.name
+      rp = resident_properties.includes(:property).detect{|p| p.status == "Current" }
+      if rp && rp.property
+        rp.property.name
       else
         "N/A"
       end
@@ -103,10 +130,10 @@ module Smartrent
         monthly_amount = 0
       else
         monthly_amount = self.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).sum(:amount).to_f
-        if (sign_up_bonus + initial_reward + monthly_amount - champion_amount) > 10000
-          monthly_amount = monthly_amount - (sign_up_bonus + initial_reward - champion_amount)
-          monthly_amount > 0 ? monthly_amount : 0
-        end
+        # if (sign_up_bonus + initial_reward + monthly_amount - champion_amount) > 10000
+        #   monthly_amount = monthly_amount - (sign_up_bonus + initial_reward - champion_amount)
+        #   monthly_amount > 0 ? monthly_amount : 0
+        # end
       end
       monthly_amount
     end
@@ -117,10 +144,13 @@ module Smartrent
 
     def total_rewards
       if smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
-        0
+        total = 0
       else
-        sign_up_bonus + initial_reward + monthly_awards_amount - champion_amount
+        total = sign_up_bonus + initial_reward + monthly_awards_amount - champion_amount
+        total = 10000 if total > 10000
       end
+      
+      total
     end
 
     def balance

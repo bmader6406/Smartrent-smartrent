@@ -44,11 +44,25 @@ module Smartrent
         
         rewards = resident.rewards.all
         
+        if move_out_date.blank? || move_out_date && move_out_date > Time.now
+          move_in_diff = (Time.now.difference_in_months(move_in_date) - 1) rescue 0
+          
+        else
+          move_in_diff = (move_out_date.difference_in_months(move_in_date) - 1) rescue 0
+        end
+        
+        initial_amount = 0
+        
+        if property.status.to_s.include?(Property.STATUS_CURRENT) && move_in_diff >= 1
+          initial_amount = Setting.monthly_award*move_in_diff
+          initial_amount = 10000 if initial_amount > 10000
+        end
+        
         if !rewards.detect{|r| r.type_ == Reward.TYPE_INITIAL_REWARD }
           Reward.create!({
             :property_id => property.id, 
             :resident_id => resident.id, 
-            :amount => 0, 
+            :amount => initial_amount, 
             :type_ => Reward.TYPE_INITIAL_REWARD, 
             :period_start => creation_date
           })
@@ -64,31 +78,6 @@ module Smartrent
           })
         end
         
-        # create monthly rewards
-        if move_out_date.blank? || move_out_date && move_out_date > Time.now
-          move_in_diff = (Time.now.difference_in_months(move_in_date) - 1) rescue 0
-          
-        else
-          move_in_diff = (move_out_date.difference_in_months(move_in_date) - 1) rescue 0
-        end
-        
-        if property.status.to_s.include?(Property.STATUS_CURRENT) && move_in_diff >= 1
-          (1..move_in_diff).each do |month|
-            period_start = move_in_date.to_time.advance(:months => month).to_date
-            
-            if !rewards.detect{|r| r.type_ == Reward.TYPE_MONTHLY_AWARDS && r.property_id ==  property.id && r.period_start == period_start.beginning_of_month }
-              Reward.create!({
-                :property_id => property.id, 
-                :resident_id => resident.id, 
-                :amount => Setting.monthly_award, 
-                :type_ => Reward.TYPE_MONTHLY_AWARDS, 
-                :period_start => period_start.beginning_of_month, 
-                :period_end => period_start.end_of_month
-              })
-            end
-          end
-        end
-      
       end
       
   end

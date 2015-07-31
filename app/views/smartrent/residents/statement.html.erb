@@ -38,14 +38,12 @@
 
     <div class="community">
       <%= @resident.current_community %><br>
-      <br>
-      ,<br>
     </div>
 
     <h3>Monthly Awards Amount</h3>
 
     <div class="v">
-      <%= @resident.monthly_awards_amount %>
+      <%= number_to_currency @resident.monthly_awards_amount, :precision => 0 %>
     </div>
 
     <h3>Months Earned</h3>
@@ -57,7 +55,7 @@
     <h3>Total Earned</h3>
 
     <div class="v">
-      <%= @resident.total_rewards %>
+      <%= number_to_currency @resident.total_rewards, :precision => 0 %>
     </div>
 
     <h3>Sign-Up Bonus</h3>
