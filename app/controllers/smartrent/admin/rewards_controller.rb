@@ -7,13 +7,9 @@ module Smartrent
     #
     before_action :set_reward
     
-    before_action do
-      @active = "rewards"
-    end
-    
     def index
       filter_rewards
-      @search = params[:search]
+      
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @rewards }

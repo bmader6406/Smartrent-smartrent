@@ -7,8 +7,10 @@
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
-      <%= link_to 'Import More Homes', import_admin_more_homes_path, :class => "btn btn-default", :style => "display:none" %>
-      <%= link_to 'New More Home', new_admin_more_home_path, :class => "btn btn-primary" %>
+      <% if current_user.is_admin? %>
+        <%= link_to 'Import More Homes', import_admin_more_homes_path, :class => "btn btn-default", :style => "display:none" %>
+        <%= link_to 'New More Home', new_admin_more_home_path, :class => "btn btn-primary" %>
+      <% end %>
     </div>
     <h3>Listing More Homes</h3>
 
@@ -31,7 +33,13 @@
             <td><%= more_home.sq_ft %></td>
             <td><%= more_home.featured %></td>
             <td><%= more_home.home.title %></td>
-            <td><%= link_to 'Show', admin_more_home_path(more_home) %> | <%= link_to 'Edit', edit_admin_more_home_path(more_home) %> | <%= link_to 'Delete', admin_more_home_path(more_home), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td>
+              <%= link_to 'Show', admin_more_home_path(more_home) %>
+              <% if current_user.is_admin? %> | 
+                <%= link_to 'Edit', edit_admin_more_home_path(more_home) %> | 
+                <%= link_to 'Delete', admin_more_home_path(more_home), method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </table>
@@ -39,7 +47,7 @@
         <%= page_entries_info @more_homes %>
         <%= page_navigation_links @more_homes %>
       </div>
-    <% elsif @search == "1" %>
+    <% elsif params[:search] == "1" %>
       <div class="alert alert-warning">No more_homes found</div>
     <% else %>
       <div class="alert alert-warning">No more_homes have been added yet.</div>

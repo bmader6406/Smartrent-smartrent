@@ -4,11 +4,9 @@ module Smartrent
   class Admin::FloorPlanImagesController < Admin::AdminController
     # GET /floor_plan_images
     # GET /floor_plan_images.json
-    before_filter :authenticate_admin!, :only => [:import, :import_page]
+    before_action :require_admin, :only => [:import, :import_page]
     before_action :set_floor_plan_image
-    before_action do
-      @active = "homes"
-    end
+
     def index
       @floor_plan_images = FloorPlanImage.paginate(:page => params[:page], :per_page => 15)
       respond_to do |format|

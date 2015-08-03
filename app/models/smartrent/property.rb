@@ -9,15 +9,21 @@ module Smartrent
     def self.STATUS_ACTIVE
       "Active"
     end
+    
     def self.STATUS_INACTIVE
-      "InActive"
+      "Inactive"
     end
+    
     def self.STATUS_CURRENT
       "Current"
     end
 
     def self.statuses
-      {"Active" => self.STATUS_ACTIVE, "InActive" => self.STATUS_INACTIVE, "Current" => self.STATUS_CURRENT}
+      {
+        "Active" => self.STATUS_ACTIVE,
+        "Inactive" => self.STATUS_INACTIVE,
+        "Current" => self.STATUS_CURRENT
+      }
     end
     
     def self.custom_ransack(q)

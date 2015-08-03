@@ -7,8 +7,10 @@
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
-      <%= link_to 'Import Floor Plan Images', import_admin_floor_plan_images_path, :class => "btn btn-default", :style => "display:none" %>
-      <%= link_to 'New Floor Plan Image', new_admin_floor_plan_image_path, :class => "btn btn-primary" %>
+      <% if current_user.is_admin? %>
+        <%= link_to 'Import Floor Plan Images', import_admin_floor_plan_images_path, :class => "btn btn-default", :style => "display:none" %>
+        <%= link_to 'New Floor Plan Image', new_admin_floor_plan_image_path, :class => "btn btn-primary" %>
+      <% end %>
     </div>
     <h3>Listing Floor Plan Images</h3>
 
@@ -26,7 +28,13 @@
             <td><%= image_tag floor_plan_image.image, :width => 50 %></td>
             <td><%= floor_plan_image.caption %></td>
             <td><%= floor_plan_image.more_home.name %></td>
-            <td><%= link_to 'Show', admin_floor_plan_image_path(floor_plan_image) %> | <%= link_to 'Edit', edit_admin_floor_plan_image_path(floor_plan_image) %> | <%= link_to 'Delete', admin_floor_plan_image_path(floor_plan_image), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td>
+              <%= link_to 'Show', admin_floor_plan_image_path(floor_plan_image) %> 
+              <% if current_user.is_admin? %> | 
+                <%= link_to 'Edit', edit_admin_floor_plan_image_path(floor_plan_image) %> | 
+                <%= link_to 'Delete', admin_floor_plan_image_path(floor_plan_image), method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </table>
@@ -34,7 +42,7 @@
         <%= page_entries_info @floor_plan_images %>
         <%= page_navigation_links @floor_plan_images %>
       </div>
-    <% elsif @search == "1" %>
+    <% elsif params[:search] == "1" %>
       <div class="alert alert-warning">No floor_plan_images found</div>
     <% else %>
       <div class="alert alert-warning">No floor_plan_images have been added yet.</div>

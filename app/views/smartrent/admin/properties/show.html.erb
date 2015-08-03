@@ -98,8 +98,9 @@
       <%= @property.status %>
     </p>
 
-
-    <%= link_to 'Edit', edit_admin_property_path(@property) %> |
+    <% if current_user.is_admin? %>
+      <%= link_to 'Edit', edit_admin_property_path(@property) %> |
+    <% end %>
     <%= link_to 'Back', admin_properties_path %>
   </div>
 <% end %>

@@ -2,18 +2,13 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::FloorPlansController < Admin::AdminController
-    before_filter :authenticate_admin!, :only => [:import, :import_page]
+    before_action :require_admin, :only => [:import, :import_page]
     before_action :set_floor_plan
-    before_action do
-      @active = "properties"
-    end
 
     # GET /admin/floor_plans
     # GET /admin/floor_plans.json
     def index
-      #@admin_floor_plans = FloorPlan.paginate(:page => params[:page], :per_page => 15)
       filter_floor_plans
-      @search = params[:search]
   
       respond_to do |format|
         format.html # index.html.erb

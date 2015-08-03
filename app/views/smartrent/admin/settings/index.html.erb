@@ -5,7 +5,9 @@
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
-      <%= link_to 'New Setting', new_admin_setting_path, :class => "btn btn-primary" %>
+      <% if current_user.is_admin? %>
+        <%= link_to 'New Setting', new_admin_setting_path, :class => "btn btn-primary" %>
+      <% end %>
     </div>
     <h3>Listing Settings</h3>
     <% if @settings.present? %>
@@ -20,9 +22,11 @@
             <td><%= setting.key.humanize %></td>
             <td><%= setting.value %></td>
             <td>
-              <%= link_to 'Show', admin_setting_path(setting) %> | 
-              <%= link_to 'Edit', edit_admin_setting_path(setting) %> | 
-              <%= link_to 'Delete', admin_setting_path(setting), method: :delete, data: { confirm: 'Are you sure?' } %>
+              <%= link_to 'Show', admin_setting_path(setting) %>
+              <% if current_user.is_admin? %> | 
+                <%= link_to 'Edit', edit_admin_setting_path(setting) %> | 
+                <%= link_to 'Delete', admin_setting_path(setting), method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% end %>
             </td>
           </tr>
         <% end %>
@@ -32,7 +36,7 @@
         <%= page_navigation_links @settings %>
       </div>
       
-    <% elsif @search == "1" %>
+    <% elsif params[:search] == "1" %>
       <div class="alert alert-warning">No Settings found</div>
       
     <% else %>

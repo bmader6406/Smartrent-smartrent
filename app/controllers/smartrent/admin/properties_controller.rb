@@ -2,17 +2,14 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::PropertiesController < Admin::AdminController
-    before_filter :authenticate_admin!, :only => [:import, :import_page]
+    before_action :require_admin, :only => [:import, :import_page]
     before_action :set_property, :except => [:index]
-    before_action do 
-      @active = "properties"
-    end
+
     # GET /properties
     # GET /properties.json
     def index
       authorize! :read, ::Property
-      @properties = filter_properties#paginate(:page => params[:page], :per_page => 15)
-      @search = params[:search]
+      @properties = filter_properties
   
       respond_to do |format|
         format.html # index.html.erb
@@ -85,7 +82,6 @@ module Smartrent
       end
     end
     def import_page
-      @active = "properties"
       render :import
     end
     def import

@@ -2,17 +2,14 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::FeaturesController < Admin::AdminController
-    before_filter :authenticate_admin!, :only => [:import, :import_page]
+    before_action :require_admin, :only => [:import, :import_page]
     before_action :set_feature
-    before_action do
-      @active = "properties"
-    end
+
     # GET /admin/features
     # GET /admin/features.json
     def index
-      #@admin_features = Feature.paginate(:page => params[:page], :per_page => 15)
       filter_features
-      @search = params[:search]
+      
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @admin_features }

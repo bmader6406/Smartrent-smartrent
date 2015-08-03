@@ -2,12 +2,8 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::SettingsController < Admin::AdminController
-    # GET /settings
-    # GET /settings.json
-    before_action do
-      @active = "settings"
-    end
     before_action :set_setting
+    
     def index
       @settings = Setting.paginate(:page => params[:page], :per_page => 15)
   

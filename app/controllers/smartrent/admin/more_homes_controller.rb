@@ -5,11 +5,10 @@ module Smartrent
     # GET /admin/more_more_homes
     # GET /admin/more_more_homes.json
     #
-    before_filter :authenticate_admin!, :only => [:import, :import_page]
-    before_action do
-      @active = "homes"
-    end
+    before_action :require_admin, :only => [:import, :import_page]
+
     before_action :set_more_home
+    
     def index
       @more_homes = MoreHome.paginate(:page => params[:page], :per_page => 15).order(:created_at)
   

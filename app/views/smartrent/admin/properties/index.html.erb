@@ -5,8 +5,10 @@
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
-      <%= link_to 'Import Properties', import_admin_properties_path, :class => "btn btn-default", :style => "display:none" %>
-      <%= link_to 'New Property', new_admin_property_path, :class => "btn btn-primary" %>
+      <% if current_user.is_admin? %>
+        <%= link_to 'Import Properties', import_admin_properties_path, :class => "btn btn-default", :style => "display:none" %>
+        <%= link_to 'New Property', new_admin_property_path, :class => "btn btn-primary" %>
+      <% end %>
     </div>
     <h3>Listing Properties</h3>
 
@@ -25,9 +27,11 @@
           <td><%= link_to truncate(property.website_url, :length => 35), property.website_url, :target => "_blank" %></td>
           <td>
             <%= link_to 'Residents', main_app.property_residents_path(property) %> |
-            <%= link_to 'Show', admin_property_path(property) %> | 
-            <%= link_to 'Edit', edit_admin_property_path(property) %> | 
-            <%= link_to 'Delete', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %>
+            <%= link_to 'Show', admin_property_path(property) %> 
+            <% if current_user.is_admin? %> | 
+              <%= link_to 'Edit', edit_admin_property_path(property) %> | 
+              <%= link_to 'Delete', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %>
+            <% end %>
           </td>
         </tr>
       <% end %>
@@ -36,7 +40,7 @@
         <%= page_entries_info @properties %>
         <%= page_navigation_links @properties %>
       </div>
-    <% elsif @search == "1" %>
+    <% elsif params[:search] == "1" %>
       <div class="alert alert-warning">No Properties found</div>
     <% else %>
       <div class="alert alert-warning">No Properties have been added yet.</div>

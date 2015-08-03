@@ -14,8 +14,9 @@
       <%= @floor_plan_image.more_home.name %>
     </p>
 
-
-    <%= link_to 'Edit', edit_admin_floor_plan_image_path(@floor_plan_image) %> |
+    <% if current_user.is_admin? %>
+      <%= link_to 'Edit', edit_admin_floor_plan_image_path(@floor_plan_image) %> |
+    <% end %>
     <%= link_to 'Back', admin_floor_plan_images_path %>
   </div>
 <% end %>

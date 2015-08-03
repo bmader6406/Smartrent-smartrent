@@ -5,8 +5,10 @@
 <% content_for(:ui_center) do %>
   <div class="listing">
     <div class="links pull-right">
-      <%= link_to 'Import Floor Plans', import_admin_floor_plans_path, :class => "btn btn-default", :style => "display:none" %>
-      <%= link_to 'New Floor Plan', new_admin_floor_plan_path, :class => "btn btn-primary" %>
+      <% if current_user.is_admin? %>
+        <%= link_to 'Import Floor Plans', import_admin_floor_plans_path, :class => "btn btn-default", :style => "display:none" %>
+        <%= link_to 'New Floor Plan', new_admin_floor_plan_path, :class => "btn btn-primary" %>
+      <% end %>
     </div>
     <h3>Listing Floor Plan</h3>
 
@@ -40,7 +42,13 @@
             <td><%= admin_floor_plan.rent_min %></td>
             <td><%= admin_floor_plan.rent_max %></td>
             <td><%= admin_floor_plan.penthouse %></td>
-            <td><%= link_to 'Show', admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Edit', edit_admin_floor_plan_path(admin_floor_plan) %> | <%= link_to 'Delete', admin_floor_plan_path(admin_floor_plan), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td>
+              <%= link_to 'Show', admin_floor_plan_path(admin_floor_plan) %>
+              <% if current_user.is_admin? %> | 
+                <%= link_to 'Edit', edit_admin_floor_plan_path(admin_floor_plan) %> | 
+                <%= link_to 'Delete', admin_floor_plan_path(admin_floor_plan), method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </table>
@@ -48,7 +56,7 @@
         <%= page_entries_info @admin_floor_plans %>
         <%= page_navigation_links @admin_floor_plans %>
       </div>
-    <% elsif @search == "1" %>
+    <% elsif params[:search] == "1" %>
       <div class="alert alert-warning">No admin_floor_plans found</div>
     <% else %>
       <div class="alert alert-warning">No admin_floor_plans have been added yet.</div>

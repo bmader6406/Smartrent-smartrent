@@ -4,17 +4,12 @@ module Smartrent
   class Admin::HomesController < Admin::AdminController
     # GET /homes
     # GET /homes.json
-    before_filter :authenticate_admin!
+    before_action :require_admin
     before_action :set_home
-    before_action do
-      @active = "homes"
-    end
 
     def index
-      #@homes = Home.paginate(:page => params[:page], :per_page => 10)
       filter_homes
-      @search = params[:search]
-  
+      
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @homes }
