@@ -82,7 +82,7 @@ module Smartrent
     private
     
       def admin_feature_params
-        params.require(:admin_feature).permit!
+        params.require(:feature).permit!
       end
 
       def set_feature

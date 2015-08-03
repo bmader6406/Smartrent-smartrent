@@ -1,34 +1,45 @@
-<p>
-  <b>Name:</b>
-  <%= @more_home.name %>
-</p>
+<% content_for(:ui_center) do %>
+  <div class="main">
+    <p>
+      <b>Name:</b>
+      <%= @more_home.name %>
+    </p>
 
-<p>
-  <b>Beds:</b>
-  <%= @more_home.beds %>
-</p>
+    <p>
+      <b>Beds:</b>
+      <%= @more_home.beds %>
+    </p>
 
-<p>
-  <b>Baths:</b>
-  <%= @more_home.baths %>
-</p>
+    <p>
+      <b>Baths:</b>
+      <%= @more_home.baths %>
+    </p>
 
-<p>
-  <b>Sq ft:</b>
-  <%= @more_home.sq_ft %>
-</p>
+    <p>
+      <b>Sq ft:</b>
+      <%= @more_home.sq_ft %>
+    </p>
 
-<p>
-  <b>Featured:</b>
-  <%= @more_home.featured %>
-</p>
+    <p>
+      <b>Featured:</b>
+      <%= @more_home.featured %>
+    </p>
 
-<p>
-  <b>Home:</b>
-  <%= @more_home.home.title %>
-</p>
+    <p>
+      <b>Home:</b>
+      <%= @more_home.home.title %>
+    </p>
 
-<% if current_user.is_admin? %>
-  <%= link_to 'Edit', edit_admin_more_home_path(@more_home) %> |
+    <% if current_user.is_admin? %>
+      <%= link_to 'Edit', edit_admin_more_home_path(@more_home) %> |
+    <% end %>
+    <%= link_to 'Back', admin_more_homes_path %>
+  </div>
 <% end %>
-<%= link_to 'Back', admin_more_homes_path %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+  });
+</script>

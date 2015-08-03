@@ -28,6 +28,8 @@ module Smartrent
     # GET /admin/floor_plans/new
     # GET /admin/floor_plans/new.json
     def new
+      @admin_floor_plan = FloorPlan.new
+      
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @admin_floor_plan }
@@ -114,9 +116,19 @@ module Smartrent
             when "_id"
               arr << "id = :id"
               hash[:id] = "#{params[k]}"
-            when "sq_feet_max", "sq_feet_min", "beds", "baths", "rent_min", "rent_max", "origin_id"
+              
+            when "sq_feet_max", "sq_feet_min", "beds", "baths", "origin_id"
               arr << "#{k} = :#{k}"
               hash[k.to_sym] = "#{params[k]}"
+              
+            when "rent_min"
+              arr << "#{k} >= :#{k}"
+              hash[k.to_sym] = "#{params[k]}"
+              
+            when "rent_max"
+              arr << "#{k} <= :#{k}"
+              hash[k.to_sym] = "#{params[k]}"
+
             when "penthouse"
               value = params[k] == "true" ? true : false
               arr << "#{k} = :#{k}"

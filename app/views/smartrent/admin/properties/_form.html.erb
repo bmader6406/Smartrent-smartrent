@@ -9,26 +9,6 @@
         </div>
       </div>
     </div>
-    <% if current_user.has_role? :admin, Property %>
-      <div class="field">
-        <div class="form-group">
-          <%= f.label :is_smartrent, :class => "col-md-4 control-label" %>
-          <div class="col-md-7">
-            <%= f.check_box :is_smartrent %>
-          </div>
-        </div>
-      </div>
-      <% if false %> <!-- property always visible in CRM -->
-        <div class="field">
-          <div class="form-group">
-            <%= f.label :is_crm, :class => "col-md-4 control-label" %>
-            <div class="col-md-7">
-              <%= f.check_box :is_crm %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    <% end %>
     <div class="field">
       <div class="form-group">
         <%= f.label :phone, :class => "col-md-4 control-label" %>
@@ -55,17 +35,17 @@
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :state, :class => "col-md-4 control-label" %>
+        <%= f.label :address_line1, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :state, :class => "form-control" %>
+          <%= f.text_field :address_line1, :class => "form-control" %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :county, :class => "col-md-4 control-label" %>
+        <%= f.label :address_line2, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :county, :class => "form-control" %>
+          <%= f.text_field :address_line2, :class => "form-control" %>
         </div>
       </div>
     </div>
@@ -79,17 +59,25 @@
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :address_line1, :class => "col-md-4 control-label" %>
+        <%= f.label :state, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :address_line1, :class => "form-control" %>
+          <%= f.select :state, US_STATES.keys.sort.collect{|k| [US_STATES[k], k]}, {:include_blank => "--Select State"}, {:class => "form-control"} %>
         </div>
       </div>
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :address_line2, :class => "col-md-4 control-label" %>
+        <%= f.label :county, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :address_line2, :class => "form-control" %>
+          <%= f.text_field :county, :class => "form-control" %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :zip, :class => "col-md-4 control-label" %>
+        <div class="col-md-7">
+          <%= f.text_field :zip, :class => "form-control" %>
         </div>
       </div>
     </div>
@@ -112,8 +100,7 @@
     <div class="form-group">
       <%= f.label :status, :class => "col-md-4 control-label" %>
       <div class="col-md-7">
-        <%= f.text_field :status, :class => "form-control" %>
-        <%#= f.select :status, Smartrent::Property.statuses.collect{|key,value| [value, key]}, {:include_blank => "--Select Status"}, {:class => "form-control"} %>
+        <%= f.select :status, Smartrent::Property.statuses.collect{|key,value| [value, key]}, {:include_blank => "--Select Status"}, {:class => "form-control"} %>
       </div>
     </div>
     <div class="field">
@@ -158,14 +145,6 @@
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :origin_id, :class => "col-md-4 control-label" %>
-        <div class="col-md-7">
-          <%= f.number_field :origin_id, :class => "form-control" %>
-        </div>
-      </div>
-    </div>
-    <div class="field">
-      <div class="form-group">
         <%= f.label :bozzuto_url, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
           <%= f.url_field :bozzuto_url, :class => "form-control" %>
@@ -184,7 +163,7 @@
       <div class="form-group">
         <%= f.label :promotion_title, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.url_field :promotion_title, :class => "form-control" %>
+          <%= f.text_field :promotion_title, :class => "form-control" %>
         </div>
       </div>
     </div>
@@ -198,7 +177,7 @@
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :promotion_subtitle, :class => "col-md-4 control-label" %>
+        <%= f.label :promotion_url, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
           <%= f.url_field :promotion_url, :class => "form-control" %>
         </div>
@@ -209,14 +188,6 @@
         <%= f.label :promotion_expiration_date, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
           <%= f.date_select :promotion_expiration_date, :class => "form-control" %>
-        </div>
-      </div>
-    </div>
-    <div class="field">
-      <div class="form-group">
-        <%= f.label :zip, :class => "col-md-4 control-label" %>
-        <div class="col-md-7">
-          <%= f.text_field :zip, :class => "form-control" %>
         </div>
       </div>
     </div>

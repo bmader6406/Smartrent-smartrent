@@ -49,7 +49,7 @@ module Smartrent
       @more_home = MoreHome.new(more_home_params)
       respond_to do |format|
         if @more_home.save
-          format.html { redirect_to [:admin, @more_home], notice: 'MoreHome was successfully created.' }
+          format.html { redirect_to [:admin, @more_home], notice: 'More Home was successfully created.' }
           format.json { render json: @more_home, status: :created, location: @more_home }
         else
           format.html { render action: "new" }
@@ -61,9 +61,10 @@ module Smartrent
     # PUT /admin/more_more_homes/1
     # PUT /admin/more_more_homes/1.json
     def update
+      pp "more_home_params:", more_home_params
       respond_to do |format|
         if @more_home.update_attributes(more_home_params)
-          format.html { redirect_to admin_more_home_path(@more_home), notice: 'MoreHome was successfully updated.' }
+          format.html { redirect_to admin_more_home_path(@more_home), notice: 'More Home was successfully updated.' }
           format.json { head :no_content }
           format.js {}
         else

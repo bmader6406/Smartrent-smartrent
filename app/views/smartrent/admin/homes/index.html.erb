@@ -24,7 +24,7 @@
           <tr>
             <td><%= home.title %></td>
             <td><%= home.home_page_desc %></td>
-            <td><%= link_to(home.url, home.url, :target => "_blank") if home.url  %></td>
+            <td><%= link_to(home.url, home_path(home), :target => "_blank") if home.url  %></td>
             <td>
               <%= link_to 'Show', admin_home_path(home) %>
               <% if current_user.is_admin? %> | 

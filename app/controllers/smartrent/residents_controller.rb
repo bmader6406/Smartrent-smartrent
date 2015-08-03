@@ -43,6 +43,5 @@ module Smartrent
         @resident = current_resident if current_resident
       end
       
-      
   end
 end

@@ -6,6 +6,8 @@ module Smartrent
     has_many :resident_properties
     has_many :residents, :through => :resident_properties
     
+    before_create :set_smartrent
+    
     def self.STATUS_ACTIVE
       "Active"
     end
@@ -143,6 +145,11 @@ module Smartrent
       end
       prices
     end
+    
+    private
+      def set_smartrent
+        self.is_smartrent = true
+      end
 
   end
 end

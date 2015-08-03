@@ -54,10 +54,15 @@
         <%= f.label :floor_plan_images, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
           <%= f.fields_for :floor_plan_images do |builder| %>
-            <div class="col-md-12">
-              <%= builder.file_field :image, :class => "col-md-12 control-label" %>
+            <div>
+              <%= builder.file_field :image, :class => "control-label" %>
               <%= builder.check_box :_destroy %>
-              <%= builder.label :_destroy, "Remove Image", :class => "col-md-5 control-label" %>
+              <%= builder.label :_destroy, "Remove Image", :class => "control-label" %>
+              
+              <% if builder.object.image && builder.object.image.url %>
+                <br><img src="<%= builder.object.image.url %>" width="100px" />
+              <% end %>
+              <hr/>
             </div>
           <% end %>
         </div>
