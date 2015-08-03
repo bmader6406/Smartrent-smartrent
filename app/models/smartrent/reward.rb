@@ -2,10 +2,10 @@ module Smartrent
   class Reward < ActiveRecord::Base
     belongs_to :resident
     belongs_to :property
-    
+
     validates :amount, :resident_id, :type_, :period_start, :presence => true
     validates_numericality_of :amount , :greater_than_equal_to => 0
-    
+
     validate :period_start_greater_than_period_end
     validate :valid_type
 
@@ -17,10 +17,10 @@ module Smartrent
 
     def valid_type
       if !type_.nil? 
-        errors[:type_] << "is invalid" if type_.to_i < 0 or type_.to_i > 3
+        errors[:type_] << "is invalid" if type_.to_i < 0 or type_.to_i > 4
       end
     end
-    
+
     def self.TYPE_INITIAL_REWARD
       0
     end
@@ -33,12 +33,16 @@ module Smartrent
     def self.TYPE_CHAMPION
       3
     end
+    def self.TYPE_CHAMPION
+      3
+    end
+
 
     def self.types
       {
         self.TYPE_INITIAL_REWARD => "Initial Balance",
-        self.TYPE_SIGNUP_BONUS => "Sign Up", 
-        self.TYPE_MONTHLY_AWARDS => "Monthly Awards", 
+        self.TYPE_SIGNUP_BONUS => "Sign Up",
+        self.TYPE_MONTHLY_AWARDS => "Monthly Awards",
         self.TYPE_CHAMPION => "Champion"
       }
     end

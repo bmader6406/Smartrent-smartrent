@@ -147,7 +147,7 @@ module Smartrent
         total = sign_up_bonus + initial_reward + monthly_awards_amount - champion_amount
         total = 10000 if total > 10000
       end
-      
+
       total
     end
 
@@ -170,8 +170,8 @@ module Smartrent
       #   end
       # end
       # months
-      
-      rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).count
+      total_months = rewards.find_by_type_(Reward.TYPE_INITIAL_REWARD).first.months_earned rescue 0
+      total_months += rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).count
     end
 
     private
