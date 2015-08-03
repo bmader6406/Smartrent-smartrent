@@ -1,1 +1,1 @@
-ActionMailer::Base.default_url_options = {:host => "http://#{HOST}"}
+ActionMailer::Base.default_url_options = {:host => "http://#{SR_HOST}"}

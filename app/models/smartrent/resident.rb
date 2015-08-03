@@ -55,7 +55,7 @@ module Smartrent
     end
     
     def crm_resident
-      @crm_resident ||= ::Resident::where(:id => crm_resident_id).first
+      @crm_resident ||= ::Resident::where(:_id => crm_resident_id).first
     end
     
     def move_in_date
@@ -87,9 +87,7 @@ module Smartrent
       crm_resident.zip
     end
     
-    def email
-      crm_resident.email
-    end
+    # don't define "def email"
     
     ###
     

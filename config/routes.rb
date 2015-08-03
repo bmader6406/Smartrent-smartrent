@@ -74,6 +74,7 @@ Smartrent::Engine.routes.draw do
     collection do
       get "change_password"
       put "update_password"
+      patch "update_password"
     end
   end
 
