@@ -81,6 +81,7 @@ module Smartrent
           states[state]["total"] +=1
         end
         states
+        states.sort{|a,b| a[0].downcase <=> b[0].downcase}
       end
 
   end

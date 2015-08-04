@@ -31,7 +31,7 @@ module Smartrent
     def self.custom_ransack(q)
       if q
         q.delete_if {|key, value|
-          [ "studio_true", "maximum_price", "minimum_price", 
+          [ "maximum_price", "minimum_price", 
             "where_one_bed", "where_two_bed", "where_three_more_bed",
             "where_penthouse", "matches_all_features"].include?(key)
         }
@@ -87,8 +87,6 @@ module Smartrent
     
     def self.where_price(price, properties)
       prices = price.split(",")
-      puts prices
-      puts prices.length
       return properties if prices.length != 2
       minimum_price = prices[0].to_i
       maximum_price = prices[1].to_i
