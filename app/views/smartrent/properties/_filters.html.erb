@@ -34,11 +34,9 @@
       </div>
 
       <div class="searchPrice">
-        <label for="fourbed"></label>
-
         <div class="searchCategory">
           <label for="fourbed">Price</label>
-        </div><label for="fourbed"></label>
+        </div>
 
         <ul>
           <li>
@@ -46,7 +44,7 @@
               <%= select_tag "q[minimum_price]", options_for_select(Smartrent::Property.prices("Choose Minimum..."), "")%>
             </label>
           </li>
-          <li style="list-style: none"><label for="fourbed"></label></li>
+          <li style="list-style: none"></li>
           <li>
             <label for="fourbed">
             <%= select_tag "q[maximum_price]", options_for_select(Smartrent::Property.prices("Choose Maximum..."), "")%>
@@ -57,11 +55,9 @@
       </div>
 
       <div class="searchFeatures modern-checkbox">
-        <label for="fourbed"></label>
-
         <div class="searchCategory">
           <label for="fourbed">Most Searched Features &amp; Amenities</label>
-        </div><label for="fourbed"></label>
+        </div>
 
         <ul>
           <% Smartrent::Feature.all.each do |feature| %>
