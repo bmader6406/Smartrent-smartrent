@@ -40,19 +40,21 @@
             <div class="loginForm">
               <%= form_for(:resident, url: session_path(:resident)) do |f| %>
                 <div class="form-group">
-                  <%= f.email_field :email, autofocus: false , :class => "form-control", :placeholder => "EMAIL (MUST MATCH YOUR LEASE)" %>
+                  <%= f.email_field :email, autofocus: false, :placeholder => "EMAIL (MUST MATCH YOUR LEASE)" %>
                 </div>
                 <div class="form-group">
-                  <%= f.password_field :password, autocomplete: "off", :class => "form-control", :placeholder => "PASSWORD" %>
+                  <%= f.password_field :password, autocomplete: "off", :placeholder => "PASSWORD" %>
                 </div>
 
                 <div class="actions">
-                  <%= f.submit "Go", {:class => "btn btn-primary btn-sm"} %>
+                  <%= f.submit "GO" %>
                 </div>
               <% end %>
-              <%= link_to "Forgot your password?", new_password_path(:resident) %><br />
-              <%= link_to "Activate Your Account", new_unlock_path(:resident) %><br />
+              <div class="links">
+                <%= link_to "Forgot your password?", new_password_path(:resident) %>
+                <%= link_to "Activate Your Account", new_unlock_path(:resident) %>
               </div>
+            </div>
           </div>
         <% else %>
           <div class="title">
