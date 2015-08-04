@@ -8,8 +8,7 @@
       <div class="title">
         Request Password Reset
       </div>
-
-
+      
       <div class="formInputs">
         <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
           <div class="message"><%= devise_error_messages! %></div>
@@ -18,10 +17,10 @@
           </div>
 
           <div class="form-group">
-            <%= f.email_field :email, autofocus: true, :class => "form-control" %>
+            <%= f.email_field :email, autofocus: true %>
           </div>
           <div class="submitButton">
-            <%= f.submit "Request Password Reset", :class => "btn btn-primary" %>
+            <%= f.submit "Request Password Reset" %>
           </div>
         <% end %>
       </div>

@@ -1,16 +1,42 @@
-<h2>Resend confirmation instructions</h2>
-
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= devise_error_messages! %>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
+<div class="member clearfix">
+  <div class="memberLeft">
+    <%= image_tag "login.jpg" %>
   </div>
 
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
-  </div>
-<% end %>
+  <div class="memberRight">
+    <div class="forgotForm clearfix">
+      <div class="formInstructions">
+        <p>
+          You must activate your account prior to logging in using the email address that matches your lease.
+        </p>
+        <p>
+          Enter your email address in the box below
+          Click the "Activate Account" button below to begin the activation process.
+        </p>
+      </div>
+      
+      <div class="formInputs">
+        <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+          <div class="message"><%= devise_error_messages! %></div>
+          <div class="labelText">
+            <%= f.label :email, "Email Address" %>
+          </div>
 
-<%= render "devise/shared/links" %>
+          <div class="form-group">
+            <%= f.email_field :email, autofocus: true %>
+          </div>
+          <div class="submitButton">
+            <%= f.submit "Activate Account" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="formInstructions">
+        <p>
+          An activation email will be sent to your email address. 
+          If you do not receive an email please check your spam folder.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,7 +8,7 @@ module Smartrent
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
     devise :database_authenticatable, :registerable,
-           :recoverable, :rememberable, :trackable, :validatable, :lockable
+           :recoverable, :rememberable, :trackable, :validatable, :lockable, :confirmable
     
     has_many :resident_properties, :dependent => :destroy
     has_many :properties, :through => :resident_properties

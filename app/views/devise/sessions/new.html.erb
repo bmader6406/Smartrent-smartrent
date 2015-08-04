@@ -1,54 +1,56 @@
 <% if resource_name.to_s == "resident" %>
-<div class="member clearfix">
-  <div class="memberLeft">
-    <%= image_tag "smartrent21.jpg" %>
-</div>
-
-  <div class="memberRight">
-    <div class="title">
-      Log-In
+  <div class="member clearfix">
+    <div class="memberLeft">
+      <%= image_tag "smartrent21.jpg" %>
     </div>
 
-    <div class="message"></div>
-
-    <div class="loginForm">
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <%= devise_error_messages! %>
-      <div class="form-group">
-        <%= f.email_field :email, autofocus: true , :class => "form-control"%>
-      </div>
-      <div class="form-group">
-        <%= f.password_field :password, autocomplete: "off", :class => "form-control"  %>
+    <div class="memberRight">
+      <div class="title">
+        Log-In
       </div>
 
-      <div class="actions">
-        <%= f.submit "Go", {:class => "btn btn-primary btn-sm"} %>
-      </div>
-    <% end %>
-    </div>
-    <div class="formInstructions">
-      <p>First time users will need to activate their account.<br>
-      Enter your email address above and click the Go button.</p>
-    </div>
+      <div class="message"></div>
 
+      <div class="loginForm">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <div class="message"><%= devise_error_messages! %></div>
+        <div class="form-group">
+          <%= f.email_field :email, autofocus: true, :placeholder => "EMAIL" %>
+        </div>
+        <div class="form-group">
+          <%= f.password_field :password, autocomplete: "off", :placeholder => "PASSWORD"  %>
+        </div>
+
+        <div class="actions">
+          <%= f.submit "GO" %>
+        </div>
+      <% end %>
+      </div>
+      <div class="formInstructions">
+        <p>
+          First time users will need to activate their account.<br>
+          <%= link_to "Click here", new_confirmation_path(:resident) %> to activate
+        </p>
+      </div>
       <%= render "devise/shared/links" %>
+    </div>
   </div>
-</div>
+  
 <% else %>
-    <div class="loginForm">
+  <div class="loginForm">
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <%= devise_error_messages! %>
+      <div class="message"><%= devise_error_messages! %></div>
       <div class="form-group">
-        <%= f.email_field :email, autofocus: true , :class => "form-control"%>
+        <%= f.email_field :email, autofocus: true, :placeholder => "EMAIL" %>
       </div>
       <div class="form-group">
-        <%= f.password_field :password, autocomplete: "off", :class => "form-control"  %>
+        <%= f.password_field :password, autocomplete: "off", :placeholder => "PASSWORD" %>
       </div>
 
       <div class="actions">
-        <%= f.submit "Go", {:class => "btn btn-primary btn-sm"} %>
+        <%= f.submit "GO" %>
       </div>
     <% end %>
-    </div>
-      <%= render "devise/shared/links" %>
+  </div>
+  <%= render "devise/shared/links" %>
 <% end %>

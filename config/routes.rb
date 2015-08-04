@@ -2,6 +2,8 @@ Smartrent::Engine.routes.draw do
   
   # website content management
   namespace :admin do
+    root :to => "properties#index"
+    
     resources :properties do
       collection do
         get "import", :to => "properties#import_page"
