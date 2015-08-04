@@ -170,8 +170,8 @@ module Smartrent
       #   end
       # end
       # months
-      total_months = rewards.find_by_type_(Reward.TYPE_INITIAL_REWARD).months_earned rescue 0
-      total_months += rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).count
+      #total_months = rewards.find_by_type_(Reward.TYPE_INITIAL_REWARD).months_earned rescue 0
+      rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).count
     end
 
     private
