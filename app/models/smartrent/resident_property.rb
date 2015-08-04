@@ -51,26 +51,16 @@ module Smartrent
           move_in_diff = (move_out_date.difference_in_months(move_in_date)) rescue 0
         end
         
-        #initial_amount = 0
-        #months_earned = 0
+        initial_amount = 0
+        months_earned = 0
         
         if property.status.to_s.include?(Property.STATUS_CURRENT) && move_in_diff >= 1
-          (1..move_in_diff).each do
-            Reward.create!({
-              :property_id => property.id,
-              :resident_id => resident.id,
-              :amount => Setting.monthly_award,
-              :type_ => Reward.TYPE_MONTHLY_AWARDS,
-              :period_start => creation_date,
-            })
-          end
-          #initial_amount = Setting.monthly_award*move_in_diff
-          #months_earned = move_in_diff
-          #initial_amount = 10000 if initial_amount > 10000
+          initial_amount = Setting.monthly_award*move_in_diff
+          months_earned = move_in_diff
+          initial_amount = 10000 if initial_amount > 10000
         end
-
         
-        /#if !rewards.detect{|r| r.type_ == Reward.TYPE_INITIAL_REWARD }
+        if !rewards.detect{|r| r.type_ == Reward.TYPE_INITIAL_REWARD }
           Reward.create!({
             :property_id => property.id,
             :resident_id => resident.id,
@@ -79,7 +69,7 @@ module Smartrent
             :period_start => creation_date,
             :months_earned => months_earned
           })
-          end/
+        end
         
         if !rewards.detect{|r| r.type_ == Reward.TYPE_SIGNUP_BONUS }
           Reward.create!({
