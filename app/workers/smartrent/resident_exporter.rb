@@ -14,20 +14,19 @@ module Smartrent
     
     def self.perform(move_in = nil)
       if move_in
-        batch_name = "monthly_#{move_in.strftime("%m_%Y")}"
+        batch_name = "month_#{move_in.strftime("%m_%Y")}"
       else
         batch_name = "all_#{Time.now.strftime("%m_%d_%Y")}"
       end
       
-      file_name = "smartrent_#{batch_name}.csv"
+      file_name = "residents_#{batch_name}.csv"
+      
       @index = 0
       
       CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
         csv << ["Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"]
         
-        
-        if move_in #export recent active resident
-          
+        if move_in #export recent active resident  
           Smartrent::Resident.joins(:resident_properties).includes(:rewards)
             .where("smartrent_status = ? AND smartrent_resident_properties.move_in_date = ?", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE, move_in.to_date).find_in_batches do |residents|
               add_csv_row(csv, residents, batch_name)
@@ -35,7 +34,7 @@ module Smartrent
           
         else # export all active resident
           Smartrent::Resident.includes(:rewards).where("smartrent_status = ?", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE).find_in_batches do |residents|
-            add_csv_row(csv, residents, batch_name)
+            add_csv_row(csv, residents, "All")
           end
           
         end
@@ -62,7 +61,7 @@ module Smartrent
         pp "index: #{@index}"
         
         r.crm_resident = crm_residents[r.crm_resident_id.to_s]
-        csv << [r.name, r.email, r.total_rewards, r.smartrent_status, batch_name]
+        csv << [r.name, r.email, r.total_rewards.to_i, r.smartrent_status, batch_name]
       end
     end
     
