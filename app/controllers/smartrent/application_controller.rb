@@ -3,6 +3,7 @@ module Smartrent
     # before_action :authenticate_user!
     # protect_from_forgery
     layout :layout_by_resource
+    
     def after_sign_in_path_for(resource)
       if resource_name == :resident
         request.env['omniauth.origin'] || stored_location_for(resource) || smartrent.root_path
@@ -10,6 +11,7 @@ module Smartrent
         request.env['omniauth.origin'] || stored_location_for(resource) || smartrent.admin_root_path
       end
     end
+    
     def require_no_user
       if current_user
         store_location
@@ -19,6 +21,7 @@ module Smartrent
         return false
       end
     end
+    
     def layout_by_resource
       if devise_controller? && resource_name == :admin_user
         "smartrent/admin"
@@ -26,6 +29,7 @@ module Smartrent
         "smartrent/application"
       end
     end
+    
     def after_sign_out_path_for(resource)
       if resource == :resident
         smartrent.root_path
@@ -33,7 +37,6 @@ module Smartrent
         smartrent.admin_root_path
       end
     end
-    protected
 
   end
 end
