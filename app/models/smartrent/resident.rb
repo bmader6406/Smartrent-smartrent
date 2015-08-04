@@ -58,6 +58,11 @@ module Smartrent
       @crm_resident ||= ::Resident::where(:_id => crm_resident_id).first
     end
     
+    # preload
+    def crm_resident=(r)
+      @crm_resident = r
+    end
+    
     def move_in_date
       resident_properties.order("move_in_date desc").first.move_in_date
     end

@@ -1,0 +1,70 @@
+require 'csv'
+require 'net/ftp'
+
+# - Export resident list with total rewards point, upload to hy.ly FTP site
+# - app.hy.ly will check the ftp folder and import the resident list
+
+
+module Smartrent
+  class ResidentExporter
+
+    def self.queue
+      :crm_immediate
+    end
+    
+    def self.perform(move_in = nil)
+      if move_in
+        batch_name = "monthly_#{move_in.strftime("%m_%Y")}"
+      else
+        batch_name = "all_#{Time.now.strftime("%m_%d_%Y")}"
+      end
+      
+      file_name = "smartrent_#{batch_name}.csv"
+      @index = 0
+      
+      CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
+        csv << ["Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"]
+        
+        
+        if move_in #export recent active resident
+          
+          Smartrent::Resident.joins(:resident_properties).includes(:rewards)
+            .where("smartrent_status = ? AND smartrent_resident_properties.move_in_date = ?", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE, move_in.to_date).find_in_batches do |residents|
+              add_csv_row(csv, residents, batch_name)
+          end
+          
+        else # export all active resident
+          Smartrent::Resident.includes(:rewards).where("smartrent_status = ?", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE).find_in_batches do |residents|
+            add_csv_row(csv, residents, batch_name)
+          end
+          
+        end
+      end
+      
+      # upload ftp
+      ftp = Net::FTP.new()
+      ftp.passive = true
+      ftp.connect("ftp.hy.ly")
+      ftp.login("bozzuto", "bozzuto0804")
+      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{file_name}")
+      ftp.close
+    end
+    
+    def self.add_csv_row(csv, residents, batch_name)
+      #"Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"
+      crm_residents = {}
+      ::Resident.where(:_id.in => residents.collect{|r| r.crm_resident_id.to_s }).each do |cr|
+        crm_residents[cr._id] = cr
+      end
+
+      residents.each do |r|
+        @index += 1
+        pp "index: #{@index}"
+        
+        r.crm_resident = crm_residents[r.crm_resident_id.to_s]
+        csv << [r.name, r.email, r.total_rewards, r.smartrent_status, batch_name]
+      end
+    end
+    
+  end
+end

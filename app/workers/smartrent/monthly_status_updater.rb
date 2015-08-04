@@ -8,7 +8,7 @@ module Smartrent
     end
   
     def self.perform(period_start = nil)
-      period_start = (period_start || Time.now).prev_month.beginning_of_month
+      period_start = (period_start || Time.now.prev_month).beginning_of_month
       pp "period_start: #{period_start}"
       Smartrent::Resident.all.each do |r|
         # active => inactive or active => + rewards
