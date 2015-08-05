@@ -1,5 +1,13 @@
-<p>Hello <%= @email %>!</p>
-
-<p>You can activate your account email through the link below:</p>
-
-<p><%= link_to 'Activate my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+<html>
+  <head>
+    <title>Account Activation Request</title>
+  </head>
+  <body>
+      <p>A request to activate your account was received.  If you did not make this request you can ignore this email, no account information has been created or accessed.</p>
+      <p>
+        <%= link_to 'To activate your account follow this link', confirmation_url(@resource, confirmation_token: @token) %>
+      </p>
+      <p>If the link above does not work copy and paste the following address into a browser http://$_SERVER[HTTP_HOST]/activate/?id=$prID</p>
+      <p>The request will only be active for 12 hours. If you are unable to complete the process in that time you may make another request.</p>
+  </body>
+</html>
