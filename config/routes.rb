@@ -76,14 +76,14 @@ Smartrent::Engine.routes.draw do
    }
     devise_scope :resident do
       get "/member-login" => "sessions#new", :as => :new_member_login
-      post "/member-login" => "sessions#new", :as => :member_login
+      post "/member-login" => "sessions#create", :as => :member_login
       get '/reset-password', to: 'devise/passwords#new', as: 'new_member_password'
-      get '/reset-password/change', to: 'devise/passwords#edit', as: 'edit_member_password'
+      get '/password/change', to: 'devise/passwords#edit', as: 'edit_member_password'
       put  '/reset-password', to: 'devise/passwords#update', as: 'member_password'
       post '/reset-password', to: 'devise/passwords#create'
       #get "/reset-password"   => 'devise/passwords#new', :as => :forgot_password
       get "/activation"   => 'devise/confirmations#new', :as => "new_member_confirmation"
-      post "/activation"   => 'devise/confirmations#new', :as => "member_confirmation"
+      post "/activation"   => 'devise/confirmations#create', :as => "member_confirmation"
     end
    
   resource :residents do
