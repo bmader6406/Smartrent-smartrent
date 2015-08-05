@@ -21,6 +21,10 @@ module Smartrent
     validates :email, :uniqueness => true
     validate :valid_smartrent_status
 
+    ## !!! stop devise confirmation. Don't remove this method
+    def send_on_create_confirmation_instructions
+    end
+    
     def self.SMARTRENT_STATUS_ACTIVE
       "Active"
     end
