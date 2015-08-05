@@ -12,7 +12,7 @@
       <div class="message"></div>
 
       <div class="loginForm">
-      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <%= form_for(resource, as: resource_name, url: member_login_path) do |f| %>
         <div class="message"><%= devise_error_messages! %></div>
         <div class="form-group">
           <%= f.email_field :email, autofocus: true, :placeholder => "EMAIL" %>
@@ -29,7 +29,7 @@
       <div class="formInstructions">
         <p>
           First time users will need to activate their account.<br>
-          <%= link_to "Click here", new_confirmation_path(:resident) %> to activate
+          <%= link_to "Click here", new_member_confirmation_path %> to activate
         </p>
       </div>
       <%= render "devise/shared/links" %>
