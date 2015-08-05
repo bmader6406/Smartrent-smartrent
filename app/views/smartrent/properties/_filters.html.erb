@@ -60,7 +60,7 @@
         </div>
 
         <ul>
-          <% Smartrent::Feature.all.each do |feature| %>
+          <% Smartrent::Feature.order("name asc").each do |feature| %>
             <li>
               <%= check_box_tag(
                 'q[matches_all_features][]',
