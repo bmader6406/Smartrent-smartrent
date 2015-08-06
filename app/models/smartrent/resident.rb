@@ -28,24 +28,36 @@ module Smartrent
     def self.SMARTRENT_STATUS_ACTIVE
       "Active"
     end
+
     def self.SMARTRENT_STATUS_INACTIVE
       "Inactive"
     end
+
     def self.SMARTRENT_STATUS_EXPIRED
       "Expired"
     end
+
     def self.SMARTRENT_STATUS_CHAMPION
       "Champion"
     end
+
     def self.SMARTRENT_STATUS_ARCHIVE
       "Archive"
     end
+
     def self.smartrent_statuses
       {
         self.SMARTRENT_STATUS_ACTIVE => "Active", 
         self.SMARTRENT_STATUS_INACTIVE => "Inactive", 
         self.SMARTRENT_STATUS_EXPIRED => "Expired", 
         self.SMARTRENT_STATUS_CHAMPION => "Champion", 
+        self.SMARTRENT_STATUS_ARCHIVE => "Archive"
+      }
+    end
+
+    def self.changable_smartrent_statuses
+      {
+        self.SMARTRENT_STATUS_CHAMPION => "Champion",
         self.SMARTRENT_STATUS_ARCHIVE => "Archive"
       }
     end
@@ -94,6 +106,38 @@ module Smartrent
     
     def zip
       crm_resident.zip
+    end
+
+    def update_changable_smartrent_status(smartrent_status)
+      smartrent_status = smartrent_status.capitalize
+      if self.class.changable_smartrent_statuses.include? smartrent_status
+        update_attributes({:smartrent_status => smartrent_status.capitalize})
+      else
+        errors.add(:smartrent_status, "is invalid")
+        false
+      end
+    end
+
+    def can_become_champion_in_property?(property)
+      if self.smartrent_status == self.class.SMARTRENT_STATUS_ACTIVE
+        #resident_property = self.resident_properties.detect{|rp| rp.property_id == property.id && Time.now.difference_in_months(rp.move_in_date) >= 12}
+        resident_property = self.resident_properties.detect{|rp| rp.property_id == property.id && ((rp.move_out_date.nil? && Time.now.difference_in_months(rp.move_in_date) >= 12) || (rp.move_out_date.difference_in_months(rp.move_in_date) >= 12))}
+        resident_property.present?
+      end
+    end
+
+    def become_champion(amount)
+      amount = amount.to_f
+      if amount == 0
+        errors.add(:amount, "should be greater than 0")
+      elsif amount > total_rewards
+        errors.add(:amount, "should be less than total rewards")
+      else
+        rewards.create!(:amount => amount, :type_ => Reward.TYPE_CHAMPION, :period_start => Time.now)
+        update_attributes!(:smartrent_status => self.class.SMARTRENT_STATUS_CHAMPION, :champion_amount => amount)
+        return true
+      end
+      return false
     end
     
     # don't define "def email"
