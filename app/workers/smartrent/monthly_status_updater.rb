@@ -15,8 +15,12 @@ module Smartrent
       Smartrent::Resident.all.each do |r|
         # it is good to catch any resident which cause the below code fail rather then stop the calculation
         begin
+          
+          # important: ignore resident who not move in any properties before the execution date, otherwise their status will changed from Active to Inactive
+          next if r.resident_properties.all? {|p| p.move_in_date > period_start.end_of_month }
+          
           # get properties that the resident live in
-          live_in_properties = r.resident_properties.select{|p| p.move_in_date <= period_start &&  (p.move_out_date.blank? || p.move_out_date > Time.now) }
+          live_in_properties = r.resident_properties.select{|p| p.move_in_date <= period_start.end_of_month &&  (p.move_out_date.blank? || p.move_out_date > period_start.end_of_month) }
           
           # get smartrent eligible property
           smartrent_properties = live_in_properties.select{|rp| rp.property.status.to_s.include?(Property.STATUS_CURRENT) && rp.property.is_smartrent }
@@ -48,12 +52,12 @@ module Smartrent
           # inactive => expired or inactive => active
           if r.smartrent_status == Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
             
-            if smartrent_properties.empty?            
+            if smartrent_properties.empty?
               if period_start >= r.expiry_date
                 r.update_attributes(:smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_EXPIRED)
               end
               
-            else
+            else # resident moved in an eligible property
               r.update_attributes({
                 :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_ACTIVE,
                 :expiry_date => nil
