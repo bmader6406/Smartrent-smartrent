@@ -69,7 +69,7 @@ Smartrent::Engine.routes.draw do
   devise_for :residents, {
      class_name: 'Smartrent::Resident',
      module: :devise,
-     :controllers => { :sessions => "smartrent/sessions", :confirmations => "smartrent/devise/confirmations" },
+     :controllers => { :sessions => "smartrent/sessions", :confirmations => "smartrent/devise/confirmations", :registrations => "smartrent/devise/registrations" },
      :path_names => {
     #sign_in: 'member-login'
      }
