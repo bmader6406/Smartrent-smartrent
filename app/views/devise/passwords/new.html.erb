@@ -8,7 +8,6 @@
       <div class="title">
         Request Password Reset
       </div>
-      
       <div class="formInputs">
         <%= form_for(resource, as: resource_name, url: member_password_path, html: { method: :post }) do |f| %>
           <div class="message"><%= devise_error_messages! %></div>

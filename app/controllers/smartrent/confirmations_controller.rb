@@ -19,8 +19,7 @@ module Smartrent
         end
 
         if !@confirmable.errors.empty?
-          self.resource = @confirmable
-          render 'devise/confirmations/password' #Change this if you don't have the views on default path
+          render 'devise/confirmations/new' #Change this if you don't have the views on default path
         end
       end
 
@@ -31,7 +30,7 @@ module Smartrent
         end
         if !@confirmable.errors.empty?
           self.resource = @confirmable
-          render 'devise/confirmations/password' #Change this if you don't have the views on default path 
+          render 'devise/confirmations/new' #Change this if you don't have the views on default path 
         end
       end
 
@@ -39,8 +38,8 @@ module Smartrent
 
       def with_unconfirmed_confirmable
         original_token = params[:confirmation_token]
-        confirmation_token = ::Devise.token_generator.digest(Smartrent::Resident, :confirmation_token, original_token)
-        @confirmable = Smartrent::Resident.find_or_initialize_with_error_by(:confirmation_token, confirmation_token)
+        confirmation_token = Devise.token_generator.digest(resident, :confirmation_token, original_token)
+        @confirmable = resident.find_or_initialize_with_error_by(:confirmation_token, confirmation_token)
         if !@confirmable.new_record?
           @confirmable.only_if_unconfirmed {yield}
         end

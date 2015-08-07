@@ -69,7 +69,7 @@ Smartrent::Engine.routes.draw do
   devise_for :residents, {
      class_name: 'Smartrent::Resident',
      module: :devise,
-     :controllers => { :sessions => "smartrent/sessions" },
+     :controllers => { :sessions => "smartrent/sessions", :confirmations => "smartrent/devise/confirmations" },
      :path_names => {
     #sign_in: 'member-login'
      }
@@ -84,6 +84,7 @@ Smartrent::Engine.routes.draw do
       #get "/reset-password"   => 'devise/passwords#new', :as => :forgot_password
       get "/activation"   => 'devise/confirmations#new', :as => "new_member_confirmation"
       post "/activation"   => 'devise/confirmations#create', :as => "member_confirmation"
+      match '/activation' => 'devise/confirmations#update', :via => :put, :as => :update_member_confirmation
     end
    
   resource :residents do
