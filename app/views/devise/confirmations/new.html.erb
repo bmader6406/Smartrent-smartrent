@@ -18,16 +18,7 @@
       <div class="formInputs">
         <%= form_for(resource, as: resource_name, url: member_confirmation_path, html: { method: :post }) do |f| %>
           <div class="message">
-            <% if resource.errors.any? %>
-              <div id="error_explanation">
-                <h2>Activation Failed</h2>
-                <ul>
-                  <% resource.errors.full_messages.each do |msg| %>
-                    <li><%= msg %></li>
-                  <% end %>
-                </ul>
-              </div>
-            <% end %>
+            <%= render "layouts/error_messages", :target => resource, :header_message => "Activation Failed" %>
           </div>
           <div class="labelText">
             <%= f.label :email, "Email Address" %>

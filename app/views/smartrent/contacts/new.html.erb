@@ -10,16 +10,7 @@
 <section class="content">
   <p>At Bozzuto, we’re here to help. So feel free to raise any questions or concerns and we’ll do our best to address them as quickly as possible.</p>
   <%= form_for(@contact, :url => submit_contact_path) do |f| %>
-    <% if @contact.errors.any? %>
-      <div id="error_explanation">
-        <h2><%= pluralize(@contact.errors.count, "error") %> prohibited this contact from being submitted:</h2>
-        <ul>
-        <% @contact.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <%= render "layouts/error_messages", :target => @contact, :header_message => "Message sending failed" %>
 
     <div class="contactForm">
       <%= f.label :name, "Name*", {:class => "label"} %>

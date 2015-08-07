@@ -10,7 +10,7 @@
       </div>
       <div class="formInputs">
         <%= form_for(resource, as: resource_name, url: member_password_path, html: { method: :post }) do |f| %>
-          <div class="message"><%= devise_error_messages! %></div>
+          <%= render "layouts/error_messages", :target => resource, :header_message => "Password Request Failed" %>
           <div class="labelText">
             <%= f.label :email, "Email Address" %>
           </div>
