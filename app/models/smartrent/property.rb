@@ -45,6 +45,7 @@ module Smartrent
     end
 
     def self.custom_filters(q_params, properties)
+      properties = properties.where(:is_visible => true)
       if q_params
         properties = self.matches_all_features(properties, q_params[:matches_all_features]) if q_params[:matches_all_features]
         properties = self.where_bed(properties, 1) if q_params[:where_one_bed]
