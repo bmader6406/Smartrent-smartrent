@@ -9,7 +9,11 @@ module Smartrent
     validates_numericality_of :baths, :beds
     
     def self.import(file)
-      f = File.open(file.path, "r:bom|utf-8")
+      if file.class.to_s == "ActionDispatch::Http::UploadedFile"
+        f = File.open(file.path, "r:bom|utf-8")
+      else
+        f = File.open(Smartrent::Engine.root.to_path + "/data/more_homes.csv")
+      end
       more_homes = SmarterCSV.process(f)
       more_homes.each do |home_hash|
         home_title = home_hash[:home_id]

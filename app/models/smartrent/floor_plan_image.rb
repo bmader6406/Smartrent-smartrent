@@ -17,7 +17,11 @@ module Smartrent
         }
     
     def self.import(file)
-      f = File.open(file.path, "r:bom|utf-8")
+      if file.class.to_s == "ActionDispatch::Http::UploadedFile"
+        f = File.open(file.path, "r:bom|utf-8")
+      else
+        f = File.open(Smartrent::Engine.root.to_path + "/data/floor_plan_images.csv")
+      end
       floor_plan_images = SmarterCSV.process(f)
       floor_plan_images.each do |floor_plan_image_hash|
         home_name = floor_plan_image_hash[:more_home_id]

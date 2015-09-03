@@ -8,7 +8,7 @@ module Smartrent
     #geocoded_by :complete_street_address
     #after_validation :geocode
     
-    has_attached_file :image, 
+    has_attached_file :image,
       :styles => {
         :home_page => "195x145>",
         :search_page => "149x112>"
@@ -34,16 +34,42 @@ module Smartrent
     end
 
     def self.import(file)
+
+#image,wp_post_date,title,search_page_description,address,city,latitude,longitude,phone_number,image_description,home_page_desc,description,state,video_url,website
+      resident_map = {
+        :image => 0,
+        :title => 2,
+        :search_page_description => 3,
+        :address => 4,
+        :city => 5,
+        :latitude => 6,
+        :longitude => 7,
+        :phone_number => 8,
+        :image_description => 9,
+        :home_page_desc => 10,
+        :description => 11,
+        :state => 12,
+        :video_url => 13,
+        :website => 14
+
+      }
       if file.class.to_s == "ActionDispatch::Http::UploadedFile"
         f = File.open(file.path, "r:bom|utf-8")
       else
         f = File.open(Smartrent::Engine.root.to_path + "/data/homes.csv")
       end
-      homes = SmarterCSV.process(f)
-      homes.each do |home_hash|
-        home_hash.delete(:wp_post_date)
-        create! home_hash
+      index = 0
+      CSV.foreach(f) do |row|
+        index += 1
+        next if index == 1
+        home_hash = {}
+        resident_map.each do |key, index|
+          home_hash[key] = row[index]
+        end
+        Smartrent::Home.create! home_hash
       end
+      MoreHome.import("")
+      FloorPlanImage.import("")
     end
     
     private

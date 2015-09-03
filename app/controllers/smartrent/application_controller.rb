@@ -6,7 +6,7 @@ module Smartrent
     
     def after_sign_in_path_for(resource)
       if resource_name == :resident
-        request.env['omniauth.origin'] || stored_location_for(resource) || smartrent.root_path
+        request.env['omniauth.origin'] || stored_location_for(resource) || member_profile_url
       else
         request.env['omniauth.origin'] || stored_location_for(resource) || smartrent.admin_root_path
       end
