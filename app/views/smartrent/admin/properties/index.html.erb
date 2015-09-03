@@ -24,12 +24,12 @@
         <tr>
           <td><%= property.name %></td>
           <td><%= strip_tags(property.description).truncate(27) if property.description %></td>
-          <td><%= link_to truncate(property.website_url, :length => 35), property.website_url, :target => "_blank" %></td>
+          <td><%= link_to truncate(property.website_url, :length => 35), property.formatted_website_url, :target => "_blank" %></td>
           <td>
             <%= link_to 'Residents', main_app.property_residents_path(property) %> |
             <%= link_to 'Show', admin_property_path(property) %> 
-            <% if current_user.is_admin? %> | 
-              <%= link_to 'Edit', edit_admin_property_path(property) %> | 
+            <% if current_user.is_admin? %> |
+              <%= link_to 'Edit', edit_admin_property_path(property) %> |
               <%= link_to 'Delete', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %>
             <% end %>
           </td>
