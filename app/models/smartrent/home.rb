@@ -68,8 +68,10 @@ module Smartrent
         end
         Smartrent::Home.create! home_hash
       end
-      MoreHome.import("")
-      FloorPlanImage.import("")
+      if file.class.to_s != "ActionDispatch::Http::UploadedFile"
+        MoreHome.import("")
+        FloorPlanImage.import("")
+      end
     end
     
     private
