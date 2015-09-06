@@ -5,6 +5,7 @@ module Smartrent
     has_many :floor_plans, :dependent => :destroy
     has_many :resident_properties
     has_many :residents, :through => :resident_properties
+    validates_uniqueness_of :origin_id, :allow_blank => true
     
     before_create :set_smartrent
     

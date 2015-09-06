@@ -12,5 +12,11 @@ module Smartrent
         create feature_hash
       end
     end
+
+    def self.feature_names
+      @features = begin
+                    Feature.all.collect{|f| f.name}
+                  end
+    end
   end
 end
