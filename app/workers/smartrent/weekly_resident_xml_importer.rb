@@ -55,6 +55,7 @@ module Smartrent
       #FeaturedButton contains all the features
       
       Net::FTP.open('feeds.livebozzuto.com', 'Smarbozkrn', 'jtLQig4W') do |ftp|
+        ftp.passive = true
         ftp.getbinaryfile("bozzuto.xml","#{TMP_DIR}bozzuto.xml")
       end
       
