@@ -121,7 +121,7 @@ module Smartrent
     def can_become_champion_in_property?(property)
       if self.smartrent_status == self.class.SMARTRENT_STATUS_ACTIVE
         #resident_property = self.resident_properties.detect{|rp| rp.property_id == property.id && Time.now.difference_in_months(rp.move_in_date) >= 12}
-        resident_property = self.resident_properties.detect{|rp| rp.property_id == property.id && ((rp.move_out_date.nil? && Time.now.difference_in_months(rp.move_in_date) >= 12) || (rp.move_out_date.difference_in_months(rp.move_in_date) >= 12))}
+        resident_property = self.resident_properties.detect{|rp| rp.property_id == property.id && ((rp.move_out_date.nil? && Time.now.difference_in_months(rp.move_in_date) >= 12) || (rp.move_out_date.present? && rp.move_out_date.difference_in_months(rp.move_in_date) >= 12))}
         resident_property.present?
       end
     end
