@@ -49,14 +49,10 @@ module Smartrent
         :features => ["FeaturedButton"]
       }
       #FeaturedButton contains all the features
-      if Rails.env != "development"
-        Net::FTP.open('feeds.livebozzuto.com', 'Smarbozkrn', 'jtLQig4W') do |ftp|
-          ftp.passive = true
-          ftp.getbinaryfile("bozzuto.xml","#{TMP_DIR}bozzuto.xml")
-          puts "Ftp downloaded"
-        end
-      else
-        f = File.read("#{TMP_DIR}bozzuto.xml")
+      Net::FTP.open('feeds.livebozzuto.com', 'Smarbozkrn', 'jtLQig4W') do |ftp|
+        ftp.passive = true
+        ftp.getbinaryfile("bozzuto.xml","#{TMP_DIR}bozzuto.xml")
+        puts "Ftp downloaded"
       end
       
       f = File.read("/Users/talal/Desktop/bozzuto.xml")
