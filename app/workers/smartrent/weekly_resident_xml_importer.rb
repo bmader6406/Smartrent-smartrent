@@ -1,12 +1,8 @@
 require 'csv'
 require 'net/ftp'
+require Rails.root.join("lib/core_ext", "hash.rb")
 
 # - Import Residents from the ftp link and add the new properties
-class Hash
-  def nest(keys)
-    keys.reduce(self) {|m,k| m && m[k] }
-  end
-end
 
 module Smartrent
   class WeeklyResidentXmlImporter
@@ -114,7 +110,6 @@ module Smartrent
           end
           property.is_smartrent = true
           property.updated_by = "xml_feed"
-          property.save!
           if property.save!
             puts "A property has been saved"
             property_floor_plans.each do |floor_plan|
