@@ -55,7 +55,7 @@ module Smartrent
         puts "Ftp downloaded"
       end
       
-      #f = File.read("/Users/talal/Desktop/bozzuto.xml")
+      f = File.read("#{TMP_DIR}bozzuto.xml")
       properties = Hash.from_xml(f)
       properties["PhysicalProperty"]["Property"].each do |p|
         features = p.nest(property_map[:features])
