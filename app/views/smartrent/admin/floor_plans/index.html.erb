@@ -17,7 +17,6 @@
         <tr>
           <th>Property</th>
           <th>Name</th>
-          <th>Url</th>
           <th>Sq feet max</th>
           <th>Sq feet min</th>
           <th>Beds</th>
@@ -30,9 +29,8 @@
 
         <% @admin_floor_plans.each do |admin_floor_plan| %>
           <tr>
-            <td><%= admin_floor_plan.property.name %></td>
+            <td><%= admin_floor_plan.property.name rescue "Property not present" %></td>
             <td><%= admin_floor_plan.name %></td>
-            <td><%= admin_floor_plan.url %></td>
             <td><%= admin_floor_plan.sq_feet_max %></td>
             <td><%= admin_floor_plan.sq_feet_min %></td>
             <td><%= admin_floor_plan.beds %></td>
@@ -42,8 +40,8 @@
             <td><%= admin_floor_plan.penthouse %></td>
             <td>
               <%= link_to 'Show', admin_floor_plan_path(admin_floor_plan) %>
-              <% if current_user.is_admin? %> | 
-                <%= link_to 'Edit', edit_admin_floor_plan_path(admin_floor_plan) %> | 
+              <% if current_user.is_admin? %> |
+                <%= link_to 'Edit', edit_admin_floor_plan_path(admin_floor_plan) %> |
                 <%= link_to 'Delete', admin_floor_plan_path(admin_floor_plan), method: :delete, data: { confirm: 'Are you sure?' } %>
               <% end %>
             </td>
@@ -55,9 +53,9 @@
         <%= page_navigation_links @admin_floor_plans %>
       </div>
     <% elsif params[:search] == "1" %>
-      <div class="alert alert-warning">No admin_floor_plans found</div>
+      <div class="alert alert-warning">No Floor Plans found</div>
     <% else %>
-      <div class="alert alert-warning">No admin_floor_plans have been added yet.</div>
+      <div class="alert alert-warning">No Floor Plans have been added yet.</div>
     <% end %>
   </div>
 <% end %>

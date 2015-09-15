@@ -105,8 +105,10 @@ module Smartrent
               end
             end
           end
-          property.is_smartrent = true
-          property.is_crm = false
+          if !property.id.present?
+            property.is_smartrent = true
+            property.is_crm = false
+          end
           property.updated_by = "xml_feed"
           if property.save!
             puts "A property has been saved"

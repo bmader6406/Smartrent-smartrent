@@ -2,7 +2,7 @@
   <div class="main">
     <p>
       <b>Property:</b>
-      <%= @admin_floor_plan.property_id %>
+      <%= @admin_floor_plan.property.name rescue "Property not Present" %>
     </p>
 
 
@@ -13,7 +13,7 @@
 
     <p>
       <b>Url:</b>
-      <%= @admin_floor_plan.url %>
+      <%= link_to @admin_floor_plan.url, @admin_floor_plan.url, :target => "_blank" %>
     </p>
 
     <p>
