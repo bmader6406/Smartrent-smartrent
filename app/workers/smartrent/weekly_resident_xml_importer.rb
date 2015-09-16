@@ -56,6 +56,8 @@ module Smartrent
       end
       
       f = File.read("#{TMP_DIR}bozzuto.xml")
+      
+      #f = File.read("/Users/talal/Desktop/bozzuto.xml")
       properties = Hash.from_xml(f)
       properties["PhysicalProperty"]["Property"].each do |p|
         features = p.nest(property_map[:features])
@@ -95,7 +97,7 @@ module Smartrent
             else
               if key == :image
                 begin
-                  property.image = p.nest(value)
+                  #property.image = p.nest(value)
                 rescue Exception => e
                   puts e.message
                   puts e.backtrace.inspect

@@ -29,7 +29,7 @@
 
         <% @admin_floor_plans.each do |admin_floor_plan| %>
           <tr>
-            <td><%= admin_floor_plan.property.name rescue "Property not present" %></td>
+            <td><%= admin_floor_plan.property.name rescue "N/A" %></td>
             <td><%= admin_floor_plan.name %></td>
             <td><%= admin_floor_plan.sq_feet_max %></td>
             <td><%= admin_floor_plan.sq_feet_min %></td>

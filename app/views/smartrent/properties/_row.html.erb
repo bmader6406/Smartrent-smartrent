@@ -94,36 +94,38 @@
             penthouse = []
             
             fp_dict[property_.id].each do |fp|
-              case fp.beds
-                when 1
-                  one_bedroom << fp
-                when 2
-                  two_bedrooms << fp
-                when 3
-                  three_bedrooms << fp
-                else
-                  four_bedrooms << fp
+              if fp.rent_min > 0
+                case fp.beds
+                  when 1
+                    one_bedroom << fp
+                  when 2
+                    two_bedrooms << fp
+                  when 3
+                    three_bedrooms << fp
+                  else
+                    four_bedrooms << fp
+                end
               end
-              
+
               penthouse << fp if fp.penthouse?
             end
           %>
           <% if !one_bedroom.empty? %>
             <li><span class="bold">1 Bedroom</span> from <%= number_to_currency one_bedroom.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
           <% end %>
-          
+
           <% if !two_bedrooms.empty? %>
             <li><span class="bold">2 Bedrooms</span> from <%= number_to_currency two_bedrooms.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
           <% end %>
-          
+
           <% if !three_bedrooms.empty? %>
             <li><span class="bold">3 Bedrooms</span> from <%= number_to_currency three_bedrooms.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
           <% end %>
-          
+
           <% if !four_bedrooms.empty? %>
             <li><span class="bold">4 Bedrooms or more</span> from <%= number_to_currency four_bedrooms.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
           <% end %>
-          
+
           <% if !penthouse.empty? %>
             <li><span class="bold">Penthouses</span> from <%= number_to_currency penthouse.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
           <% end %>

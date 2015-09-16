@@ -66,15 +66,16 @@ module Smartrent
     end
 
     def self.where_bed(properties, bed_count)
+        #.where(:floor_plans => {:beds => bed_count})
       result = Property.joins(:floor_plans)
-        .where(:floor_plans => {:beds => bed_count})
+        .where("smartrent_floor_plans.beds = ? and (smartrent_floor_plans.rent_min > 0 or smartrent_floor_plans.rent_max > 0)", bed_count)
         .group("properties.id")
       self.filter_from_result result, properties
     end
     
     def self.where_bed_more_than_eq(properties,bed_count)
       result = Property.joins(:floor_plans)
-        .where("smartrent_floor_plans.beds >= ?", bed_count)
+        .where("smartrent_floor_plans.beds >= ? and (smartrent_floor_plans.rent_min > 0 or smartrent_floor_plans.rent_max > 0)", bed_count)
         .group("properties.id")
       self.filter_from_result result, properties
     end
