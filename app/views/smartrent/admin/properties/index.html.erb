@@ -15,6 +15,7 @@
     <% if @properties.present? %>
       <table class="table">
         <tr>
+          <th>Origin ID</th>
           <th>Name</th>
           <th>Description</th>
           <th>Website</th>
@@ -22,6 +23,7 @@
         </tr>
       <% @properties.each do |property| %>
         <tr>
+          <td><%= property.origin_id %></td>
           <td><%= property.name %></td>
           <td><%= strip_tags(property.description).truncate(27) if property.description %></td>
           <td><%= link_to truncate(property.website_url, :length => 35), property.formatted_website_url, :target => "_blank" %></td>
