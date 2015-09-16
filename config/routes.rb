@@ -5,6 +5,7 @@ Smartrent::Engine.routes.draw do
     root :to => "properties#index"
     
     resources :properties do
+      resources :floor_plans
       collection do
         get "import", :to => "properties#import_page"
         post "import"

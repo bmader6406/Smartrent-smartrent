@@ -4,6 +4,7 @@ module Smartrent
   class Admin::FloorPlansController < Admin::AdminController
     before_action :require_admin, :only => [:import, :import_page]
     before_action :set_floor_plan
+    before_action :set_property, :only => [:index]
 
     # GET /admin/floor_plans
     # GET /admin/floor_plans.json
@@ -94,6 +95,9 @@ module Smartrent
       def floor_plan_params
         params.require(:floor_plan).permit!
       end
+      def set_property
+        @property = Smartrent::Property.find(params[:property_id])
+      end
       def set_floor_plan
         @admin_floor_plan = FloorPlan.find(params[:id]) if params[:id].present?
         case action_name
@@ -138,7 +142,12 @@ module Smartrent
               hash[k.to_sym] = "%#{params[k]}%"
           end
         end
-        @admin_floor_plans = FloorPlan.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
+        if @property.present?
+          floor_plans = @property.floor_plans
+        else
+          floor_plans = FloorPlan.all
+        end
+        @admin_floor_plans = floor_plans.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
       end
   end
 end

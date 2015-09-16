@@ -27,6 +27,7 @@
           <td><%= link_to truncate(property.website_url, :length => 35), property.formatted_website_url, :target => "_blank" %></td>
           <td>
             <%= link_to 'Residents', main_app.property_residents_path(property) %> |
+            <%= link_to 'Floorplans', admin_property_floor_plans_path(property) %> |
             <%= link_to 'Show', admin_property_path(property) %> 
             <% if current_user.is_admin? %> |
               <%= link_to 'Edit', edit_admin_property_path(property) %> |
