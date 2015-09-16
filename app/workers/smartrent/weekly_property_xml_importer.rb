@@ -87,7 +87,11 @@ module Smartrent
                 floor_plans.each do |fp|
                   floor_plan = {}
                   floor_plans_map.each do |floor_key, floor_value|
-                    floor_plan[floor_key] = fp.nest(floor_value)
+                    if fp.nest(floor_value).present?
+                      floor_plan[floor_key] = fp.nest(floor_value).strip
+                    else
+                      floor_plan[floor_key] = fp.nest(floor_value)
+                    end
                   end
                   property_floor_plans << floor_plan
                 end
@@ -95,13 +99,17 @@ module Smartrent
             else
               if key == :image
                 begin
-                  property.image = p.nest(value)
+                  #property.image = p.nest(value)
                 rescue Exception => e
                   puts e.message
                   puts e.backtrace.inspect
                 end
               else
-                property[key] = p.nest(value)
+                if p.nest(value).present?
+                  property[key] = p.nest(value).strip
+                else
+                  property[key] = p.nest(value)
+                end
               end
             end
           end
