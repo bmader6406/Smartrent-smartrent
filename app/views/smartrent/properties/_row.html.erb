@@ -131,10 +131,11 @@
           <% end %>
         <% end %>
       </ul>
-
-      <ul class="desc">
-        <li><%= strip_tags(property_.description).truncate(100) if property_.description %></li>
-      </ul>
+        <ul class="desc">
+          <% if property_.description.present? %>
+          <li><%= strip_tags(property_.description).truncate(100)  %></li>
+          <% end %>
+        </ul>
     </div>
 
     <div class="learnMore">
