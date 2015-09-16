@@ -148,9 +148,10 @@ module Smartrent
 
     def self.to_csv
       CSV.generate do |csv|
-        csv << ["name"]
+        column_names = ["name", "city", "state"]
+        csv << column_names
         where(:is_smartrent => true).each do |property|
-          csv << [property.name]
+          csv << property.attributes.values_at(*column_names)
         end
       end
     end
