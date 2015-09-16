@@ -145,6 +145,15 @@ module Smartrent
       end
       prices
     end
+
+    def self.to_csv(properties)
+      CSV.generate do |csv|
+        csv << ["name"]
+        properties.each do |property|
+          csv << [property.name]
+        end
+      end
+    end
     
     private
       def set_smartrent

@@ -14,6 +14,7 @@ module Smartrent
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @properties }
+        format.csv { render text: Smartrent::Property.to_csv(@properties) }
       end
     end
   
@@ -88,6 +89,10 @@ module Smartrent
       Property.import(params[:file])
       redirect_to admin_properties_path, notice: "Properties have been imported"
     end
+
+    def export
+    end
+
     private
       def property_params
         params.require(:property).permit! if params[:property].present?
