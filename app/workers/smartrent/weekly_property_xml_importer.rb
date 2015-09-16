@@ -113,8 +113,8 @@ module Smartrent
               end
             end
           end
+          property.is_smartrent = true
           if !property.id.present?
-            property.is_smartrent = true
             property.is_crm = false
           end
           property.updated_by = "xml_feed"
