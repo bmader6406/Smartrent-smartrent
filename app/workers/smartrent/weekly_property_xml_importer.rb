@@ -2,10 +2,8 @@ require 'csv'
 require 'net/ftp'
 require Rails.root.join("lib/core_ext", "hash.rb")
 
-# - Import Residents from the ftp link and add the new properties
-
 module Smartrent
-  class WeeklyResidentXmlImporter
+  class WeeklyPropertyXmlImporter
     extend Resque::Plugins::Retry
     @retry_limit = RETRY_LIMIT
     @retry_delay = RETRY_DELAY
@@ -42,7 +40,7 @@ module Smartrent
         :state => ["PropertyID" ,"Address" ,"State"],
         :zip => ["PropertyID" ,"Address" ,"PostalCode"],
         :county => ["PropertyID" ,"Address" ,"CountyName"],
-        :email => ["PropertyID" ,"Address" ,"Lead2LeaseEmail"],
+        #:email => ["PropertyID" ,"Address" ,"Lead2LeaseEmail"], # don't set property email as Lead2LeaseEmail
         :phone => ["PropertyID" ,"Phone" ,"PhoneNumber"],
         :image => ["Slideshow", "SlideshowImageURL", 0],
         :floor_plans => ["Floorplan"],
