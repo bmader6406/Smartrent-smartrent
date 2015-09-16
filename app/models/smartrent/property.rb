@@ -146,10 +146,10 @@ module Smartrent
       prices
     end
 
-    def self.to_csv(properties)
+    def self.to_csv
       CSV.generate do |csv|
         csv << ["name"]
-        properties.each do |property|
+        where(:is_smartrent => true).each do |property|
           csv << [property.name]
         end
       end

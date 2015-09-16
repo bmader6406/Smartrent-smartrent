@@ -14,7 +14,7 @@ module Smartrent
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @properties }
-        format.csv { render text: Smartrent::Property.to_csv(@properties) }
+        format.csv { render text: Smartrent::Property.to_csv }
       end
     end
   
