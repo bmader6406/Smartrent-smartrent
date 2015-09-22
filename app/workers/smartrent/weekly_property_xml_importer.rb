@@ -64,7 +64,7 @@ module Smartrent
         next if !origin_id.present? || !name.present? || !features.present? || features.nil? || features.select{|f| f["Name"].downcase == 'smartrent'}.count == 0
         property = Smartrent::Property.where("lower(name) = ?", name.downcase).first
         property = Smartrent::Property.new if !property
-        #next if property.id.present? && property.updated_by == "xml_feed"
+        next if property.id.present? && property.updated_by == "xml_feed"
         ActiveRecord::Base.transaction do
           property_floor_plans = []
           property_map.each do |key, value|
