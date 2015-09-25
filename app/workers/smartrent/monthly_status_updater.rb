@@ -7,8 +7,9 @@ module Smartrent
       :crm_immediate
     end
   
-    def self.perform(period_start = nil)
-      period_start = (period_start || Time.now.prev_month).utc.beginning_of_month
+    def self.perform(time = nil)
+      time = Time.parse(time) if time.kind_of?(String)
+      period_start = (time || Time.now.prev_month).utc.beginning_of_month
       
       pp "period_start: #{period_start}"
       total = 0

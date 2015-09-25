@@ -6,6 +6,7 @@ module Smartrent
     end
   
     def self.perform(time = nil)
+      time = Time.parse(time) if time.kind_of?(String)
       for_date = (time || Time.now).to_date
       
       pp "for_date: #{for_date}"
