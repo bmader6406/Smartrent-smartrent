@@ -115,14 +115,17 @@ module Smartrent
             end
           end
           property.is_smartrent = true
-          if !property.id.present?
-            property.is_crm = false
-          end
+          property.is_crm = false if !property.id.present?
           property.updated_by = "xml_feed"
           if property.save!
             puts "A property has been saved"
             property_floor_plans.each do |floor_plan|
-              property.floor_plans.create!(floor_plan)
+              fp = Smartrent::FloorPlan.where(:property_id => property.id, :origin_id => floor_plan[:origin_id]).first
+              if fp
+                fp.update_attributes!(floor_plan)
+              else
+                property.floor_plans.create!(floor_plan)
+              end
             end
           end
         end
