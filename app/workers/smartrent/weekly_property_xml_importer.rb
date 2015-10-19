@@ -47,7 +47,7 @@ module Smartrent
         :floor_plans => ["Floorplan"],
         :features => ["FeaturedButton"]
       }
-      #FeaturedButton contains all the features
+      FeaturedButton contains all the features
       Net::FTP.open('feeds.livebozzuto.com', 'Smarbozkrn', 'jtLQig4W') do |ftp|
         ftp.passive = true
         ftp.getbinaryfile("bozzuto.xml","#{TMP_DIR}bozzuto.xml")
@@ -58,24 +58,41 @@ module Smartrent
       
       #f = File.read("/Users/talal/Desktop/bozzuto.xml")
       properties = Hash.from_xml(f)
-      properties["PhysicalProperty"]["Property"].each do |p|
+      properties["PhysicalProperty"]["Property"].each_with_index do |p, pndx|
         features = p.nest(property_map[:features])
         origin_id = p.nest(property_map[:origin_id])
         name = p.nest(property_map[:name])
+        
+        pp ">>> pndx: #{pndx+1}"
+        
         next if !origin_id.present? || !name.present? || !features.present? || features.nil? || features.select{|f| f["Name"].downcase == 'smartrent'}.count == 0
+        
         property = Smartrent::Property.where("lower(name) = ?", name.downcase).first
-        property = Smartrent::Property.new if !property
-        next if property.id.present? && property.updated_by == "xml_feed"
+        
+        if !property
+          property = Smartrent::Property.new 
+          
+          # set default attributes when the xml importer create the property record
+          property.is_smartrent = true
+          property.is_crm = false
+          property.updated_by = "xml_feed"
+        end
+        
+        # only update property which is allowed to be updated by xml_feed
+        next if property.updated_by != "xml_feed"
+        
         ActiveRecord::Base.transaction do
           property_floor_plans = []
           property_map.each do |key, value|
             if key == :features
+              #pp key, value
               p.nest(value).each do |feature|
                 if !Smartrent::Feature.feature_names.include?(feature["Name"])
                   Feature.create!({:name => feature["Name"]})
                 end
                 property.feature_ids << Feature.find_by_name(feature["Name"]).id
               end
+              
             elsif key == :floor_plans
               #Destroying previous floor plans to use only these floor plans
               if property.id.nil?
@@ -84,10 +101,17 @@ module Smartrent
               #Due to an unexpected FloorPlan constant not found error
               #So, I'm saving it after the property is saved
               floor_plans = p.nest(property_map[key])
+              
               if floor_plans.present?
+                
+                if floor_plans.kind_of?(Hash) 
+                  floor_plans = [floor_plans] #push hash to array
+                end
+                
                 floor_plans.each do |fp|
                   floor_plan = {}
                   floor_plans_map.each do |floor_key, floor_value|
+                    #pp fp, floor_key, floor_value
                     if fp.nest(floor_value).present?
                       floor_plan[floor_key] = fp.nest(floor_value).strip
                     else
@@ -97,6 +121,7 @@ module Smartrent
                   property_floor_plans << floor_plan
                 end
               end
+              
             else
               if key == :image
                 begin
@@ -105,6 +130,7 @@ module Smartrent
                   puts e.message
                   puts e.backtrace.inspect
                 end
+                
               else
                 if p.nest(value).present?
                   property[key] = p.nest(value).strip
@@ -112,13 +138,13 @@ module Smartrent
                   property[key] = p.nest(value)
                 end
               end
+              
             end
           end
-          property.is_smartrent = true
-          property.is_crm = false if !property.id.present?
-          property.updated_by = "xml_feed"
+          
           if property.save!
-            puts "A property has been saved"
+            pp "A property has been saved, ##{property.id} changes: ", property.changed_attributes
+            
             property_floor_plans.each do |floor_plan|
               fp = Smartrent::FloorPlan.where(:property_id => property.id, :origin_id => floor_plan[:origin_id]).first
               if fp
@@ -127,9 +153,17 @@ module Smartrent
                 property.floor_plans.create!(floor_plan)
               end
             end
+            
+          elsif !property.errors.empty?
+            pp "error: ##{property.id}", property.errors.full_messages.join(", ")
           end
+          
         end
-      end
-    end
+      end #/ properties loop
+      
+      nil #stop properties array output
+      
+    end #/ perform
   end
+  
 end
