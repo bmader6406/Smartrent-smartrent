@@ -71,7 +71,12 @@ module Smartrent
     end
     
     def crm_resident
-      @crm_resident ||= ::Resident::where(:_id => crm_resident_id).first
+      #@crm_resident ||= ::Resident::where(:_id => crm_resident_id).first
+      
+      # search by email is better than crm_resident_id
+      # because the id "link" will be broken when the user do the full upload, result in duplicated sr resident
+      # (mysql is not case sensitive but mongodb is)
+      @crm_resident ||= ::Resident::where(:email_lc => email.to_s.downcase).first
     end
     
     # preload

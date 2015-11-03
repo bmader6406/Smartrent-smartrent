@@ -52,15 +52,15 @@ module Smartrent
     def self.add_csv_row(csv, residents, batch_name)
       #"Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"
       crm_residents = {}
-      ::Resident.where(:_id.in => residents.collect{|r| r.crm_resident_id.to_s }).each do |cr|
-        crm_residents[cr._id] = cr
+      ::Resident.where(:email_lc.in => residents.collect{|r| r.email.to_s.downcase }).each do |cr|
+        crm_residents[cr.email_lc] = cr
       end
 
       residents.each do |r|
         @index += 1
         pp "index: #{@index}"
         
-        r.crm_resident = crm_residents[r.crm_resident_id.to_s]
+        r.crm_resident = crm_residents[r.email.to_s.downcase]
         csv << [r.name, r.email, r.total_rewards.to_i, r.smartrent_status, batch_name]
       end
     end

@@ -11,10 +11,10 @@ module Smartrent
       
       pp "for_date: #{for_date}"
       
-      ::Resident.where(:smartrent_resident_id => nil, "properties.move_in" => for_date).each do |r|
-        r.properties.each do |p|
-          pp "p.move_in: #{p.move_in}"
-          p.send(:update_smartrent_resident) if p.move_in == for_date
+      ::Resident.where(:smartrent_resident_id => nil, "units.move_in" => for_date).each do |r|
+        r.units.each do |u|
+          pp "u.move_in: #{u.move_in}"
+          p.send(:update_smartrent_resident) if u.move_in == for_date
 
         end
       end
