@@ -95,9 +95,13 @@ module Smartrent
       def floor_plan_params
         params.require(:floor_plan).permit!
       end
+      
       def set_property
-        @property = Smartrent::Property.find(params[:property_id])
+        if !params[:property_id].blank?
+          @property = Smartrent::Property.find(params[:property_id])
+        end
       end
+      
       def set_floor_plan
         @admin_floor_plan = FloorPlan.find(params[:id]) if params[:id].present?
         case action_name
@@ -111,6 +115,7 @@ module Smartrent
             authorize! :read, Smartrent::FloorPlan
         end
       end
+      
       def filter_floor_plans(per_page = 15)
         arr = []
         hash = {}
@@ -142,11 +147,13 @@ module Smartrent
               hash[k.to_sym] = "%#{params[k]}%"
           end
         end
+        
         if @property.present?
           floor_plans = @property.floor_plans
         else
           floor_plans = FloorPlan.all
         end
+        
         @admin_floor_plans = floor_plans.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
       end
   end

@@ -21,6 +21,12 @@
   <%= javascript_include_tag 'smartrent/admin' %>
   <%= csrf_meta_tags %>
   
+  
+  <script type="text/javascript">
+    //to not activate crm backbone code
+    App.vars.srApp = true;
+  </script>
+  
   <%= yield :css %>
   <%= yield :js %>
 </head>

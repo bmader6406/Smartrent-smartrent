@@ -97,6 +97,7 @@ module Smartrent
       def property_params
         params.require(:property).permit! if params[:property].present?
       end
+      
       def set_property
         @property = Property.find(params[:id]) if params[:id]
         case action_name
@@ -110,6 +111,7 @@ module Smartrent
             authorize! :read, ::Property
         end
       end
+      
       def filter_properties(per_page = 15)
         arr = []
         hash = {}
