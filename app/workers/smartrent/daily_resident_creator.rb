@@ -7,6 +7,7 @@ module Smartrent
   
     def self.perform(time = nil)
       time = Time.parse(time) if time.kind_of?(String)
+      time = time.in_time_zone('Eastern Time (US & Canada)')
       for_date = (time || Time.now).to_date
       
       pp "for_date: #{for_date}"

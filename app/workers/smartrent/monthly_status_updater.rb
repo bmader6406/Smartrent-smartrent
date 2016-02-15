@@ -9,14 +9,15 @@ module Smartrent
   
     def self.perform(time = nil)
       time = Time.parse(time) if time.kind_of?(String)
-      period_start = (time || Time.now.prev_month).utc.beginning_of_month
+      time = time.in_time_zone('Eastern Time (US & Canada)')
+      period_start = (time || Time.now.prev_month).beginning_of_month
       
       pp "period_start: #{period_start}"
       total = 0
       
       Smartrent::Resident.includes(:resident_properties => :property).find_in_batches do |residents|
         residents.each do |r|
-          # it is good to catch any resident which cause the below code fail rather then stop the calculation
+          # it is good to catch any resident which cause the below code fail rather than stop the calculation
           begin
 
             # important: ignore resident who not move in any properties before the execution date, otherwise their status will changed from Active to Inactive

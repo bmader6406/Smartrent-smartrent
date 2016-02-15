@@ -24,7 +24,7 @@ module Smartrent
         Resque.enqueue(Smartrent::MonthlyStatusUpdater, time.prev_month)
 
         # wait for MonthlyStatusUpdater executed
-        Resque.enqueue_at(time + 2.hours, Smartrent::BalanceExporter, time.prev_month)
+        Resque.enqueue_at(time + 2.hours, Smartrent::ResidentExporter, time.prev_month)
 
         #- app.hy.ly import should be run at midnight ET + 4hours
         #- email should be scheduled around 7AM ET

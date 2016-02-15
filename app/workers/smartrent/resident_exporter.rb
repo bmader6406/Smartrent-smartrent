@@ -6,35 +6,42 @@ require 'net/ftp'
 
 
 module Smartrent
-  class BalanceExporter
+  class ResidentExporter
 
     def self.queue
       :crm_immediate
     end
     
-    def self.perform(move_in = nil)
-      if move_in
-        batch_name = "month_#{move_in.strftime("%m_%Y")}"
+    def self.perform(time = nil)
+      if time
+        time = Time.parse(time) if time.kind_of?(String)
+        time = time.in_time_zone('Eastern Time (US & Canada)')
+
+        batch_name = "new_active_#{time.strftime("%m_%Y")}"
       else
-        batch_name = "all_#{Time.now.strftime("%m_%d_%Y")}"
+        batch_name = "all_active_#{Time.now.strftime("%m_%Y")}"
       end
       
-      file_name = "residents_#{batch_name}.csv"
+      if Rails.env.production?
+        file_name = "residents_#{batch_name}.csv"
+      else
+        file_name = "stage_residents_#{batch_name}.csv"
+      end
       
       @index = 0
       
       CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
         csv << ["Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"]
         
-        if move_in #export recent active resident  
-          Smartrent::Resident.joins(:resident_properties).includes(:rewards)
-            .where("smartrent_status = ? AND smartrent_resident_properties.move_in_date = ?", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE, move_in.to_date).find_in_batches do |residents|
+        if time #export active residents for a specified month
+          Smartrent::Resident.includes(:rewards)
+            .where("smartrent_status = ? AND created_at #{(time.beginning_of_month..time.end_of_month).to_s(:db)}", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE).find_in_batches do |residents|
               add_csv_row(csv, residents, batch_name)
           end
           
         else # export all active resident
           Smartrent::Resident.includes(:rewards).where("smartrent_status = ?", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE).find_in_batches do |residents|
-            add_csv_row(csv, residents, "All")
+            add_csv_row(csv, residents, batch_name)
           end
           
         end
@@ -61,7 +68,12 @@ module Smartrent
         pp "index: #{@index}"
         
         r.crm_resident = crm_residents[r.email.to_s.downcase]
-        csv << [r.name, r.email, r.total_rewards.to_i, r.smartrent_status, batch_name]
+        
+        if r.crm_resident
+          csv << [r.name, r.email, r.total_rewards.to_i, r.smartrent_status, batch_name]
+        else
+          pp "CRM Resident not found for SR Resident ID: #{r.id}, #{r.email}"
+        end
       end
     end
     

@@ -94,23 +94,23 @@ module Smartrent
     
     # share crm info
     def name
-      crm_resident.full_name
+      crm_resident.full_name rescue "N/A"
     end
     
     def address
-      crm_resident.street
+      crm_resident.street rescue "N/A"
     end
     
     def city
-      crm_resident.city
+      crm_resident.city rescue "N/A"
     end
     
     def state
-      crm_resident.state
+      crm_resident.state rescue "N/A"
     end
     
     def zip
-      crm_resident.zip
+      crm_resident.zip rescue "N/A"
     end
 
     def update_changable_smartrent_status(smartrent_status)
