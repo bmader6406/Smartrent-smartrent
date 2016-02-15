@@ -1,6 +1,7 @@
 <%= form_for(@contact) do |f| %>
   <%= render "layouts/error_messages", :target => @contact, :header_message => "Message sending failed" %>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit :class => "btn btn-primary" %>
+    <%= link_to 'Cancel', contacts_path, :class => "btn btn-default" %>
   </div>
 <% end %>

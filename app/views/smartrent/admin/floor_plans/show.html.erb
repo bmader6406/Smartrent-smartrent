@@ -50,11 +50,11 @@
       <b>Penthouse:</b>
       <%= @admin_floor_plan.penthouse %>
     </p>
-
+    
+    <%= link_to '<< Back', admin_floor_plans_path, :class => "btn btn-default back" %>
     <% if current_user.is_admin? %>
-      <%= link_to 'Edit', edit_admin_floor_plan_path(@admin_floor_plan) %> |
+      <%= link_to 'Edit', edit_admin_floor_plan_path(@admin_floor_plan), :class => "btn btn-default" %>
     <% end %>
-    <%= link_to 'Back', admin_floor_plans_path %>
   </div>
 <% end %>
 

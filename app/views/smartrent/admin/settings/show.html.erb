@@ -10,10 +10,11 @@
       <%= @setting.value %>
     </p>
 
+    
+    <%= link_to '<< Back', admin_settings_path, :class => "btn btn-default back" %>
     <% if current_user.is_admin? %>
-      <%= link_to 'Edit', edit_admin_setting_path(@setting) %> |
+      <%= link_to 'Edit', edit_admin_setting_path(@setting), :class => "btn btn-default" %>
     <% end %>
-    <%= link_to 'Back', admin_settings_path %>
   </div>
 <% end %>
 
