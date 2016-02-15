@@ -34,8 +34,7 @@ module Smartrent
     end
 
     def self.import(file)
-
-#image,wp_post_date,title,search_page_description,address,city,latitude,longitude,phone_number,image_description,home_page_desc,description,state,video_url,website
+      #image,wp_post_date,title,search_page_description,address,city,latitude,longitude,phone_number,image_description,home_page_desc,description,state,video_url,website
       resident_map = {
         :image => 0,
         :title => 2,
@@ -51,14 +50,16 @@ module Smartrent
         :state => 12,
         :video_url => 13,
         :website => 14
-
       }
+      
       if file.class.to_s == "ActionDispatch::Http::UploadedFile"
         f = File.open(file.path, "r:bom|utf-8")
       else
         f = File.open(Smartrent::Engine.root.to_path + "/data/homes.csv")
       end
+      
       index = 0
+      
       CSV.foreach(f) do |row|
         index += 1
         next if index == 1
@@ -68,6 +69,8 @@ module Smartrent
         end
         Smartrent::Home.create! home_hash
       end
+      
+      # also import MoreHome and FloorPlanImage if no input file
       if file.class.to_s != "ActionDispatch::Http::UploadedFile"
         MoreHome.import("")
         FloorPlanImage.import("")

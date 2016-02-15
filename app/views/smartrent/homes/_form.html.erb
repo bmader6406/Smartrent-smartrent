@@ -62,6 +62,10 @@
   <div class="field">
     <%= f.label :image %><br />
     <%= f.file_field :image %>
+    
+    <% if f.object.image && f.object.image.url %>
+      <br><img src="<%= f.object.image.url %>" width="100px" />
+    <% end %>
   </div>
   <div class="field">
     <%= f.label :image_description %><br />

@@ -124,8 +124,9 @@ module Smartrent
               
             else
               if key == :image
+                pp ">>> #{key}: ", p.nest(value)
                 begin
-                  #property.image = p.nest(value)
+                  property.image = p.nest(value)
                 rescue Exception => e
                   puts e.message
                   puts e.backtrace.inspect

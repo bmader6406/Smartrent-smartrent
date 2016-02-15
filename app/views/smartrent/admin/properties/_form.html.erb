@@ -140,6 +140,10 @@
         <%= f.label :image, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
           <%= f.file_field :image %>
+          
+          <% if f.object.image && f.object.image.url %>
+            <br><img src="<%= f.object.image.url %>" width="100px" />
+          <% end %>
         </div>
       </div>
     </div>
