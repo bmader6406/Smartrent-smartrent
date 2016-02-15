@@ -1,5 +1,5 @@
 module Smartrent
-  class ResidentUpdater
+  class ResidentCreator
     def self.queue
       :crm_immediate
     end

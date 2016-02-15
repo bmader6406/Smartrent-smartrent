@@ -14,7 +14,7 @@ module Smartrent
       ::Resident.where(:smartrent_resident_id => nil, "units.move_in" => for_date).each do |r|
         r.units.each do |u|
           pp "u.move_in: #{u.move_in}"
-          u.send(:update_smartrent_resident) if u.move_in == for_date
+          u.send(:create_or_update_smartrent_resident) if u.move_in == for_date
 
         end
       end

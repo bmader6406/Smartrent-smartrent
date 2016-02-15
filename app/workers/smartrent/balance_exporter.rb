@@ -6,7 +6,7 @@ require 'net/ftp'
 
 
 module Smartrent
-  class ResidentExporter
+  class BalanceExporter
 
     def self.queue
       :crm_immediate
