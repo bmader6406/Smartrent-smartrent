@@ -29,7 +29,7 @@ module Smartrent
       def set_studio_penthouse
         name_lc = name.to_s.downcase
         
-        self.studio = rent_min > 0 && name_lc.include?("studio")
+        self.studio = rent_min > 0 && (name_lc.include?("studio") || name_lc.include?("s0"))
         self.penthouse = rent_min > 0 && name_lc.include?("penthouse")
         
         true

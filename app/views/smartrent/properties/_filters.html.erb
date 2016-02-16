@@ -82,8 +82,8 @@
 
         <ul>
           <li>
-          <%= f.check_box :special_promotion_true %>
-          <%= f.label :special_promotion_true, "Special Promotions" %>
+            <%= check_box_tag "q[where_promotion]" %>
+            <%= label_tag "q[where_promotion]", "Special Promotions" %>
           </li>
         </ul>
         <%= f.hidden_field :state_eq %>

@@ -46,7 +46,8 @@ module Smartrent
         :phone => ["PropertyID" ,"Phone" ,"PhoneNumber"],
         :image => ["Slideshow", "SlideshowImageURL", 0],
         :floor_plans => ["Floorplan"],
-        :features => ["FeaturedButton"]
+        :features => ["FeaturedButton"],
+        :promotion => ["Promotion"]
       }
       #FeaturedButton contains all the features
       
@@ -130,6 +131,22 @@ module Smartrent
                 rescue Exception => e
                   puts e.message
                   puts e.backtrace.inspect
+                end
+              
+              elsif key == :promotion
+                promotion = p.nest(property_map[key])
+
+                if promotion
+                  property.promotion_title = promotion["Title"]
+                  property.promotion_subtitle = promotion["Subtitle"]
+                  property.promotion_url = promotion["LinkURL"]
+                  property.promotion_expiration_date = Date.new(promotion["ExpirationDate"]["Year"].to_i, promotion["ExpirationDate"]["Month"].to_i, promotion["ExpirationDate"]["Day"].to_i) rescue nil
+
+                else
+                  property.promotion_title = nil
+                  property.promotion_subtitle = nil
+                  property.promotion_url = nil
+                  property.promotion_expiration_date = nil
                 end
                 
               else
