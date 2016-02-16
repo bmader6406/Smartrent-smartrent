@@ -177,6 +177,9 @@ module Smartrent
         end
       end #/ properties loop
       
+      Notifier.system_message("[SmartRent] WeeklyPropertyXmlImporter - SUCCESS", 
+        "Executed at #{Time.now}, total_creates: #{total_creates}, total_updates: #{total_updates}", Notifier::DEV_ADDRESS).deliver_now
+      
       pp "total_creates: #{total_creates}, total_updates: #{total_updates}"
       
     end #/ perform

@@ -60,6 +60,8 @@ module Smartrent
       ftp.login("bozzuto", "bozzuto0804")
       ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{file_name}")
       ftp.close
+      
+      Notifier.system_message("[SmartRent] ResidentExporter - SUCCESS", "Executed at #{Time.now}", Notifier::DEV_ADDRESS).deliver_now
     end
     
     def self.add_csv_row(csv, residents, batch_name)

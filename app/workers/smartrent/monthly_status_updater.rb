@@ -84,6 +84,9 @@ module Smartrent
         end
         
       end # /find in batch
+      
+      Notifier.system_message("[SmartRent] MonthlyStatusUpdater - SUCCESS", "Executed at #{Time.now}", Notifier::DEV_ADDRESS).deliver_now
+      
     end # /perform
     
     def self.create_monthly_rewards(resident, smartrent_properties, period_start)
