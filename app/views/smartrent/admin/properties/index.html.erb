@@ -17,7 +17,7 @@
         <tr>
           <th>Origin ID</th>
           <th>Name</th>
-          <th>Description</th>
+          <th>Short Description</th>
           <th>Website</th>
           <th width="310px">Actions</th>
         </tr>
@@ -25,7 +25,7 @@
         <tr>
           <td><%= property.origin_id %></td>
           <td><%= property.name %></td>
-          <td><%= strip_tags(property.description).truncate(27) if property.description %></td>
+          <td><%= strip_tags(property.short_description).truncate(27) if property.short_description %></td>
           <td><%= link_to truncate(property.website_url, :length => 35), property.formatted_website_url, :target => "_blank" %></td>
           <td>
             <%= link_to 'Residents', main_app.property_residents_path(property) %> |

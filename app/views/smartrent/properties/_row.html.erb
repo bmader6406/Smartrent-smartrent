@@ -132,8 +132,8 @@
         <% end %>
       </ul>
         <ul class="desc">
-          <% if property_.description.present? %>
-          <li><%= strip_tags(property_.description).truncate(100)  %></li>
+          <% if property_.short_description.present? %>
+          <li><%= strip_tags(property_.short_description).truncate(100)  %></li>
           <% end %>
         </ul>
     </div>

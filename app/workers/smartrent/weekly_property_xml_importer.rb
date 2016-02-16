@@ -41,13 +41,15 @@ module Smartrent
         :state => ["PropertyID" ,"Address" ,"State"],
         :zip => ["PropertyID" ,"Address" ,"PostalCode"],
         :county => ["PropertyID" ,"Address" ,"CountyName"],
-        #:email => ["PropertyID" ,"Address" ,"Lead2LeaseEmail"], # don't set property email as Lead2LeaseEmail
+        :description => ["Information" ,"OverviewText"],
+        :short_description => ["Information" ,"OverviewBullet1"],
         :phone => ["PropertyID" ,"Phone" ,"PhoneNumber"],
         :image => ["Slideshow", "SlideshowImageURL", 0],
         :floor_plans => ["Floorplan"],
         :features => ["FeaturedButton"]
       }
       #FeaturedButton contains all the features
+      
       Net::FTP.open('feeds.livebozzuto.com', 'Smarbozkrn', 'jtLQig4W') do |ftp|
         ftp.passive = true
         ftp.getbinaryfile("bozzuto.xml","#{TMP_DIR}bozzuto.xml")
@@ -55,19 +57,22 @@ module Smartrent
       end
       
       f = File.read("#{TMP_DIR}bozzuto.xml")
+      #f = File.read("/Users/tinnguyen/Desktop/_smartrent/sr-data/bozzuto.xml")
       
-      #f = File.read("/Users/talal/Desktop/bozzuto.xml")
+      total_updates = 0
+      total_creates = 0
+      
       properties = Hash.from_xml(f)
       properties["PhysicalProperty"]["Property"].each_with_index do |p, pndx|
         features = p.nest(property_map[:features])
-        origin_id = p.nest(property_map[:origin_id])
+        origin_id = p.nest(property_map[:origin_id]) # this is the Bozzuto Property No on BozzutoLink
         name = p.nest(property_map[:name])
         
-        pp ">>> pndx: #{pndx+1}"
+        pp ">>> pndx: #{pndx+1}: origin_id: #{origin_id}, name: #{name}"
         
         next if !origin_id.present? || !name.present? || !features.present? || features.nil? || features.select{|f| f["Name"].downcase == 'smartrent'}.count == 0
         
-        property = Smartrent::Property.where("lower(name) = ?", name.downcase).first
+        property = Smartrent::Property.find_by(:origin_id => origin_id)
         
         if !property
           property = Smartrent::Property.new 
@@ -94,10 +99,6 @@ module Smartrent
               end
               
             elsif key == :floor_plans
-              #Destroying previous floor plans to use only these floor plans
-              if property.id.nil?
-                property.floor_plans.destroy_all
-              end
               #Due to an unexpected FloorPlan constant not found error
               #So, I'm saving it after the property is saved
               floor_plans = p.nest(property_map[key])
@@ -124,7 +125,6 @@ module Smartrent
               
             else
               if key == :image
-                pp ">>> #{key}: ", p.nest(value)
                 begin
                   property.image = p.nest(value)
                 rescue Exception => e
@@ -143,17 +143,32 @@ module Smartrent
             end
           end
           
-          if property.save!
+          if property.save
             pp "A property has been saved, ##{property.id} changes: ", property.changed_attributes
             
+            if property.id_was.nil?
+              total_creates += 1
+            else
+              total_updates += 1
+            end
+            
+            floor_plan_ids = []
             property_floor_plans.each do |floor_plan|
               fp = Smartrent::FloorPlan.where(:property_id => property.id, :origin_id => floor_plan[:origin_id]).first
               if fp
                 fp.update_attributes!(floor_plan)
               else
-                property.floor_plans.create!(floor_plan)
+                fp = property.floor_plans.create(floor_plan)
               end
+              
+              floor_plan_ids << fp.id
             end
+            
+            #delete previous floor plans to use the new floorplans from the xml
+            pp "deleting floorplan not IN floor_plan_ids: #{floor_plan_ids}"
+            floor_plan_ids.compact!
+            Smartrent::FloorPlan.where("property_id = ? AND id NOT IN (?)", property.id, floor_plan_ids).delete_all
+
             
           elsif !property.errors.empty?
             pp "error: ##{property.id}", property.errors.full_messages.join(", ")
@@ -162,7 +177,7 @@ module Smartrent
         end
       end #/ properties loop
       
-      nil #stop properties array output
+      pp "total_creates: #{total_creates}, total_updates: #{total_updates}"
       
     end #/ perform
   end

@@ -23,6 +23,11 @@
       <b>Description:</b>
       <%= @property.description.html_safe if @property.description.present? %>
     </p>
+    
+    <p>
+      <b>Short Description:</b>
+      <%= @property.short_description.html_safe if @property.short_description.present? %>
+    </p>
 
     <p>
       <b>State:</b>

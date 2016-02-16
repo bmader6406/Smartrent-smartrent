@@ -35,6 +35,14 @@
     </div>
     <div class="field">
       <div class="form-group">
+        <%= f.label :short_description, :class => "col-md-4 control-label" %>
+        <div class="col-md-7">
+          <%= f.text_area :short_description, :class => "form-control", :rows => 8 %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
         <%= f.label :address_line1, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
           <%= f.text_field :address_line1, :class => "form-control" %>
