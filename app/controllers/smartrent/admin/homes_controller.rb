@@ -110,7 +110,7 @@ module Smartrent
               hash[k.to_sym] = "%#{params[k]}%"
           end
         end
-        @homes = Home.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("title asc")
+        @homes = Home.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("position asc")
       end
       def set_home
         @home = Home.find_by_url(params[:id]) if params[:id].present?

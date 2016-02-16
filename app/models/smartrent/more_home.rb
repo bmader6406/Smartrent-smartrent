@@ -8,6 +8,8 @@ module Smartrent
     validates :baths, :beds, :home_id, :sq_ft, :presence => true
     validates_numericality_of :baths, :beds
     
+    before_create :set_position
+    
     def self.import(file)
       if file.class.to_s == "ActionDispatch::Http::UploadedFile"
         f = File.open(file.path, "r:bom|utf-8")
@@ -24,6 +26,18 @@ module Smartrent
         end
       end
     end
+    
+    private
+    
+      def set_position
+        if home
+          h = self.class.unscoped.where("home_id = #{home.id}").group(:home_id).maximum(:position)
+          max = h && h[home.id] || 0
+          self.position = max + 1
+        end
+        
+        true
+      end
     
   end
 end

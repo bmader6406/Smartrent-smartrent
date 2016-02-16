@@ -10,7 +10,7 @@ module Smartrent
     before_action :set_more_home
     
     def index
-      @more_homes = MoreHome.paginate(:page => params[:page], :per_page => 15).order(:created_at)
+      @more_homes = MoreHome.paginate(:page => params[:page], :per_page => 15).order("position asc")
   
       respond_to do |format|
         format.html # index.html.erb

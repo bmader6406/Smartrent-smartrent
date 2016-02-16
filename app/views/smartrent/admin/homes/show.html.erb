@@ -26,7 +26,7 @@
         <div class="desc">
           <%= @home.description.html_safe %>
         </div>
-        <% if @home.more_homes.present? %>
+        <% if false && @home.more_homes.present? %> <!-- disabled -->
           <% more_homes = @home.more_homes  %>
           <div class="more_homes">
           <div class="title">Homes</div>

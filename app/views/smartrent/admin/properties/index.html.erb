@@ -6,7 +6,6 @@
   <div class="listing">
     <div class="links pull-right">
       <% if current_user.is_admin? %>
-        <%= link_to 'Import Properties', import_admin_properties_path, :class => "btn btn-default", :style => "display:none" %>
         <%= link_to 'New Property', new_admin_property_path, :class => "btn btn-primary" %>
       <% end %>
     </div>

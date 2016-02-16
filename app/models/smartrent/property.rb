@@ -108,22 +108,6 @@ module Smartrent
       end
     end
     
-    def self.import(file)
-      if file.class.to_s == "ActionDispatch::Http::UploadedFile"
-        f = File.open(file.path, "r:bom|utf-8")
-      else
-        f = File.open(Smartrent::Engine.root.to_path + "/data/properties.csv")
-      end
-      properties = SmarterCSV.process(f)
-      properties.each do |property_hash|
-        property_hash[:name] = HTMLEntities.new.decode property_hash[:name]
-        property_hash[:description] = HTMLEntities.new.decode property_hash[:description]
-        property_hash[:is_smartrent] = true
-        property_hash[:status] = self.STATUS_CURRENT
-        create property_hash
-      end
-    end
-
     def self.get_price(q)
       q[:minimum_price] = q[:minimum_price].to_i
       q[:maximum_price] = q[:maximum_price].to_i

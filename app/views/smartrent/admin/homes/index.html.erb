@@ -15,6 +15,7 @@
     <% if @homes.present? %>
       <table class="table">
         <tr>
+          <th width="80px">Position</th>
           <th>Title</th>
           <th>Short Description</th>
           <th>Url</th>
@@ -22,6 +23,7 @@
         </tr>
         <% @homes.each do |home| %>
           <tr>
+            <td><%= home.position %></td>
             <td><%= home.title %></td>
             <td><%= home.home_page_desc %></td>
             <td><%= link_to(home.url, home_path(home), :target => "_blank") if home.url  %></td>

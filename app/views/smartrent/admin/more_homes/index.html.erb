@@ -17,6 +17,7 @@
     <% if @more_homes.present? %>
       <table class="table">
         <tr>
+          <th width="80px">Position</th>
           <th>Name</th>
           <th>Beds</th>
           <th>Baths</th>
@@ -27,6 +28,7 @@
         </tr>
         <% @more_homes.each do |more_home| %>
           <tr>
+            <td><%= more_home.position %></td>
             <td><%= more_home.name %></td>
             <td><%= more_home.beds %></td>
             <td><%= more_home.baths %></td>

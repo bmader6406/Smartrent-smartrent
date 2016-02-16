@@ -26,7 +26,7 @@ module Smartrent
     
     validates :title, :presence => true, :uniqueness => true
     
-    
+    before_create :set_position
     before_save :set_url
     
     def to_param
@@ -81,6 +81,11 @@ module Smartrent
     
       def set_url
         self.url = self.to_param
+      end
+      
+      def set_position
+        self.position = self.class.unscoped.maximum(:position).to_i + 1
+        true
       end
   end
 end

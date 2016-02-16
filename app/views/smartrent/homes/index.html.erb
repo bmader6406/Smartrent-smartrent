@@ -38,7 +38,7 @@
                 </div>
               </h3>
               <div class="video">
-                <% if home.video_url %>
+                <% if !home.video_url.blank? %>
                   <%= link_to "Watch Video", home.video_url, :target => "blank" %>
                 <% end %>
               </div>
