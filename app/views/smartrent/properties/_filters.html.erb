@@ -12,8 +12,8 @@
 
         <ul>
           <li>
-            <%= f.check_box :studio_true %>
-            <%= f.label :studio_true, "Studios" %>
+            <%= check_box_tag "q[where_studio]" %>
+            <%= label_tag "q[where_studio]", "Studios" %>
           </li>
           <li>
             <%= check_box_tag "q[where_one_bed]" %>

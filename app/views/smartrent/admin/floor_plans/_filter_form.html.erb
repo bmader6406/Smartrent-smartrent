@@ -30,6 +30,12 @@
     </div>
     <div class="form-group">
       <label>
+        <%= check_box_tag :studio, true, params[:studio] %>
+        Studio
+      </label>
+    </div>
+    <div class="form-group">
+      <label>
         <%= check_box_tag :penthouse, true, params[:penthouse] %>
         Penthouse
       </label>

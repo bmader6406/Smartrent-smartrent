@@ -81,12 +81,10 @@
       <%= property_.phone %></p>
 
       <ul class="fp">
-        <% if property_.studio %>
-          <li><span class="bold">Studio</span> from <%= number_to_currency property_.studio_price %></li>
-        <% end %>
-        
         <% if fp_dict[property_.id] %>
           <% 
+            
+            studio = []
             one_bedroom = []
             two_bedrooms = []
             three_bedrooms = [] 
@@ -106,10 +104,16 @@
                     four_bedrooms << fp
                 end
               end
-
+              
+              studio << fp if fp.studio?
               penthouse << fp if fp.penthouse?
             end
           %>
+          
+          <% if !studio.empty? %>
+            <li><span class="bold">Studio</span> from <%= number_to_currency studio.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
+          <% end %>
+          
           <% if !one_bedroom.empty? %>
             <li><span class="bold">1 Bedroom</span> from <%= number_to_currency one_bedroom.sort{|a, b| a.rent_min.to_i <=> b.rent_min.to_i }.first.rent_min, :precision => 0 %></li>
           <% end %>

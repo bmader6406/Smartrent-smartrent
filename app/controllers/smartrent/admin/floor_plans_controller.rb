@@ -119,7 +119,7 @@ module Smartrent
       def filter_floor_plans(per_page = 15)
         arr = []
         hash = {}
-        ["_id", "origin_id", "name", "url", "sq_feet_max", "sq_feet_min", "beds", "baths", "rent_min", "rent_max", "penthouse"].each do |k|
+        ["_id", "origin_id", "name", "url", "sq_feet_max", "sq_feet_min", "beds", "baths", "rent_min", "rent_max", "penthouse", "studio"].each do |k|
           next if params[k].blank?
           case k
             when "_id"
@@ -138,7 +138,7 @@ module Smartrent
               arr << "#{k} <= :#{k}"
               hash[k.to_sym] = "#{params[k]}"
 
-            when "penthouse"
+            when "penthouse", "studio"
               value = params[k] == "true" ? true : false
               arr << "#{k} = :#{k}"
               hash[k.to_sym] = value

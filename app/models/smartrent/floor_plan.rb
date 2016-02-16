@@ -8,6 +8,8 @@ module Smartrent
     validates_numericality_of :rent_max, :greater_than_equal_to => 0
     validates_numericality_of :sq_feet_max, :greater_than_equal_to => 0
     validates_numericality_of :sq_feet_min, :greater_than_equal_to => 0
+    
+    before_save :set_studio_penthouse
 
     def self.import(file)
       f = File.open(file.path, "r:bom|utf-8")
@@ -21,5 +23,17 @@ module Smartrent
         end
       end
     end
+    
+    private
+    
+      def set_studio_penthouse
+        name_lc = name.to_s.downcase
+        
+        self.studio = rent_min > 0 && name_lc.include?("studio")
+        self.penthouse = rent_min > 0 && name_lc.include?("penthouse")
+        
+        true
+      end
+      
   end
 end

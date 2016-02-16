@@ -113,22 +113,6 @@
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :studio, :class => "col-md-4 control-label" %>
-        <div class="col-md-7" style="margin-top:5px;">
-          <%= f.check_box :studio %> Yes
-        </div>
-      </div>
-    </div>
-    <div class="field">
-      <div class="form-group">
-        <%= f.label :studio_price, :class => "col-md-4 control-label" %>
-        <div class="col-md-7">
-          <%= f.text_field :studio_price, :class => "form-control" %>
-        </div>
-      </div>
-    </div>
-    <div class="field">
-      <div class="form-group">
         <%= f.label :special_promotion, :class => "col-md-4 control-label" %>
         <div class="col-md-7" style="margin-top:5px;">
           <%= f.check_box :special_promotion %> Yes
@@ -139,7 +123,10 @@
       <div class="form-group">
         <%= f.label :features, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.select :feature_ids, Smartrent::Feature.all.collect {|x| [x.name, x.id]}, {:include_blank => "--Select Features--"}, {:multiple => true, :class => "form-control"} %>
+          <%= f.select :feature_ids, Smartrent::Feature.all.collect {|x| [x.name, x.id]}, {:include_blank => "--Select Features--"}, {
+                :multiple => true, 
+                :class => "form-control",
+                :style => "height: 300px;" } %>
         </div>
       </div>
     </div>

@@ -21,14 +21,14 @@ module Smartrent
         q_params_copy[:price] = price
         q_params_copy.delete_if {|key, value| 
           [ "maximum_price", "minimum_price", "where_one_bed", "where_two_bed", 
-            "where_three_more_bed", "where_penthouse", "matches_all_features" ].include?(key) &&  value == "0"
+            "where_three_more_bed", "where_penthouse", "where_studio", "matches_all_features" ].include?(key) &&  value == "0"
         }
       end
-      
+            
       @q = Property.smartrent.custom_ransack(q_params)
-      
+
       properties = Property.custom_filters(q_params_copy, @q.result.uniq)
-      
+
       @properties_grouped_by_states = grouped_by_states(properties)
 
       respond_to do |format|

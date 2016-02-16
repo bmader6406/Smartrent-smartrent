@@ -88,14 +88,14 @@ module Smartrent
         
         ActiveRecord::Base.transaction do
           property_floor_plans = []
+          feature_ids = []
+          
           property_map.each do |key, value|
             if key == :features
               #pp key, value
               p.nest(value).each do |feature|
-                if !Smartrent::Feature.feature_names.include?(feature["Name"])
-                  Feature.create!({:name => feature["Name"]})
-                end
-                property.feature_ids << Feature.find_by_name(feature["Name"]).id
+                ft = Feature.find_or_create_by(:name => feature["Name"])
+                feature_ids << ft.id # create later
               end
               
             elsif key == :floor_plans
@@ -152,6 +152,7 @@ module Smartrent
               total_updates += 1
             end
             
+            # refresh floorplans (create & delete old floorplans)
             floor_plan_ids = []
             property_floor_plans.each do |floor_plan|
               fp = Smartrent::FloorPlan.where(:property_id => property.id, :origin_id => floor_plan[:origin_id]).first
@@ -165,9 +166,17 @@ module Smartrent
             end
             
             #delete previous floor plans to use the new floorplans from the xml
-            pp "deleting floorplan not IN floor_plan_ids: #{floor_plan_ids}"
+            pp "deleting floorplan not IN: #{floor_plan_ids}"
             floor_plan_ids.compact!
             Smartrent::FloorPlan.where("property_id = ? AND id NOT IN (?)", property.id, floor_plan_ids).delete_all
+            
+            # refresh features (create & delete old features)
+            feature_ids.each do |fid|
+              property.property_features.find_or_create_by(:feature_id => fid)
+            end
+            
+            pp "deleting feature_ids not IN: #{feature_ids}"
+            Smartrent::PropertyFeature.where("property_id = ? AND feature_id NOT IN (?)", property.id, feature_ids).delete_all
 
             
           elsif !property.errors.empty?

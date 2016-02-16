@@ -33,7 +33,7 @@ module Smartrent
         q.delete_if {|key, value|
           [ "maximum_price", "minimum_price", 
             "where_one_bed", "where_two_bed", "where_three_more_bed",
-            "where_penthouse", "matches_all_features"].include?(key)
+            "where_penthouse", "where_studio", "matches_all_features"].include?(key)
         }
       end
       super q
@@ -52,7 +52,8 @@ module Smartrent
         properties = self.where_bed(properties, 2) if q_params[:where_two_bed]
         properties = self.where_bed_more_than_eq(properties, 3) if q_params[:where_three_more_bed]
         properties = self.where_penthouse(properties) if q_params[:where_penthouse]
-        properties = self.where_price(properties, q_params[:price]) if q_params[:where_price]
+        properties = self.where_studio(properties) if q_params[:where_studio]
+        properties = self.where_price(properties, q_params[:price]) if q_params[:price]
       end
       properties
     end
@@ -87,8 +88,16 @@ module Smartrent
       self.filter_from_result result, properties
     end
     
-    def self.where_price(price, properties)
+    def self.where_studio(properties)
+      result = Property.joins(:floor_plans)
+        .where(:floor_plans => {:studio => true})
+        .group("properties.id")
+      self.filter_from_result result, properties
+    end
+    
+    def self.where_price(properties, price)
       prices = price.split(",")
+
       return properties if prices.length != 2
       minimum_price = prices[0].to_i
       maximum_price = prices[1].to_i
@@ -96,16 +105,18 @@ module Smartrent
         result = Property.joins(:floor_plans)
           .where("smartrent_floor_plans.rent_min >= ?", minimum_price)
           .where("smartrent_floor_plans.rent_max <= ?", maximum_price)
-          .group("smartrent_properties.id")
+          .group("properties.id")
       elsif minimum_price > 0
         result = Property.joins(:floor_plans)
           .where("smartrent_floor_plans.rent_min >= ?", minimum_price)
-          .group("smartrent_properties.id")
+          .group("properties.id")
       elsif maximum_price > 0
         result = Property.joins(:floor_plans)
           .where("smartrent_floor_plans.rent_max <= ?", maximum_price)
-          .group("smartrent_properties.id")
+          .group("properties.id")
       end
+
+      self.filter_from_result result, properties
     end
     
     def self.get_price(q)
