@@ -14,7 +14,7 @@ var mapStart = function() {
   ia_map.map_options = jQuery.extend({ // added during insert of overlay
     scrollwheel: true,
     draggable: true,
-    disableDoubleClickZoom: false,
+    disableDoubleClickZoom: false
   }, ia_map.map_options)
   ia_map.map_options.zoom = ZOOM_LEVEL; // Accepted values are 1-20;
   ia_map.params.lat = MAP_LATITUDE; // Latitude on which to center map

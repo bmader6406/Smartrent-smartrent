@@ -35,12 +35,18 @@ module Smartrent
         
         if time #export active residents for a specified month
           Smartrent::Resident.includes(:rewards)
-            .where("smartrent_status = ? AND created_at #{(time.beginning_of_month..time.end_of_month).to_s(:db)}", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE).find_in_batches do |residents|
+            .where("smartrent_status = ? AND created_at #{(time.beginning_of_month..time.end_of_month).to_s(:db)}", [
+              Smartrent::Resident.SMARTRENT_STATUS_ACTIVE, 
+              Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
+            ]).find_in_batches do |residents|
               add_csv_row(csv, residents, batch_name)
           end
           
         else # export all active resident
-          Smartrent::Resident.includes(:rewards).where("smartrent_status = ?", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE).find_in_batches do |residents|
+          Smartrent::Resident.includes(:rewards).where("smartrent_status = ?", [
+            Smartrent::Resident.SMARTRENT_STATUS_ACTIVE, 
+            Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
+          ]).find_in_batches do |residents|
             add_csv_row(csv, residents, batch_name)
           end
           

@@ -43,7 +43,7 @@ module Smartrent
               lat: p.latitude,
               lon: p.longitude,
               image: p.image,
-              image_link: p.image
+              image_link: p.bozzuto_url
             }
           }
         }

@@ -18,7 +18,7 @@ module Smartrent
               lat: h.latitude,
               lon: h.longitude,
               image: h.image,
-              image_link: h.image
+              image_link: home_url(h)
             }
             
           }
