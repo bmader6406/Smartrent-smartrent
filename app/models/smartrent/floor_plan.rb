@@ -10,27 +10,14 @@ module Smartrent
     validates_numericality_of :sq_feet_min, :greater_than_equal_to => 0
     
     before_save :set_studio_penthouse
-
-    def self.import(file)
-      f = File.open(file.path, "r:bom|utf-8")
-      floor_plans = SmarterCSV.process(f)
-      floor_plans.each do |floor_plan|
-        property_name = floor_plan[:property_id]
-        property = Property.find_by_name(property_name)
-        if property
-          floor_plan[:property_id] = property.id
-          create! floor_plan
-        end
-      end
-    end
     
     private
     
       def set_studio_penthouse
         name_lc = name.to_s.downcase
         
-        self.studio = rent_min > 0 && (name_lc.include?("studio") || name_lc.include?("s0"))
-        self.penthouse = rent_min > 0 && name_lc.include?("penthouse")
+        self.studio = name_lc.include?("studio") || name_lc.include?("s0")
+        self.penthouse = name_lc.include?("penthouse")
         
         true
       end

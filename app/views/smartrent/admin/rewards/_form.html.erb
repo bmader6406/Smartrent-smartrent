@@ -22,13 +22,13 @@
     <div class="form-group">
       <%= f.label :period_start, :class => "col-md-4 control-label" %>
       <div class="col-md-7">
-        <%= f.date_select :period_start, :class => "form-control" %>
+        <%= f.date_select :period_start, {:include_blank => true, :default => nil} %>
       </div>
     </div>
     <div class="form-group">
       <%= f.label :period_end, :class => "col-md-4 control-label" %>
       <div class="col-md-7">
-        <%= f.date_select :period_end, :class => "form-control" %>
+        <%= f.date_select :period_end, {:include_blank => true, :default => nil} %>
       </div>
     </div>
     <div class="form-group">

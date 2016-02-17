@@ -12,19 +12,19 @@
     </div>
     <h3>Listing Features</h3>
 
-    <% if @admin_features.present? %>
+    <% if @features.present? %>
       <table class="table">
         <tr>
           <th>Name</th>
           <th width="160px">Actions</th>
         </tr>
 
-        <% @admin_features.each do |admin_feature| %>
+        <% @features.each do |admin_feature| %>
           <tr>
             <td><%= admin_feature.name %></td>
             <td>
               <% if current_user.is_admin? %>
-                <%= link_to 'Edit', edit_admin_feature_path(admin_feature) %> | 
+                <%= link_to 'Edit', edit_admin_feature_path(admin_feature) %> &middot;
                 <%= link_to 'Delete', admin_feature_path(admin_feature), method: :delete, data: { confirm: 'Are you sure?' } %>
               <% end %>
             </td>
@@ -32,8 +32,8 @@
         <% end %>
       </table>
       <div class="paging-info">
-        <%= page_entries_info @admin_features %>
-        <%= page_navigation_links @admin_features %>
+        <%= page_entries_info @features %>
+        <%= page_navigation_links @features %>
       </div>
     <% elsif params[:search] == "1" %>
       <div class="alert alert-warning">No admin_features found</div>

@@ -1,7 +1,9 @@
 <% content_for(:ui_center) do %>
   <div class="main">
+    <h3> <%= link_to @home.title, admin_home_path(@home) %> &gt; <%= link_to @more_home.name, admin_home_more_home_path(@home, @more_home) %> &gt; Floor Plan Detail </h3>
+    <hr/>
     <p>
-    <%= image_tag @floor_plan_image.image, :width => "100" %>
+      <%= image_tag @floor_plan_image.image, :width => "100" %>
     </p>
 
     <p>
@@ -14,9 +16,9 @@
       <%= @floor_plan_image.more_home.name %>
     </p>
     
-    <%= link_to '<< Back', admin_floor_plan_images_path, :class => "btn btn-default back" %>
+    <%= link_to '<< Back', admin_home_more_home_floor_plan_images_path(@home, @more_home), :class => "btn btn-default back" %>
     <% if current_user.is_admin? %>
-      <%= link_to 'Edit', edit_admin_floor_plan_image_path(@floor_plan_image), :class => "btn btn-default" %>
+      <%= link_to 'Edit', edit_admin_home_more_home_floor_plan_image_path(@home, @more_home, @floor_plan_image), :class => "btn btn-default" %>
     <% end %>
   </div>
 <% end %>

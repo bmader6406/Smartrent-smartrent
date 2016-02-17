@@ -1,21 +1,15 @@
 <% if current_user.is_admin? %>
-  <li class="<%= "active" if controller_name == "properties" %>">
+  <li class="<%= "active" if controller_name == "properties" || controller_name == "floor_plans" %>">
     <a href="<%= raw admin_properties_path %>"> <i class="fa fa-building-o fa-fw"></i> Properties </a>
   </li>
   <li class="<%= "active" if controller_name == "features" %>">
     <a href="<%= raw admin_features_path %>"> <i class="fa fa-star fa-fw"></i> Features </a>
   </li>
-  <li class="<%= "active" if controller_name == "floor_plans" %>">
-    <a href="<%= raw admin_floor_plans_path %>"> <i class="fa fa-info-circle fa-fw"></i> Floor Plans </a>
-  </li>
-  <li class="<%= "active" if controller_name == "floor_plan_images" %>">
-    <a href="<%= raw admin_floor_plan_images_path %>"> <i class="fa fa-picture-o fa-fw"></i> Floor Plan Images </a>
-  </li>
-  <li class="<%= "active" if controller_name == "homes" %>">
+  <li class="<%= "active" if controller_name == "homes" || controller_name == "more_homes" || controller_name == "floor_plan_images" %>">
     <a href="<%= raw admin_homes_path %>"> <i class="fa fa-home fa-fw"></i> Homes </a>
   </li>
-  <li class="<%= "active" if controller_name == "more_homes" %>">
-    <a href="<%= raw admin_more_homes_path %>"> <i class="fa fa-home fa-fw"></i> More Homes </a>
+  <li class="<%= "active" if controller_name == "balances" %>">
+    <a href="<%= raw admin_balances_path %>"> <i class="fa fa-usd fa-fw"></i> Balances </a>
   </li>
   <li class="<%= "active" if controller_name == "rewards" %>" style="display:none">
     <a href="<%= raw admin_rewards_path %>"> <i class="fa fa-trophy fa-fw"></i> Rewards </a>

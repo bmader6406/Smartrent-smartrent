@@ -53,6 +53,7 @@
     <% if current_user.is_admin? %>
       <%= link_to 'Edit', edit_admin_home_path(@home), :class => "btn btn-default" %>
     <% end %>
+    <%= link_to 'More Homes', admin_home_more_homes_path(@home), :class => "btn btn-default" %>
   </div>
 <% end %>
 

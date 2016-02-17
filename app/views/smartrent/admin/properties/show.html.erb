@@ -1,5 +1,7 @@
 <% content_for(:ui_center) do %>
   <div class="main">
+    <h3>Property Details</h3>
+    <hr/>
     <p>
       <b>Name:</b>
       <%= @property.name %>
@@ -10,7 +12,7 @@
       <%= @property.phone %>
     </p>
     <p>
-      <%= image_tag @property.image %>
+      <%= image_tag @property.image, :style => "width:160px" %>
     </p>
 
 

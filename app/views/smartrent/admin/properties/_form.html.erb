@@ -113,14 +113,6 @@
     </div>
     <div class="field">
       <div class="form-group">
-        <%= f.label :special_promotion, :class => "col-md-4 control-label" %>
-        <div class="col-md-7" style="margin-top:5px;">
-          <%= f.check_box :special_promotion %> Yes
-        </div>
-      </div>
-    </div>
-    <div class="field">
-      <div class="form-group">
         <%= f.label :features, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
           <%= f.select :feature_ids, Smartrent::Feature.all.collect {|x| [x.name, x.id]}, {:include_blank => "--Select Features--"}, {
@@ -186,7 +178,15 @@
       <div class="form-group">
         <%= f.label :promotion_expiration_date, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.date_select :promotion_expiration_date, :class => "form-control" %>
+          <%= f.date_select :promotion_expiration_date, {:include_blank => true, :default => nil} %>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :special_promotion, :class => "col-md-4 control-label" %>
+        <div class="col-md-7" style="margin-top:5px;">
+          <%= f.check_box :special_promotion %> Yes
         </div>
       </div>
     </div>

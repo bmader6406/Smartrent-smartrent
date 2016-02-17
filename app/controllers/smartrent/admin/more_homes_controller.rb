@@ -6,11 +6,11 @@ module Smartrent
     # GET /admin/more_more_homes.json
     #
     before_action :require_admin, :only => [:import, :import_page]
-
+    before_action :set_home
     before_action :set_more_home
     
     def index
-      @more_homes = MoreHome.paginate(:page => params[:page], :per_page => 15).order("position asc")
+      @more_homes = @home.more_homes.paginate(:page => params[:page], :per_page => 15).order("position asc")
   
       respond_to do |format|
         format.html # index.html.erb
@@ -30,7 +30,7 @@ module Smartrent
     # GET /admin/more_more_homes/new
     # GET /admin/more_more_homes/new.json
     def new
-      @more_home = MoreHome.new
+      @more_home = @home.more_homes.new
       #3.times { @more_home.floor_plan_images.build }
   
       respond_to do |format|
@@ -46,10 +46,10 @@ module Smartrent
     # POST /admin/more_more_homes
     # POST /admin/more_more_homes.json
     def create
-      @more_home = MoreHome.new(more_home_params)
+      @more_home = @home.more_homes.new(more_home_params)
       respond_to do |format|
         if @more_home.save
-          format.html { redirect_to [:admin, @more_home], notice: 'More Home was successfully created.' }
+          format.html { redirect_to [:admin, @home, @more_home], notice: 'More Home was successfully created.' }
           format.json { render json: @more_home, status: :created, location: @more_home }
         else
           format.html { render action: "new" }
@@ -64,7 +64,7 @@ module Smartrent
       pp "more_home_params:", more_home_params
       respond_to do |format|
         if @more_home.update_attributes(more_home_params)
-          format.html { redirect_to admin_more_home_path(@more_home), notice: 'More Home was successfully updated.' }
+          format.html { redirect_to admin_home_more_home_url(@home, @more_home), notice: 'More Home was successfully updated.' }
           format.json { head :no_content }
           format.js {}
         else
@@ -80,27 +80,33 @@ module Smartrent
     def destroy
       @more_home.destroy
       respond_to do |format|
-        format.html { redirect_to admin_more_homes_url }
+        format.html { redirect_to admin_home_more_homes_url(@home) }
         format.json { head :no_content }
       end
     end
-
-    def import_page
-      render :import
-    end
-
-    def import
-      MoreHome.import(params[:file])
-      redirect_to admin_more_homes_path, notice: "more_more_homes have been imported"
-    end
-
 
     private
       def more_home_params
         params.require(:more_home).permit!
       end
+      
+      def set_home
+        @home = Smartrent::Home.find_by_url(params[:home_id])
+      end
+      
       def set_more_home
-        @more_home = MoreHome.find(params[:id]) if params[:id]
+        @more_home = @home.more_homes.find(params[:id]) if params[:id]
+        
+        case action_name
+          when "create"
+            authorize! :cud, Smartrent::MoreHome
+          when "edit", "update", "destroy"
+            authorize! :cud, @more_home
+          when "read"
+            authorize! :read, @more_home
+          else
+            authorize! :read, Smartrent::MoreHome
+        end
       end
   end
 end

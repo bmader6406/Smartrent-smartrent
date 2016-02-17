@@ -1,13 +1,6 @@
-<%= form_for([:admin, @admin_floor_plan], html: {:class => "form-horizontal"}) do |f| %>
-  <%= render "layouts/error_messages", :target => @admin_floor_plan %>
+<%= form_for([:admin, @property, @floor_plan], html: {:class => "form-horizontal"}) do |f| %>
+  <%= render "layouts/error_messages", :target => @floor_plan %>
   <fieldset>
-
-    <div class="form-group">
-      <%= f.label :property_id, :class => "col-md-4 control-label" %>
-      <div class="col-md-7">
-        <%= f.collection_select :property_id, Property.smartrent.order("name asc").all, :id, :name, {:include_blank => "--Select Property--"}, {:class => "form-control"} %>
-      </div>
-    </div>
     <div class="form-group">
       <%= f.label :name, :class => "col-md-4 control-label" %>
       <div class="col-md-7">
@@ -72,7 +65,7 @@
       <label class="col-md-4 control-label" for="singlebutton"></label>
       <div class="col-md-7">
         <%= f.submit :class => "btn btn-primary" %>
-        <%= link_to 'Cancel', admin_floor_plans_path, :class => "btn btn-default" %>
+        <%= link_to 'Cancel', admin_property_floor_plans_path(@property), :class => "btn btn-default" %>
       </div>
     </div>
   </fieldset>

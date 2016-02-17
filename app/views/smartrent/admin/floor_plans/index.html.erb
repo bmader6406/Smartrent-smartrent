@@ -6,16 +6,15 @@
   <div class="listing">
     <div class="links pull-right">
       <% if current_user.is_admin? %>
-        <%= link_to 'Import Floor Plans', import_admin_floor_plans_path, :class => "btn btn-default", :style => "display:none" %>
-        <%= link_to 'New Floor Plan', new_admin_floor_plan_path, :class => "btn btn-primary" %>
+        <%= link_to 'New Floor Plan', new_admin_property_floor_plan_path(@property), :class => "btn btn-primary" %>
       <% end %>
     </div>
-    <h3>Listing Floor Plan</h3>
+    <h3> <%= link_to @property.name, admin_property_path(@property) %> &gt; Listing Floor Plan</h3>
 
-    <% if @admin_floor_plans.present? %>
+    <% if @floor_plans.present? %>
       <table class="table">
         <tr>
-          <th>Property</th>
+          <th>Origin ID</th>
           <th>Name</th>
           <th>Sq feet max</th>
           <th>Sq feet min</th>
@@ -23,34 +22,35 @@
           <th>Baths</th>
           <th>Rent min</th>
           <th>Rent max</th>
+          <th>Studio</th>
           <th>Penthouse</th>
           <th width="160px">Actions</th>
         </tr>
 
-        <% @admin_floor_plans.each do |admin_floor_plan| %>
+        <% @floor_plans.each do |floor_plan| %>
           <tr>
-            <td><%= admin_floor_plan.property.name rescue "N/A" %></td>
-            <td><%= admin_floor_plan.name %></td>
-            <td><%= admin_floor_plan.sq_feet_max %></td>
-            <td><%= admin_floor_plan.sq_feet_min %></td>
-            <td><%= admin_floor_plan.beds %></td>
-            <td><%= admin_floor_plan.baths %></td>
-            <td><%= admin_floor_plan.rent_min %></td>
-            <td><%= admin_floor_plan.rent_max %></td>
-            <td><%= admin_floor_plan.penthouse %></td>
+            <td><%= floor_plan.origin_id %></td>
+            <td><%= link_to floor_plan.name, admin_property_floor_plan_path(@property, floor_plan) %></td>
+            <td><%= floor_plan.sq_feet_max %></td>
+            <td><%= floor_plan.sq_feet_min %></td>
+            <td><%= floor_plan.beds %></td>
+            <td><%= floor_plan.baths %></td>
+            <td><%= floor_plan.rent_min %></td>
+            <td><%= floor_plan.rent_max %></td>
+            <td><%= floor_plan.studio %></td>
+            <td><%= floor_plan.penthouse %></td>
             <td>
-              <%= link_to 'Show', admin_floor_plan_path(admin_floor_plan) %>
-              <% if current_user.is_admin? %> |
-                <%= link_to 'Edit', edit_admin_floor_plan_path(admin_floor_plan) %> |
-                <%= link_to 'Delete', admin_floor_plan_path(admin_floor_plan), method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% if current_user.is_admin? %>
+                <%= link_to 'Edit', edit_admin_property_floor_plan_path(@property, floor_plan) %> &middot;
+                <%= link_to 'Delete', admin_property_floor_plan_path(@property, floor_plan), method: :delete, data: { confirm: 'Are you sure?' } %>
               <% end %>
             </td>
           </tr>
         <% end %>
       </table>
       <div class="paging-info">
-        <%= page_entries_info @admin_floor_plans %>
-        <%= page_navigation_links @admin_floor_plans %>
+        <%= page_entries_info @floor_plans %>
+        <%= page_navigation_links @floor_plans %>
       </div>
     <% elsif params[:search] == "1" %>
       <div class="alert alert-warning">No Floor Plans found</div>

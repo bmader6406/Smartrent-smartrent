@@ -96,18 +96,19 @@ module Smartrent
         arr = []
         hash = {}
         
-        ["_id", "title", "phone_number", "state", "latitude", "longitude"].each do |k|
+        ["_id", "title", "city", "state"].each do |k|
           next if params[k].blank?
+          val = params[k].strip
           case k
             when "_id"
               arr << "id = :id"
-              hash[:id] = "#{params[k]}"
+              hash[:id] = "#{val}"
             when "latitude", "longitude"
               arr << "#{k} = :#{k}"
-              hash[k.to_sym] = "#{params[k]}"
+              hash[k.to_sym] = "#{val}"
             else
               arr << "#{k} LIKE :#{k}"
-              hash[k.to_sym] = "%#{params[k]}%"
+              hash[k.to_sym] = "%#{val}%"
           end
         end
         @homes = Home.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("position asc")

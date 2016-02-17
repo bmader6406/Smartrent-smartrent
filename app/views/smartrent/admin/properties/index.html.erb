@@ -8,32 +8,35 @@
       <% if current_user.is_admin? %>
         <%= link_to 'New Property', new_admin_property_path, :class => "btn btn-primary" %>
       <% end %>
+      
+      <%= link_to 'Export All', export_admin_properties_path, :class => "btn btn-default" %>
+      <%= link_to 'Re-import Properties', import_xml_admin_properties_path, :class => "btn btn-danger re-import" %>
     </div>
     <h3>Listing Properties</h3>
 
     <% if @properties.present? %>
       <table class="table">
         <tr>
-          <th>Origin ID</th>
+          <th>Property No</th>
           <th>Name</th>
-          <th>Short Description</th>
-          <th>Website</th>
+          <th>City</th>
+          <th>State</th>
           <th width="310px">Actions</th>
         </tr>
       <% @properties.each do |property| %>
         <tr>
           <td><%= property.origin_id %></td>
-          <td><%= property.name %></td>
-          <td><%= strip_tags(property.short_description).truncate(27) if property.short_description %></td>
-          <td><%= link_to truncate(property.website_url, :length => 35), property.formatted_website_url, :target => "_blank" %></td>
+          <td><%= link_to property.name, admin_property_path(property) %> </td>
+          <td><%= property.city %></td>
+          <td><%= property.state %></td>
           <td>
-            <%= link_to 'Residents', main_app.property_residents_path(property) %> |
-            <%= link_to 'Floorplans', admin_property_floor_plans_path(property) %> |
-            <%= link_to 'Show', admin_property_path(property) %> 
-            <% if current_user.is_admin? %> |
-              <%= link_to 'Edit', edit_admin_property_path(property) %> |
-              <%= link_to 'Delete', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %>
+            <% if current_user.is_admin? %>
+              <%= link_to 'Edit', edit_admin_property_path(property) %> &middot;
+              <%= link_to 'Delete', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %> &middot;
             <% end %>
+            
+            <%= link_to 'Residents', main_app.property_residents_path(property) %> &middot;
+            <%= link_to 'Floor Plans', admin_property_floor_plans_path(property) %>
           </td>
         </tr>
       <% end %>
@@ -54,5 +57,19 @@
 <script type="text/javascript">
   $(function(){
     App.initPageLayout();
+    
+    $('.re-import').on('click', function(){
+      var t = $(this);
+      
+      bootbox.confirm("Sure you want to re-import properties?", function(result) {
+        if (result) {
+          $.post(t.attr('href'), function(){
+            msgbox("Import is running... Please reload this page after a few minutes!");
+          }, 'json');
+        }
+      });
+      
+      return false;
+    });
   });
 </script>

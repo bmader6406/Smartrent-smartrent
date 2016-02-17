@@ -1,18 +1,26 @@
 <div id="property-search">
   <h3>Property Search</h3>
   <%= form_tag({}, {:method => "get"}) do %>
-    <div class="form-group">
+    <div class="form-group" style="display:none">
       <%= text_field_tag :_id, params[:_id], :class => "form-control", :placeholder => "Property ID" %>
+    </div>
+    <div class="form-group">
+      <%= text_field_tag :origin_id, params[:origin_id], :class => "form-control", :placeholder => "Property No" %>
     </div>
     <div class="form-group">
       <%= text_field_tag :name, params[:name], :class => "form-control", :placeholder => "Property Name" %>
     </div>
     <div class="form-group">
-      <%= select_tag :status, options_for_select(Smartrent::Property.statuses.collect{|key,value| [value, key]}, params[:status]), 
-            {:include_blank => "--Select Status--", :class => "form-control"}%>
+      <%= text_field_tag :city, params[:city], :class => "form-control", :placeholder => "City" %>
     </div>
     <div class="form-group">
-      <%= text_field_tag :website_url, params[:website_url], :class => "form-control", :placeholder => "Website URL" %>
+      <%= select_tag :state, options_for_select(US_STATES.keys.sort.collect{|k| [US_STATES[k], k]}, params[:state]), 
+            {:include_blank => "--Select State--", :class => "form-control"}%>
+    </div>
+    
+    <div class="form-group">
+      <%= select_tag :status, options_for_select(Smartrent::Property.statuses.collect{|key,value| [value, key]}, params[:status]), 
+            {:include_blank => "--Select Status--", :class => "form-control"}%>
     </div>
     <%= hidden_field_tag "search", "1" %>
     <%= submit_tag "Search", :class => "btn btn-default btn-block search" %>

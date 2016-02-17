@@ -1,4 +1,4 @@
-<%= form_for([:admin, @floor_plan_image], html: {:class => "form-horizontal"}) do |f| %>
+<%= form_for([:admin, @home, @more_home, @floor_plan_image], html: {:class => "form-horizontal"}) do |f| %>
   <%= render "layouts/error_messages", :target => @floor_plan_image %>
   <fieldset>
     <div class="form-group">
@@ -18,16 +18,10 @@
       </div>
     </div>
     <div class="form-group">
-      <%= f.label :more_home_id, :class => "col-md-4 control-label" %>
-      <div class="col-md-7">
-        <%= f.collection_select :more_home_id, Smartrent::MoreHome.order("name asc").all, :id, :name, {:include_blank => "--Select Home--"}, {:class => "form-control"} %>
-      </div>
-    </div>
-    <div class="form-group">
       <label class="col-md-4 control-label" for="singlebutton"></label>
       <div class="col-md-7">
         <%= f.submit :class => "btn btn-primary" %>
-        <%= link_to 'Cancel', admin_floor_plan_images_path, :class => "btn btn-default" %>
+        <%= link_to 'Cancel', admin_home_more_home_floor_plan_images_path(@home, @more_home), :class => "btn btn-default" %>
       </div>
     </div>
   </fieldset>

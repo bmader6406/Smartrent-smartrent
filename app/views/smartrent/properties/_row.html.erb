@@ -92,21 +92,23 @@
             penthouse = []
             
             fp_dict[property_.id].each do |fp|
-              if fp.rent_min > 0 && fp.beds > 0
-                case fp.beds
-                  when 1
-                    one_bedroom << fp
-                  when 2
-                    two_bedrooms << fp
-                  when 3
-                    three_bedrooms << fp
-                  else
-                    four_bedrooms << fp
+              if fp.rent_min > 0
+                if fp.beds > 0
+                  case fp.beds
+                    when 1
+                      one_bedroom << fp
+                    when 2
+                      two_bedrooms << fp
+                    when 3
+                      three_bedrooms << fp
+                    else
+                      four_bedrooms << fp
+                  end
                 end
+                
+                studio << fp if fp.studio?
+                penthouse << fp if fp.penthouse?
               end
-              
-              studio << fp if fp.studio?
-              penthouse << fp if fp.penthouse?
             end
           %>
           

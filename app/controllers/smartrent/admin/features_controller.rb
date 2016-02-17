@@ -12,18 +12,18 @@ module Smartrent
       
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @admin_features }
+        format.json { render json: @features }
       end
     end
   
     # GET /admin/features/new
     # GET /admin/features/new.json
     def new
-      @admin_feature = Feature.new
+      @feature = Feature.new
   
       respond_to do |format|
         format.html # new.html.erb
-        format.json { render json: @admin_feature }
+        format.json { render json: @feature }
       end
     end
   
@@ -34,15 +34,15 @@ module Smartrent
     # POST /admin/features
     # POST /admin/features.json
     def create
-      @admin_feature = Feature.new(admin_feature_params)
+      @feature = Feature.new(admin_feature_params)
   
       respond_to do |format|
-        if @admin_feature.save
+        if @feature.save
           format.html { redirect_to admin_features_url, notice: 'Feature was successfully created.' }
-          format.json { render json: @admin_feature, status: :created, location: @admin_feature }
+          format.json { render json: @feature, status: :created, location: @feature }
         else
           format.html { render action: "new" }
-          format.json { render json: @admin_feature.errors, status: :unprocessable_entity }
+          format.json { render json: @feature.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -51,12 +51,12 @@ module Smartrent
     # PUT /admin/features/1.json
     def update
       respond_to do |format|
-        if @admin_feature.update_attributes(admin_feature_params)
+        if @feature.update_attributes(admin_feature_params)
           format.html { redirect_to admin_features_url, notice: 'Feature was successfully updated.' }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
-          format.json { render json: @admin_feature.errors, status: :unprocessable_entity }
+          format.json { render json: @feature.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -64,7 +64,7 @@ module Smartrent
     # DELETE /admin/features/1
     # DELETE /admin/features/1.json
     def destroy
-      @admin_feature.destroy
+      @feature.destroy
   
       respond_to do |format|
         format.html { redirect_to admin_features_url }
@@ -86,14 +86,14 @@ module Smartrent
       end
 
       def set_feature
-        @admin_feature = Feature.find(params[:id]) if params[:id]
+        @feature = Feature.find(params[:id]) if params[:id]
         case action_name
           when "create"
             authorize! :cud, Smartrent::Feature
           when "edit", "update", "destroy"
-            authorize! :cud, @admin_feature
+            authorize! :cud, @feature
           when "read"
-            authorize! :read, @admin_feature
+            authorize! :read, @feature
           else
             authorize! :read, Smartrent::Feature
         end
@@ -104,15 +104,16 @@ module Smartrent
         
         ["_id","name"].each do |k|
           next if params[k].blank?
+          val = params[k].strip
           if k == "_id"
             arr << "id = :id"
-            hash[:id] = "#{params[k]}"
+            hash[:id] = "#{val}"
           else
             arr << "#{k} LIKE :#{k}"
-            hash[k.to_sym] = "%#{params[k]}%"
+            hash[k.to_sym] = "%#{val}%"
           end
         end
-        @admin_features = Feature.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
+        @features = Feature.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")
       end
       
   end

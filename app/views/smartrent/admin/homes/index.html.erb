@@ -15,24 +15,25 @@
     <% if @homes.present? %>
       <table class="table">
         <tr>
-          <th width="80px">Position</th>
+          <th>Position</th>
           <th>Title</th>
-          <th>Short Description</th>
-          <th>Url</th>
-          <th width="160px">Actions</th>
+          <th>City</th>
+          <th>State</th>
+          <th width="250px">Actions</th>
         </tr>
         <% @homes.each do |home| %>
           <tr>
             <td><%= home.position %></td>
-            <td><%= home.title %></td>
-            <td><%= home.home_page_desc %></td>
-            <td><%= link_to(home.url, home_path(home), :target => "_blank") if home.url  %></td>
+            <td><%= link_to home.title, admin_home_path(home) %></td>
+            <td><%= home.city %></td>
+            <td><%= home.state  %></td>
             <td>
-              <%= link_to 'Show', admin_home_path(home) %>
-              <% if current_user.is_admin? %> | 
-                <%= link_to 'Edit', edit_admin_home_path(home) %> | 
-                <%= link_to 'Delete', admin_home_path(home), method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% if current_user.is_admin? %> 
+                <%= link_to 'Edit', edit_admin_home_path(home) %> &middot;
+                <%= link_to 'Delete', admin_home_path(home), method: :delete, data: { confirm: 'Are you sure?' } %> &middot;
               <% end %>
+              
+              <%= link_to 'More Homes', admin_home_more_homes_path(home) %>
             </td>
           </tr>
         <% end %>

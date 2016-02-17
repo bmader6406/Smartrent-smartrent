@@ -1,59 +1,55 @@
 <% content_for(:ui_center) do %>
   <div class="main">
-    <p>
-      <b>Property:</b>
-      <%= @admin_floor_plan.property.name rescue "N/A" %>
-    </p>
-
-
+    <h3> <%= link_to @property.name, admin_property_path(@property) %> &gt; Floor Plan Detail </h3>
+    <hr/>
     <p>
       <b>Name:</b>
-      <%= @admin_floor_plan.name %>
+      <%= @floor_plan.name %>
     </p>
 
     <p>
       <b>Url:</b>
-      <%= link_to @admin_floor_plan.url, @admin_floor_plan.url, :target => "_blank" %>
+      <%= link_to @floor_plan.url, @floor_plan.url, :target => "_blank" %>
     </p>
 
     <p>
       <b>Sq feet max:</b>
-      <%= @admin_floor_plan.sq_feet_max %>
+      <%= @floor_plan.sq_feet_max %>
     </p>
 
     <p>
       <b>Sq feet min:</b>
-      <%= @admin_floor_plan.sq_feet_min %>
+      <%= @floor_plan.sq_feet_min %>
     </p>
 
     <p>
       <b>Beds:</b>
-      <%= @admin_floor_plan.beds %>
+      <%= @floor_plan.beds %>
     </p>
 
     <p>
       <b>Baths:</b>
-      <%= @admin_floor_plan.baths %>
+      <%= @floor_plan.baths %>
     </p>
 
     <p>
       <b>Rent min:</b>
-      <%= @admin_floor_plan.rent_min %>
+      <%= @floor_plan.rent_min %>
     </p>
 
     <p>
       <b>Rent max:</b>
-      <%= @admin_floor_plan.rent_max %>
+      <%= @floor_plan.rent_max %>
     </p>
 
     <p>
       <b>Penthouse:</b>
-      <%= @admin_floor_plan.penthouse %>
+      <%= @floor_plan.penthouse %>
     </p>
     
-    <%= link_to '<< Back', admin_floor_plans_path, :class => "btn btn-default back" %>
+    <%= link_to '<< Back', admin_property_floor_plans_path(@property), :class => "btn btn-default back" %>
     <% if current_user.is_admin? %>
-      <%= link_to 'Edit', edit_admin_floor_plan_path(@admin_floor_plan), :class => "btn btn-default" %>
+      <%= link_to 'Edit', edit_admin_property_floor_plan_path(@property, @floor_plan), :class => "btn btn-default" %>
     <% end %>
   </div>
 <% end %>

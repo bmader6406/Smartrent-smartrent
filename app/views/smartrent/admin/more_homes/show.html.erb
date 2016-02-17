@@ -1,5 +1,7 @@
 <% content_for(:ui_center) do %>
   <div class="main">
+    <h3> <%= link_to @home.title, admin_home_path(@home) %> &gt; More Home Detail </h3>
+    <hr/>
     <p>
       <b>Name:</b>
       <%= @more_home.name %>
@@ -30,10 +32,11 @@
       <%= @more_home.home.title %>
     </p>
     
-    <%= link_to '<< Back', admin_more_homes_path, :class => "btn btn-default back" %>
+    <%= link_to '<< Back', admin_home_more_homes_path(@home), :class => "btn btn-default back" %>
     <% if current_user.is_admin? %>
-      <%= link_to 'Edit', edit_admin_more_home_path(@more_home), :class => "btn btn-default" %>
+      <%= link_to 'Edit', edit_admin_home_more_home_path(@home, @more_home), :class => "btn btn-default" %>
     <% end %>
+    <%= link_to 'Floor Plan Images', admin_home_more_home_floor_plan_images_path(@home, @more_home), :class => "btn btn-default" %>
   </div>
 <% end %>
 

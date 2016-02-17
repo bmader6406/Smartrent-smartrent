@@ -6,7 +6,6 @@
   <div class="listing">
     <div class="links pull-right">
       <% if current_user.is_admin? %>
-        <%= link_to 'Import rewards', import_admin_rewards_path, :class => "btn btn-default", :style => "display:none" %>
         <%= link_to 'New reward', new_admin_reward_path, :class => "btn btn-primary" %>
       <% end %>
     </div>

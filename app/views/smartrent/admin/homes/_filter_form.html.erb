@@ -1,17 +1,18 @@
 <div id="home-search">
   <h3>Home Search</h3>
   <%= form_tag({}, {:method => "get"}) do %>
-    <div class="form-group">
+    <div class="form-group" style="display:none">
       <%= text_field_tag :_id, params[:_id], :class => "form-control", :placeholder => "ID" %>
     </div>
     <div class="form-group">
       <%= text_field_tag :title, params[:title], :class => "form-control", :placeholder => "Title" %>
     </div>
     <div class="form-group">
-      <%= text_field_tag :phone_number, params[:phone_number], :class => "form-control", :placeholder => "Phone Number" %>
+      <%= text_field_tag :city, params[:city], :class => "form-control", :placeholder => "City" %>
     </div>
     <div class="form-group">
-      <%= text_field_tag :state, params[:state], :class => "form-control", :placeholder => "State" %>
+      <%= select_tag :state, options_for_select(US_STATES.keys.sort.collect{|k| [US_STATES[k], k]}, params[:state]), 
+            {:include_blank => "--Select State--", :class => "form-control"}%>
     </div>
     <%= hidden_field_tag "search", "1" %>
     <%= submit_tag "Search", :class => "btn btn-default btn-block search" %>

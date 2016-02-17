@@ -1,10 +1,8 @@
 <% content_for(:ui_center) do %>
   <div class="main">
-    <h3>New More home</h3>
-
+    <h3><%= link_to @home.title, admin_home_path(@home) %> &gt; New More home</h3>
+    <hr/>
     <%= render 'form' %>
-
-    
   </div>
 <% end %>
 

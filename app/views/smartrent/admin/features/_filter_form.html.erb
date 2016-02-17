@@ -2,9 +2,6 @@
   <h3>Feature Search</h3>
   <%= form_tag({}, {:method => "get"}) do %>
     <div class="form-group">
-      <%= text_field_tag :_id, params[:_id], :class => "form-control", :placeholder => "ID" %>
-    </div>
-    <div class="form-group">
       <%= text_field_tag :name, params[:name], :class => "form-control", :placeholder => "Name" %>
     </div>
     <%= hidden_field_tag "search", "1" %>

@@ -3,7 +3,7 @@
     
     <%= link_to '<< Back', admin_features_path, :class => "btn btn-default back" %>
     <% if current_user.is_admin? %>
-      <%= link_to 'Edit', edit_admin_feature_path(@admin_feature), :class => "btn btn-default" %>
+      <%= link_to 'Edit', edit_admin_feature_path(@feature), :class => "btn btn-default" %>
     <% end %>
     
   </div>

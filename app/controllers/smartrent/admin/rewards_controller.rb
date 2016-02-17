@@ -83,15 +83,6 @@ module Smartrent
       end
     end
 
-    def import_page
-      render :import
-    end
-
-    def import
-      Reward.import(params[:file])
-      redirect_to admin_rewards_path, notice: "Rewards have been imported"
-    end
-
     
     private
       def set_reward
@@ -113,12 +104,13 @@ module Smartrent
         
         ["_id","property_id", "resident_id", "type_", "amount", "period_start", "period_end"].each do |k|
           next if params[k].blank?
+          val = params[k].strip
           if k == "_id"
             arr << "id = :id"
-            hash[:id] = "#{params[k]}"
+            hash[:id] = "#{val}"
           else
             arr << "#{k} = :#{k}"
-            hash[k.to_sym] = "#{params[k]}"
+            hash[k.to_sym] = "#{val}"
           end
         end
         

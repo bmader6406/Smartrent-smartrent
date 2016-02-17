@@ -98,7 +98,7 @@ module Smartrent
     
     def self.where_promotion(properties)
       result = Property.joins(:floor_plans)
-        .where("promotion_title IS NOT NULL")
+        .where("special_promotion = 1")
         .group("properties.id")
       self.filter_from_result result, properties
     end
@@ -115,7 +115,7 @@ module Smartrent
       if maximum_price > 0 and minimum_price > 0
         result = Property.joins(:floor_plans)
           .where("smartrent_floor_plans.rent_min >= ?", minimum_price)
-          .where("smartrent_floor_plans.rent_max <= ?", maximum_price)
+          .where("smartrent_floor_plans.rent_min <= ?", maximum_price)
           .group("properties.id")
       elsif minimum_price > 0
         result = Property.joins(:floor_plans)
@@ -123,7 +123,7 @@ module Smartrent
           .group("properties.id")
       elsif maximum_price > 0
         result = Property.joins(:floor_plans)
-          .where("smartrent_floor_plans.rent_max <= ?", maximum_price)
+          .where("smartrent_floor_plans.rent_min > 0 AND smartrent_floor_plans.rent_min <= ?", maximum_price)
           .group("properties.id")
       end
 
@@ -154,8 +154,16 @@ module Smartrent
 
     def self.to_csv
       CSV.generate do |csv|
-        column_names = ["name", "city", "state"]
-        csv << column_names
+        column_names = []
+        
+        Property.column_names.each do |c|
+          if !["user_id", "origin_id", "region_id", "deleted_at", "studio_price", "studio", "image_file_name", "image_content_type", "image_file_size", "image_updated_at"].include?(c)
+            column_names << c
+          end
+        end
+        
+        csv << column_names.collect{|c| c.titleize }
+        
         where(:is_smartrent => true).each do |property|
           csv << property.attributes.values_at(*column_names)
         end

@@ -5,6 +5,11 @@ Smartrent::Engine.routes.draw do
     root :to => "properties#index"
     
     resources :properties do
+      collection do
+        get :export
+        post :import_xml
+      end
+      
       resources :floor_plans
     end
     
@@ -14,48 +19,20 @@ Smartrent::Engine.routes.draw do
         post "import"
       end
     end
-    resources :property_features do
-      collection do
-        get "import", :to => "property_features#import_page"
-        post "import"
-      end
-    end
     
     resources :homes do
       collection do
         get "import", :to => "homes#import_page"
         post "import"
       end
-    end
-    
-    resources :more_homes do
-      collection do
-        get "import", :to => "more_homes#import_page"
-        post "import"
+      
+      resources :more_homes do
+        resources :floor_plan_images
       end
     end
     
-    resources :floor_plans do
-      collection do
-        get "import", :to => "floor_plans#import_page"
-        post "import"
-      end
-    end
-    
-    resources :floor_plan_images do
-      collection do
-        get "import", :to => "floor_plan_images#import_page"
-        post "import"
-      end
-    end
-    
-    resources :rewards do
-      collection do
-        get "import", :to => "rewards#import_page"
-        post "import"
-      end
-    end
-    
+    resources :balances
+    resources :rewards
     resources :settings
   end
   

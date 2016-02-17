@@ -1,7 +1,7 @@
 <% content_for(:ui_center) do %>
   <div class="main">
-    <h3>Editing Property Floor Plan</h3>
-
+    <h3> <%= link_to @property.name, admin_property_path(@property) %> &gt; Editing Floor Plan</h3>
+    <hr/>
     <%= render 'form' %>
   </div>
 <% end %>

@@ -141,12 +141,14 @@ module Smartrent
                   property.promotion_subtitle = promotion["Subtitle"]
                   property.promotion_url = promotion["LinkURL"]
                   property.promotion_expiration_date = Date.new(promotion["ExpirationDate"]["Year"].to_i, promotion["ExpirationDate"]["Month"].to_i, promotion["ExpirationDate"]["Day"].to_i) rescue nil
-
+                  property.special_promotion = true
+                  
                 else
                   property.promotion_title = nil
                   property.promotion_subtitle = nil
                   property.promotion_url = nil
                   property.promotion_expiration_date = nil
+                  property.special_promotion = false
                 end
                 
               else

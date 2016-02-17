@@ -2,7 +2,6 @@ require_dependency "smartrent/admin/admin_controller"
 
 module Smartrent
   class Admin::PropertiesController < Admin::AdminController
-    before_action :require_admin, :only => [:import, :import_page]
     before_action :set_property, :except => [:index]
 
     # GET /properties
@@ -82,15 +81,16 @@ module Smartrent
         format.json { head :no_content }
       end
     end
-    def import_page
-      render :import
-    end
-    def import
-      Property.import(params[:file])
-      redirect_to admin_properties_path, notice: "Properties have been imported"
-    end
 
     def export
+      send_data(Smartrent::Property.to_csv, 
+        :type => 'text/csv; charset=utf-8; header=present', 
+        :filename => "PropertyList_#{Date.today.strftime('%m_%d_%Y')}.csv")
+    end
+    
+    def import_xml
+      Resque.enqueue(Smartrent::WeeklyPropertyXmlImporter, Time.now)
+      render :json => {:success => true}
     end
 
     private
@@ -116,17 +116,19 @@ module Smartrent
         arr = []
         hash = {}
         
-        ["_id","name", "city", "state", "zip", "website_url", "status"].each do |k|
+        ["_id", "origin_id","name", "city", "state", "status"].each do |k|
           next if params[k].blank?
+          val = params[k].strip
+          
           if k == "_id"
             arr << "id = :id"
-            hash[:id] = "#{params[k]}"
+            hash[:id] = "#{val}"
           elsif k == "status"
             arr << "#{k} LIKE :#{k}"
-            hash[k.to_sym] = "%#{params[k]}%"
+            hash[k.to_sym] = "%#{val}%"
           else
             arr << "#{k} LIKE :#{k}"
-            hash[k.to_sym] = "%#{params[k]}%"
+            hash[k.to_sym] = "%#{val}%"
           end
         end
         @properties = current_user.managed_properties.smartrent.where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("name asc")

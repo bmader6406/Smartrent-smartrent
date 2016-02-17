@@ -37,7 +37,6 @@ module Smartrent
       3
     end
 
-
     def self.types
       {
         self.TYPE_INITIAL_REWARD => "Initial Balance",
@@ -45,31 +44,6 @@ module Smartrent
         self.TYPE_MONTHLY_AWARDS => "Monthly Awards",
         self.TYPE_CHAMPION => "Champion"
       }
-    end
-    
-    def self.import(file)
-      f = File.open(file.path, "r:bom|utf-8")
-      rewards = SmarterCSV.process(f)
-      types = {}
-      Reward.types.each do |value, type|
-        types[type.downcase] = value
-      end
-      rewards.each do |reward_hash|
-        email = reward_hash[:email]
-        resident = Resident.find_by_email(email)
-        reward_hash.delete(:email)
-        if resident
-          if !reward_hash[:period_start].present?
-            reward_hash[:period_start] = Time.now
-          end
-          if reward_hash[:type] and types[reward_hash[:type].downcase].present?
-            reward_hash[:type_] = types[reward_hash[:type].downcase]
-          end
-          reward_hash.delete(:type)
-          reward_hash[:resident_id] = resident.id
-          create! reward_hash
-        end
-      end
     end
     
   end

@@ -8,11 +8,10 @@
   <div class="listing">
     <div class="links pull-right">
       <% if current_user.is_admin? %>
-        <%= link_to 'Import More Homes', import_admin_more_homes_path, :class => "btn btn-default", :style => "display:none" %>
-        <%= link_to 'New More Home', new_admin_more_home_path, :class => "btn btn-primary" %>
+        <%= link_to 'New More Home', new_admin_home_more_home_path, :class => "btn btn-primary" %>
       <% end %>
     </div>
-    <h3>Listing More Homes</h3>
+    <h3><%= link_to @home.title, admin_home_path(@home) %> &gt; Listing More Homes</h3>
 
     <% if @more_homes.present? %>
       <table class="table">
@@ -23,24 +22,23 @@
           <th>Baths</th>
           <th>Sq ft</th>
           <th>Featured</th>
-          <th>Home</th>
-          <th width="160px">Actions</th>
+          <th width="250px">Actions</th>
         </tr>
         <% @more_homes.each do |more_home| %>
           <tr>
             <td><%= more_home.position %></td>
-            <td><%= more_home.name %></td>
+            <td><%= link_to more_home.name, admin_home_more_home_path(@home, more_home) %></td>
             <td><%= more_home.beds %></td>
             <td><%= more_home.baths %></td>
             <td><%= more_home.sq_ft %></td>
             <td><%= more_home.featured %></td>
-            <td><%= more_home.home.title %></td>
             <td>
-              <%= link_to 'Show', admin_more_home_path(more_home) %>
-              <% if current_user.is_admin? %> | 
-                <%= link_to 'Edit', edit_admin_more_home_path(more_home) %> | 
-                <%= link_to 'Delete', admin_more_home_path(more_home), method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% if current_user.is_admin? %>
+                <%= link_to 'Edit', edit_admin_home_more_home_path(@home, more_home) %> &middot;
+                <%= link_to 'Delete', admin_home_more_home_path(@home, more_home), method: :delete, data: { confirm: 'Are you sure?' } %> &middot;
               <% end %>
+              
+              <%= link_to 'Floor Plan Images', admin_home_more_home_floor_plan_images_path(@home, more_home) %>
             </td>
           </tr>
         <% end %>
@@ -50,9 +48,9 @@
         <%= page_navigation_links @more_homes %>
       </div>
     <% elsif params[:search] == "1" %>
-      <div class="alert alert-warning">No more_homes found</div>
+      <div class="alert alert-warning">No More Homes found</div>
     <% else %>
-      <div class="alert alert-warning">No more_homes have been added yet.</div>
+      <div class="alert alert-warning">No More Homes have been added yet.</div>
     <% end %>
   </div>
 <% end %>
