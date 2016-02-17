@@ -98,7 +98,7 @@ module Smartrent
             authorize! :read, Smartrent::Reward
         end
       end
-      def filter_rewards(per_page = 15)
+      def filter_rewards(per_page = 20)
         arr = []
         hash = {}
         

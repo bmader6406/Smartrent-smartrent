@@ -16,23 +16,38 @@
           <th>Last Name</th>
           <th>Email</th>
           <th>Current Property</th>
+          <th>Past Properties</th>
           <th>Status</th>
           <th>Balance</th>
           <th>Activation Date</th>
           <th width="100px">Detail</th>
         </tr>
         <% @balances.each do |resident| %>
+          <% 
+            curr = nil
+            past = []
+            
+            resident.resident_properties.each do |p|
+              next if !p.property
+              if p.status == "Current"
+                curr = p.property
+              elsif p.status == "Past"
+                past << p.property
+              end
+            end
+          %>
           <tr>
             <td><%= resident.first_name %></td>
             <td><%= resident.last_name %></td>
             <td><%= resident.email %></td>
-            <td><%= resident.current_property.name rescue resident.current_property_id %></td>
+            <td><%= curr.name if curr %></td>
+            <td><%= truncate(past.collect{|p| p.name.to_s }.join(", "), :length => 70) if past.length > 0 %></td>
             <td><%= resident.smartrent_status %></td>
             <td><%= number_to_currency resident.balance, :precision => 0 %></td>
             <td><%= resident.confirmed_at ? resident.confirmed_at.strftime("%Y-%m-%d") : "" %></td>
             <td>
-              <% if resident.current_property_id && resident.crm_resident_id %>
-                <%= link_to 'View', main_app.property_resident_url(resident.current_property_id, "#{resident.crm_resident_id}_#{resident.current_unit_id}", :anchor => :smartrent, :host => HOST), :target => "_blank" %>
+              <% if curr || past[0] %>
+                <%= link_to 'View', main_app.property_resident_url((curr || past[0]).id, resident.crm_resident_id, :host => HOST), :target => "_blank" %>
               <% end %>
             </td>
           </tr>

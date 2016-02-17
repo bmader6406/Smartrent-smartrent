@@ -98,7 +98,7 @@ module Smartrent
             authorize! :read, Smartrent::Feature
         end
       end
-      def filter_features(per_page = 15)
+      def filter_features(per_page = 20)
         arr = []
         hash = {}
         

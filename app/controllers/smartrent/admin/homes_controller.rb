@@ -92,7 +92,7 @@ module Smartrent
       def home_params
         params.require(:home).permit!
       end
-      def filter_homes(per_page = 15)
+      def filter_homes(per_page = 20)
         arr = []
         hash = {}
         

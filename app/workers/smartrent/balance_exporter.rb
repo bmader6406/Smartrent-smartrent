@@ -30,7 +30,7 @@ module Smartrent
           hash[k.to_sym] = "#{val}"
           
         elsif k == "property_id"
-          arr << "current_property_id = :#{k}"
+          arr << "smartrent_resident_properties.property_id = :#{k}"
           hash[k.to_sym] = "#{val}"
           
         elsif k == "balance_min"
@@ -58,7 +58,7 @@ module Smartrent
         end  
       end
       
-      Smartrent::Resident.where(arr.join(" AND "), hash)
+      Smartrent::Resident.joins(:resident_properties).where(arr.join(" AND "), hash)
     end
 
     def self.init(params)
@@ -71,15 +71,28 @@ module Smartrent
       file_name = "SmartRentBalance_#{Time.now.strftime('%Y%m%d')}.csv"
 
       csv_string = CSV.generate() do |csv|
-        csv << ["First Name", "Last Name", "Email", "Current Property", "Status", "Balance", "Activation Date"]
+        csv << ["First Name", "Last Name", "Email", "Current Property", "Past Properties", "Status", "Balance", "Activation Date"]
         
-        balances.includes(:current_property).find_in_batches do |bs|
+        balances.includes(:resident_properties => :property).find_in_batches do |bs|
           bs.each do |b|
+            curr = nil
+            past = []
+            
+            b.resident_properties.each do |p|
+              next if !p.property
+              if p.status == "Current"
+                curr = p.property
+              elsif p.status == "Past"
+                past << p.property
+              end
+            end
+            
             csv << [
               b.first_name,
               b.last_name,
               b.email,
-              (b.current_property.name rescue b.current_property_id),
+              curr ? curr.name : "",
+              past.collect{|p| p.name.to_s }.join(", "),
               b.smartrent_status,
               b.balance,
               b.confirmed_at ? b.confirmed_at.strftime("%Y-%m-%d") : ""

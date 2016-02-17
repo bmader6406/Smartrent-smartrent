@@ -36,11 +36,11 @@ module Smartrent
     
     private
       
-      def filter_balances(per_page = 15)
+      def filter_balances(per_page = 20)
         arr = []
         hash = {}
         
-        if !params["status"].present?
+        if params["status"].nil?
           params["status"] = "Active"
         end
         
@@ -56,7 +56,7 @@ module Smartrent
             hash[k.to_sym] = "#{val}"
             
           elsif k == "property_id"
-            arr << "current_property_id = :#{k}"
+            arr << "smartrent_resident_properties.property_id = :#{k}"
             hash[k.to_sym] = "#{val}"
             
           elsif k == "balance_min"
@@ -84,7 +84,7 @@ module Smartrent
           end  
         end
         
-        @balances = Smartrent::Resident.includes(:current_property).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("if(first_name = '' or first_name is null,1,0),first_name asc")
+        @balances = Smartrent::Resident.joins(:resident_properties).includes(:resident_properties => :property).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("if(first_name = '' or first_name is null,1,0),first_name asc")
       end
 
       def balance_params

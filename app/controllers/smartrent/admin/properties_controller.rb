@@ -112,7 +112,7 @@ module Smartrent
         end
       end
       
-      def filter_properties(per_page = 15)
+      def filter_properties(per_page = 20)
         arr = []
         hash = {}
         
