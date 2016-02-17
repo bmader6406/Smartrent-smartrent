@@ -71,7 +71,7 @@ module Smartrent
       file_name = "SmartRentBalance_#{Time.now.strftime('%Y%m%d')}.csv"
 
       csv_string = CSV.generate() do |csv|
-        csv << ["First Name", "Last Name", "Email", "Current Property", "Status", "Balance", "Activated"]
+        csv << ["First Name", "Last Name", "Email", "Current Property", "Status", "Balance", "Activation Date"]
         
         balances.includes(:current_property).find_in_batches do |bs|
           bs.each do |b|
@@ -82,7 +82,7 @@ module Smartrent
               (b.current_property.name rescue b.current_property_id),
               b.smartrent_status,
               b.balance,
-              b.confirmed_at ? "Yes" : "No"
+              b.confirmed_at ? b.confirmed_at.strftime("%Y-%m-%d") : ""
             ]
           end
         end
