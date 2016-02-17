@@ -35,7 +35,7 @@
               <%= link_to 'Delete', admin_property_path(property), method: :delete, data: { confirm: 'Are you sure?' } %> &middot;
             <% end %>
             
-            <%= link_to 'Residents', main_app.property_residents_path(property) %> &middot;
+            <%= link_to 'Residents', main_app.property_residents_url(property, :host => HOST) %> &middot;
             <%= link_to 'Floor Plans', admin_property_floor_plans_path(property) %>
           </td>
         </tr>
