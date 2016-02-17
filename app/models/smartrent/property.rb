@@ -85,6 +85,7 @@ module Smartrent
     def self.where_penthouse(properties)
       result = Property.joins(:floor_plans)
         .where(:floor_plans => {:penthouse => true})
+        .where("smartrent_floor_plans.rent_min > 0")
         .group("properties.id")
       self.filter_from_result result, properties
     end
@@ -92,6 +93,7 @@ module Smartrent
     def self.where_studio(properties)
       result = Property.joins(:floor_plans)
         .where(:floor_plans => {:studio => true})
+        .where("smartrent_floor_plans.rent_min > 0")
         .group("properties.id")
       self.filter_from_result result, properties
     end

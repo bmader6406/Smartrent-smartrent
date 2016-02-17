@@ -62,6 +62,8 @@ module Smartrent
       
       total_updates = 0
       total_creates = 0
+      total_ok = 0
+      smartrent_property_ids = []
       
       properties = Hash.from_xml(f)
       properties["PhysicalProperty"]["Property"].each_with_index do |p, pndx|
@@ -70,8 +72,11 @@ module Smartrent
         name = p.nest(property_map[:name])
         
         pp ">>> pndx: #{pndx+1}: origin_id: #{origin_id}, name: #{name}"
-        
+
         next if !origin_id.present? || !name.present? || !features.present? || features.nil? || features.select{|f| f["Name"].downcase == 'smartrent'}.count == 0
+
+        total_ok += 1
+        pp ">>>>>>>>> OK: #{total_ok}"
         
         property = Smartrent::Property.find_by(:origin_id => origin_id)
         
@@ -82,10 +87,11 @@ module Smartrent
           property.is_smartrent = true
           property.is_crm = false
           property.updated_by = "xml_feed"
+          property.status = Smartrent::Property.STATUS_CURRENT
         end
         
         # only update property which is allowed to be updated by xml_feed
-        next if property.updated_by != "xml_feed"
+        next if !["xml_feed", "csv_feed"].include?(property.updated_by)
         
         ActiveRecord::Base.transaction do
           property_floor_plans = []
@@ -163,7 +169,8 @@ module Smartrent
           end
           
           if property.save
-            pp "A property has been saved, ##{property.id} changes: ", property.changed_attributes
+            smartrent_property_ids << property.id
+            pp "A property has been saved (total: #{smartrent_property_ids.length}), ##{property.id} changes: ", property.changed_attributes
             
             if property.id_was.nil?
               total_creates += 1
@@ -196,7 +203,6 @@ module Smartrent
             
             pp "deleting feature_ids not IN: #{feature_ids}"
             Smartrent::PropertyFeature.where("property_id = ? AND feature_id NOT IN (?)", property.id, feature_ids).delete_all
-
             
           elsif !property.errors.empty?
             pp "error: ##{property.id}", property.errors.full_messages.join(", ")
@@ -204,6 +210,13 @@ module Smartrent
           
         end
       end #/ properties loop
+      
+      # unmark smartrent property which not exist in the xml file
+      if !smartrent_property_ids.empty?
+        pp "found: #{smartrent_property_ids.length} smartrent property"
+        Property.unscoped.where("id IN (?)", smartrent_property_ids).update_all(:is_smartrent => 1, :status => "Current")
+        Property.unscoped.where("id NOT IN (?)", smartrent_property_ids).update_all(:is_smartrent => 0, :status => nil)
+      end
       
       Notifier.system_message("[SmartRent] WeeklyPropertyXmlImporter - SUCCESS", 
         "Executed at #{Time.now}, total_creates: #{total_creates}, total_updates: #{total_updates}", Notifier::DEV_ADDRESS).deliver_now
