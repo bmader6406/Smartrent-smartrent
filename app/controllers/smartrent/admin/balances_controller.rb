@@ -40,6 +40,10 @@ module Smartrent
         arr = []
         hash = {}
         
+        if !params["status"].present?
+          params["status"] = "Active"
+        end
+        
         ["_id", "email", "first_name", "last_name", "status", "balance_min", "balance_max", "property_id", "activated"].each do |k|
           next if params[k].blank?
           val = params[k].strip
@@ -80,7 +84,7 @@ module Smartrent
           end  
         end
         
-        @balances = Smartrent::Resident.includes(:current_property).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("first_name asc")
+        @balances = Smartrent::Resident.includes(:current_property).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("if(first_name = '' or first_name is null,1,0),first_name asc")
       end
 
       def balance_params
