@@ -54,6 +54,23 @@
   <!-- bootstrap notify -->
   <div id="notify" class='bottom-right'></div>
   
+  
+  <div class="modal" id="export-dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="jqmClose close">×</button>
+          <h4 class="modal-title">Large Data Download</h4>
+        </div>
+        <div class="modal-body">
+          Please enter your email, we will email you once the file is exported <br><br>
+          <input type="text" class="form-control" value="<%= current_user ? current_user.email : nil %>" />
+          <a href="#" id="download-btn" class="btn btn-primary"> Download </a>
+        </div>
+      </div><!-- /.modal-content -->
+    </div>
+  </div>
+  
   <div id="spinner"> <%= image_tag("circle_loading.gif") %> Loading... </div>
   
   <script type="text/javascript">

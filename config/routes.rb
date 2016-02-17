@@ -31,7 +31,13 @@ Smartrent::Engine.routes.draw do
       end
     end
     
-    resources :balances
+    resources :balances do
+      collection do
+        get :export
+        post :export
+      end
+    end
+    
     resources :rewards
     resources :settings
   end

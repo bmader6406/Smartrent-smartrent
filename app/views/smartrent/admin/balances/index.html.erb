@@ -1,0 +1,64 @@
+<% content_for(:ui_west) do %>
+  <%= render "filter_form" %>
+<% end %>
+
+<% content_for(:ui_center) do %>
+  <div class="listing">
+    <div class="links pull-right">
+      <%= link_to 'Export', export_admin_balances_path, :class => "btn btn-primary export" %>
+    </div>
+    <h3>Listing balances</h3>
+
+    <% if @balances.present? %>
+      <table class="table">
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Current Property</th>
+          <th>Status</th>
+          <th>Balance</th>
+          <th>Activated</th>
+          <th width="100px">Detail</th>
+        </tr>
+        <% @balances.each do |resident| %>
+          <tr>
+            <td><%= resident.first_name %></td>
+            <td><%= resident.last_name %></td>
+            <td><%= resident.email %></td>
+            <td><%= resident.current_property.name rescue resident.current_property_id %></td>
+            <td><%= resident.smartrent_status %></td>
+            <td><%= number_to_currency resident.balance, :precision => 0 %></td>
+            <td><%= resident.confirmed_at ? "Yes" : "No" %></td>
+            <td>
+              <% if resident.current_property_id && resident.crm_resident_id %>
+                <%= link_to 'View', main_app.property_resident_url(resident.current_property_id, "#{resident.crm_resident_id}_#{resident.current_unit_id}", :anchor => :smartrent, :host => HOST), :target => "_blank" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+      <div class="paging-info">
+        <%= page_entries_info @balances, :model => "balance" %>
+        <%= page_navigation_links @balances %>
+      </div>
+    <% elsif params[:search] == "1" %>
+      <div class="alert alert-warning">No balances found</div>
+    <% else %>
+      <div class="alert alert-warning">No balances have been added yet.</div>
+    <% end %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout();
+    App.initExportDialog();
+    
+    $('.export').click(function(){
+      $.get(this.href, $('#balance-search form').serialize(), 'script');
+      return false;
+    });
+    
+  });
+</script>

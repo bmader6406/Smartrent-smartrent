@@ -15,6 +15,7 @@ module Smartrent
     has_many :resident_homes, :dependent => :destroy
     #has_many :homes, :through => :resident_homes
     has_many :rewards, :dependent => :destroy
+    has_one :current_property, :class_name => "Property", :primary_key => "current_property_id", :foreign_key => "id"
     
     
     validates :smartrent_status, :presence => true
@@ -70,9 +71,7 @@ module Smartrent
       {0 => "First Type"}
     end
     
-    def crm_resident
-      #@crm_resident ||= ::Resident::where(:_id => crm_resident_id).first
-      
+    def crm_resident      
       # search by email is better than crm_resident_id
       # because the id "link" will be broken when the user do the full upload, result in duplicated sr resident
       # (mysql is not case sensitive but mongodb is)
@@ -207,10 +206,6 @@ module Smartrent
       end
 
       total
-    end
-
-    def balance
-      total_rewards
     end
     
     def total_months

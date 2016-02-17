@@ -8,6 +8,8 @@ module Smartrent
 
     validate :period_start_greater_than_period_end
     validate :valid_type
+    
+    after_save :update_resident_balance
 
     def period_start_greater_than_period_end
       if period_start.present? and period_end.present?
@@ -45,6 +47,12 @@ module Smartrent
         self.TYPE_CHAMPION => "Champion"
       }
     end
+    
+    private
+    
+      def update_resident_balance
+        resident.update_attributes(:balance => resident.total_rewards)
+      end
     
   end
 end
