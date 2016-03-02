@@ -15,10 +15,11 @@ module Smartrent
       sr.first_name = resident.first_name
       sr.last_name = resident.last_name
       sr.crm_resident_id = resident.id.to_i
+      # set status as active if no status, the monthly status updater will manage the rest
       sr.smartrent_status = Smartrent::Resident.SMARTRENT_STATUS_ACTIVE if sr.smartrent_status.blank?
       sr.save(:validate => false)
       
-      sr_property = sr.resident_properties.find_or_initialize_by(property_id: unit.property_id)
+      sr_property = sr.resident_properties.find_or_initialize_by(property_id: unit.property_id, unit_code: unit.unit_code)
       sr_property.status = unit.status
       sr_property.move_in_date = unit.move_in
       sr_property.move_out_date = unit.move_out
