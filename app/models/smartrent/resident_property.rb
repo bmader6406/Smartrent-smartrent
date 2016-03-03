@@ -67,7 +67,6 @@ module Smartrent
             :amount => initial_amount,
             :type_ => Reward.TYPE_INITIAL_REWARD,
             :period_start => creation_date,
-            :period_end => Time.now.prev_month.end_of_month,
             :months_earned => months_earned
           })
         end
