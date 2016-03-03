@@ -23,27 +23,32 @@ module Smartrent
 
             # important: ignore resident who not move in any properties before the execution date, otherwise their status will changed from Active to Inactive
             next if r.resident_properties.all? {|rp| rp.move_in_date > period_start.end_of_month }
+            
             total += 1
-            pp "total: #{total}"
-            pp "resident details: #{r.id}", r.attributes
+            pp "total: #{total} - id #{r.id}, email: #{r.email}"
             
             # get properties that the resident live in
             live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start.end_of_month &&  (rp.move_out_date.blank? || rp.move_out_date > period_start.end_of_month) }
-            pp "live_in_properties:", live_in_properties
+            #pp "live_in_properties:", live_in_properties
             
             # get smartrent eligible property
             smartrent_properties = live_in_properties.select{|rp| rp.property.eligible? }
-            pp "smartrent_properties:", smartrent_properties
+            #pp "smartrent_properties:", smartrent_properties
             
             move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible? }
-            pp "move_out_smartrent_properties", move_out_smartrent_properties
+            #pp "move_out_smartrent_properties", move_out_smartrent_properties
             
             # active => inactive or active => + rewards
-            if r.smartrent_status == Smartrent::Resident.SMARTRENT_STATUS_ACTIVE
+            if r.smartrent_status.blank? || r.smartrent_status == Smartrent::Resident.SMARTRENT_STATUS_ACTIVE
 
               if !live_in_properties.empty?
 
                 if !smartrent_properties.empty?
+                  r.update_attributes({
+                    :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_ACTIVE,
+                    :expiry_date => nil
+                  })
+                  
                   create_monthly_rewards(r, smartrent_properties, period_start) if scheduled_run
 
                 else #Resident doesn't live in any smartrent property, set it's expiry to 1 year from the period start
@@ -139,7 +144,8 @@ module Smartrent
 
           if !smartrent_properties.empty?
             r.update_attributes({
-              :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_ACTIVE
+              :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_ACTIVE,
+              :expiry_date => nil
             })
             
           else #Resident doesn't live in any smartrent property, set it's expiry to 1 year from the period start
