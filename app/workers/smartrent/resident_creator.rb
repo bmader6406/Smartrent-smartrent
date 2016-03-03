@@ -15,7 +15,8 @@ module Smartrent
       sr.first_name = resident.first_name
       sr.last_name = resident.last_name
       sr.crm_resident_id = resident.id.to_i # link smartrent resident with crm resident
-      
+      # set initial status for validation
+      sr.smartrent_status = Smartrent::Resident.SMARTRENT_STATUS_ACTIVE if sr.smartrent_status.blank?
       sr.save(:validate => false)
       
       sr_property = sr.resident_properties.find_or_initialize_by(property_id: unit.property_id, unit_code: unit.unit_code)

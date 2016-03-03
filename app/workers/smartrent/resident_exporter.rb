@@ -17,9 +17,9 @@ module Smartrent
         time = Time.parse(time) if time.kind_of?(String)
         time = time.in_time_zone('Eastern Time (US & Canada)')
 
-        batch_name = "new_active_#{time.strftime("%m_%Y")}"
+        batch_name = "#{time.end_of_quarter.strftime("%Y %m")} SmartRent"
       else
-        batch_name = "all_active_#{Time.now.strftime("%m_%Y")}"
+        batch_name = "#{Time.now.end_of_quarter.strftime("%Y %m")} SmartRent"
       end
       
       if Rails.env.production?
@@ -78,7 +78,7 @@ module Smartrent
         r.crm_resident = crm_residents[r.email.to_s.downcase]
         
         if r.crm_resident
-          csv << [r.name, r.email, r.total_rewards.to_i, r.smartrent_status, batch_name]
+          csv << [r.name, r.email, r.total_rewards.to_i, r.smartrent_status, "#{batch_name} #{r.smartrent_status}"]
         else
           pp "CRM Resident not found for SR Resident ID: #{r.id}, #{r.email}"
         end

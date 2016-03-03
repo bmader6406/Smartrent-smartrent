@@ -222,13 +222,15 @@ module Smartrent
     def only_if_unconfirmed
       pending_any_confirmation {yield}
     end
-  # new function to set the password without knowing the current password used in our confirmation controller. 
+    
+    # new function to set the password without knowing the current password used in our confirmation controller. 
     def attempt_set_password(params)
       p = {}
       p[:password] = params[:password]
       p[:password_confirmation] = params[:password_confirmation]
       update_attributes(p)
     end
+    
     def password_match?
         self.password == self.password_confirmation
     end

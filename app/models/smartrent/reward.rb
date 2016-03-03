@@ -52,6 +52,7 @@ module Smartrent
     
       def update_resident_balance
         resident.update_attributes(:balance => resident.total_rewards)
+        true
       end
     
   end
