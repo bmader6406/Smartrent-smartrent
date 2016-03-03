@@ -172,6 +172,11 @@ module Smartrent
       end
     end
     
+    # only create reward for the eligible property
+    def eligible?
+      smartrent_status.to_s.include?(Property.STATUS_CURRENT) && is_smartrent?
+    end
+    
     private
       def set_smartrent
         self.is_smartrent = true

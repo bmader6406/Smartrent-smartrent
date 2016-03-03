@@ -54,7 +54,7 @@ module Smartrent
         initial_amount = 0
         months_earned = 0
         
-        if property.status.to_s.include?(Property.STATUS_CURRENT) && move_in_diff >= 1
+        if property.eligible? && move_in_diff >= 1
           initial_amount = Setting.monthly_award*move_in_diff
           months_earned = move_in_diff
           initial_amount = 10000 if initial_amount > 10000

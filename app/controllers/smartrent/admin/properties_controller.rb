@@ -116,7 +116,7 @@ module Smartrent
         arr = []
         hash = {}
         
-        ["_id", "origin_id","name", "city", "state", "status"].each do |k|
+        ["_id", "origin_id","name", "city", "state", "smartrent_status"].each do |k|
           next if params[k].blank?
           val = params[k].strip
           

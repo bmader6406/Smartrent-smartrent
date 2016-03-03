@@ -83,12 +83,12 @@ module Smartrent
       @crm_resident = r
     end
     
-    def move_in_date
-      resident_properties.order("move_in_date desc").first.move_in_date
+    def first_move_in_date
+      resident_properties.order("move_in_date asc").limit(1).first.move_in_date
     end
     
-    def move_out_date
-      resident_properties.order("move_in_date desc").first.move_out_date
+    def last_move_out_date
+      resident_properties.order("move_out_date desc").limit(1).first.move_out_date
     end
     
     # share crm info
@@ -115,7 +115,7 @@ module Smartrent
     def update_changable_smartrent_status(smartrent_status)
       smartrent_status = smartrent_status.capitalize
       if self.class.changable_smartrent_statuses.include? smartrent_status
-        update_attributes({:smartrent_status => smartrent_status.capitalize})
+        update_attributes({:smartrent_status => smartrent_status})
       else
         errors.add(:smartrent_status, "is invalid")
         false
@@ -124,8 +124,12 @@ module Smartrent
 
     def can_become_champion_in_property?(property)
       if self.smartrent_status == self.class.SMARTRENT_STATUS_ACTIVE
-        #resident_property = self.resident_properties.detect{|rp| rp.property_id == property.id && Time.now.difference_in_months(rp.move_in_date) >= 12}
-        resident_property = self.resident_properties.detect{|rp| rp.property_id == property.id && ((rp.move_out_date.nil? && Time.now.difference_in_months(rp.move_in_date) >= 12) || (rp.move_out_date.present? && rp.move_out_date.difference_in_months(rp.move_in_date) >= 12))}
+        resident_property = self.resident_properties.detect{|rp| 
+          rp.property_id == property.id && (
+            ( rp.move_out_date.nil? && Time.now.difference_in_months(rp.move_in_date) >= 12 ) || 
+            ( rp.move_out_date.present? && rp.move_out_date.difference_in_months(rp.move_in_date) >= 12 )
+          )
+        }
         resident_property.present?
       end
     end
@@ -162,7 +166,7 @@ module Smartrent
     end
     
     def current_community
-      rp = resident_properties.includes(:property).detect{|p| p.status == "Current" }
+      rp = resident_properties.includes(:property).detect{|rp| rp.status == Smartrent::ResidentProperty.STATUS_CURRENT }
       if rp && rp.property
         rp.property.name
       else
@@ -209,20 +213,6 @@ module Smartrent
     end
     
     def total_months
-      # months = 0
-      # move_in_date
-      # resident_properties.order("move_in_date asc").each_with_index do |resident_property, index|
-      #   #Possible Case: When the move_in_date is present and there are more move_in_dates and move_out_date is nil in each case
-      #   move_in_date = resident_property.move_in_date if move_in_date.nil?
-      #   if resident_property.move_out_date.present?
-      #     months = resident_property.move_out_date.difference_in_months(move_in_date) + months
-      #     move_in_date = nil
-      #   elsif index == resident_properties.count - 1
-      #     #the last element of the array and the move_out_date is still nil
-      #     months = Time.now.difference_in_months(move_in_date) + months
-      #   end
-      # end
-      # months
       total_months = rewards.find_by_type_(Reward.TYPE_INITIAL_REWARD).months_earned rescue 0
       total_months += rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).count
     end

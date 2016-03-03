@@ -5,18 +5,18 @@ module Smartrent
       :crm_immediate
     end
   
-    def self.perform(time = nil)
+    def self.perform(time = Time.now)
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
-      for_date = (time || Time.now).to_date
+      for_date = time.to_date
       
       pp "for_date: #{for_date}"
       
-      ::Resident.where(:smartrent_resident_id => nil, "units.move_in" => for_date).each do |r|
+      ::Resident.where("units.move_in" => for_date).each do |r|
         r.units.each do |u|
           pp "u.move_in: #{u.move_in}"
-          u.send(:create_or_update_smartrent_resident) if !u.roommate? && u.move_in == for_date
-
+          next if u.move_in != for_date
+          u.send(:create_or_update_smartrent_resident)
         end
       end
       

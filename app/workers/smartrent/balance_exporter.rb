@@ -78,12 +78,12 @@ module Smartrent
             curr = nil
             past = []
             
-            b.resident_properties.each do |p|
-              next if !p.property
-              if p.status == "Current"
-                curr = p.property
-              elsif p.status == "Past"
-                past << p.property
+            b.resident_properties.each do |rp|
+              next if !rp.property
+              if rp.status == Smartrent::ResidentProperty.STATUS_CURRENT
+                curr = rp.property
+              elsif rp.status == Smartrent::ResidentProperty.STATUS_PAST
+                past << rp.property
               end
             end
             

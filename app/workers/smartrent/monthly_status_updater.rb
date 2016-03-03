@@ -10,6 +10,7 @@ module Smartrent
     def self.perform(time = nil)
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
+      
       period_start = time.beginning_of_month
       
       pp "period_start: #{period_start}"
@@ -21,19 +22,21 @@ module Smartrent
           begin
 
             # important: ignore resident who not move in any properties before the execution date, otherwise their status will changed from Active to Inactive
-            next if r.resident_properties.all? {|p| p.move_in_date > period_start.end_of_month }
+            next if r.resident_properties.all? {|rp| rp.move_in_date > period_start.end_of_month }
             total += 1
             pp "total: #{total}"
             pp "resident details: #{r.id}", r.attributes
             
             # get properties that the resident live in
-            live_in_properties = r.resident_properties.select{|p| p.move_in_date <= period_start.end_of_month &&  (p.move_out_date.blank? || p.move_out_date > period_start.end_of_month) }
+            live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start.end_of_month &&  (rp.move_out_date.blank? || rp.move_out_date > period_start.end_of_month) }
             pp "live_in_properties:", live_in_properties
             
             # get smartrent eligible property
-            smartrent_properties = live_in_properties.select{|rp| rp.property.status.to_s.include?(Property.STATUS_CURRENT) && rp.property.is_smartrent }
+            smartrent_properties = live_in_properties.select{|rp| rp.property.eligible? }
             pp "smartrent_properties:", smartrent_properties
-
+            
+            move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible? }
+            
             # active => inactive or active => + rewards
             if r.smartrent_status == Smartrent::Resident.SMARTRENT_STATUS_ACTIVE
 
@@ -43,16 +46,21 @@ module Smartrent
                   create_monthly_rewards(r, smartrent_properties, period_start)
 
                 else #Resident doesn't live in any smartrent property, set it's expiry to 1 year from the period start
+                  expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date } || period_start.end_of_month) + 1.year
+                  sr_status = period_start > expiry_date ? Smartrent::Resident.SMARTRENT_STATUS_EXPIRED : Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
                   r.update_attributes({
-                    :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_INACTIVE,
-                    :expiry_date => period_start.end_of_month + 1.year
+                    :smartrent_status => sr_status,
+                    :expiry_date => expiry_date
                   })
+                  
                 end
 
-              else # resident moved out, not live in any properties
+              else # resident moved out, not live in any properties, set it's expiry to 60 days from the period start
+                expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date } || period_start.end_of_month) + 60.days
+                sr_status = period_start > expiry_date ? Smartrent::Resident.SMARTRENT_STATUS_EXPIRED : Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
                 r.update_attributes({
-                  :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_INACTIVE,
-                  :expiry_date => period_start.end_of_month + 60.days
+                  :smartrent_status => sr_status,
+                  :expiry_date => expiry_date
                 })
 
               end
@@ -109,39 +117,45 @@ module Smartrent
       end
     end
     
-    def self.get_status(r, period_start)
-      attrs = {}
+    def self.set_status(r)
+      period_start = Time.now.in_time_zone('Eastern Time (US & Canada)').beginning_of_month
       
       # get properties that the resident live in
-      live_in_properties = r.resident_properties.select{|p| p.move_in_date <= period_start.end_of_month &&  (p.move_out_date.blank? || p.move_out_date > period_start.end_of_month) }
+      live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start.end_of_month &&  (rp.move_out_date.blank? || rp.move_out_date > period_start.end_of_month) }
       pp "live_in_properties:", live_in_properties
       
       # get smartrent eligible property
-      smartrent_properties = live_in_properties.select{|rp| rp.property.status.to_s.include?(Property.STATUS_CURRENT) && rp.property.is_smartrent }
+      smartrent_properties = live_in_properties.select{|rp| rp.property.eligible? }
       pp "smartrent_properties:", smartrent_properties
+      
+      move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible? }
 
-      # active => inactive or active => + rewards
-      if r.smartrent_status == Smartrent::Resident.SMARTRENT_STATUS_ACTIVE
+      # active => inactive or still active
+      if r.smartrent_status.blank? || r.smartrent_status == Smartrent::Resident.SMARTRENT_STATUS_ACTIVE
 
         if !live_in_properties.empty?
 
           if !smartrent_properties.empty?
-            attrs = {
+            r.update_attributes({
               :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_ACTIVE
-            }
+            })
             
           else #Resident doesn't live in any smartrent property, set it's expiry to 1 year from the period start
-            attrs = {
-              :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_INACTIVE,
-              :expiry_date => period_start.end_of_month + 1.year
-            }
+            expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date } || period_start.end_of_month) + 1.year
+            sr_status = period_start > expiry_date ? Smartrent::Resident.SMARTRENT_STATUS_EXPIRED : Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
+            r.update_attributes({
+              :smartrent_status => sr_status,
+              :expiry_date => expiry_date
+            })
           end
 
         else # resident moved out, not live in any properties
-          attrs = {
-            :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_INACTIVE,
-            :expiry_date => period_start.end_of_month + 60.days
-          }
+          expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date } || period_start.end_of_month) + 60.days
+          sr_status = period_start > expiry_date ? Smartrent::Resident.SMARTRENT_STATUS_EXPIRED : Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
+          r.update_attributes({
+            :smartrent_status => sr_status,
+            :expiry_date => expiry_date
+          })
 
         end
       end
@@ -151,22 +165,20 @@ module Smartrent
 
         if smartrent_properties.empty?
           if period_start >= r.expiry_date
-            attrs = {
+            r.update_attributes({
               :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_EXPIRED
-            }
+            })
           end
 
         else # resident moved in an eligible property
-          attrs = {
+          r.update_attributes({
             :smartrent_status => Smartrent::Resident.SMARTRENT_STATUS_ACTIVE,
             :expiry_date => nil
-          }
+          })
 
         end
       end
-      
-      return attrs
-    end
+    end #/set_status
     
   end
 end
