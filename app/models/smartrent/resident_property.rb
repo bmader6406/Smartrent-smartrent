@@ -9,7 +9,9 @@ module Smartrent
     validates :property, :resident, :move_in_date, :presence => true
     #validates :move_in_date, :uniqueness => {:scope => [:resident_id, :property_id]}
     
-    after_create :create_rewards
+    after_create :create_initial_signup_rewards
+    
+    attr_accessor :disable_rewards
     
     def self.STATUS_CURRENT
       "Current"
@@ -38,25 +40,33 @@ module Smartrent
     
     private
     
-      def create_rewards
-        # create inital, signup rewards
+      
+      def create_initial_signup_rewards
+        # monthly reward is created by MonthlyStatusUpdater
+        
+        # the initial import will create rewards only after the import is done on ResidentCreator
+        return true if disable_rewards
+        
+        return true if !property.eligible?
+        
         creation_date = move_in_date.blank? ? created_at : move_in_date
         
         rewards = resident.rewards.all
         
-        if move_out_date.blank? || move_out_date && move_out_date > Time.now
-          move_in_diff = (Time.now.difference_in_months(move_in_date)) rescue 0
-          
-        else
-          move_in_diff = (move_out_date.difference_in_months(move_in_date)) rescue 0
-        end
-        
         initial_amount = 0
         months_earned = 0
         
-        if property.eligible? && move_in_diff >= 1
-          initial_amount = Setting.monthly_award*move_in_diff
-          months_earned = move_in_diff
+        if move_out_date.blank? || move_out_date && move_out_date > Time.now
+          months_earned += (Time.now.difference_in_months(move_in_date) rescue 0)
+          
+        else
+          months_earned += (move_out_date.difference_in_months(move_in_date) rescue 0)
+          # count incomplete month for moved out resident
+          months_earned += 1
+        end
+        
+        if months_earned >= 1
+          initial_amount = Setting.monthly_award*months_earned
           initial_amount = 10000 if initial_amount > 10000
         end
         

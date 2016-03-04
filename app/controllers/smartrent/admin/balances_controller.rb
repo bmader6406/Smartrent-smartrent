@@ -84,7 +84,7 @@ module Smartrent
           end  
         end
         
-        @balances = Smartrent::Resident.joins(:resident_properties).includes(:resident_properties => :property).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("if(first_name = '' or first_name is null,1,0),first_name asc")
+        @balances = Smartrent::Resident.joins(:resident_properties).distinct("smartrent_residents.id").includes(:resident_properties => :property).where(arr.join(" AND "), hash).paginate(:page => params[:page], :per_page => per_page).order("if(first_name = '' or first_name is null,1,0),first_name asc")
       end
 
       def balance_params

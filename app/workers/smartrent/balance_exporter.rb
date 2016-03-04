@@ -58,7 +58,7 @@ module Smartrent
         end  
       end
       
-      Smartrent::Resident.joins(:resident_properties).where(arr.join(" AND "), hash)
+      Smartrent::Resident.joins(:resident_properties).distinct("smartrent_residents.id").where(arr.join(" AND "), hash)
     end
 
     def self.init(params)

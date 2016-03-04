@@ -128,14 +128,14 @@ module Smartrent
       
       # get properties that the resident live in
       live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start.end_of_month &&  (rp.move_out_date.blank? || rp.move_out_date > period_start.end_of_month) }
-      pp "live_in_properties:", live_in_properties
+      #pp "live_in_properties:", live_in_properties
       
       # get smartrent eligible property
       smartrent_properties = live_in_properties.select{|rp| rp.property.eligible? }
-      pp "smartrent_properties:", smartrent_properties
+      #pp "smartrent_properties:", smartrent_properties
       
       move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible? }
-      pp "move_out_smartrent_properties", move_out_smartrent_properties
+      #pp "move_out_smartrent_properties", move_out_smartrent_properties
 
       # active => inactive or still active
       if r.smartrent_status.blank? || r.smartrent_status == Smartrent::Resident.SMARTRENT_STATUS_ACTIVE

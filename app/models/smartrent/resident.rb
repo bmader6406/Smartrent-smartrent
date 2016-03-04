@@ -21,6 +21,8 @@ module Smartrent
     validates :smartrent_status, :presence => true
     validates :email, :uniqueness => true
     validate :valid_smartrent_status
+    
+    before_save :set_balance
 
     ## !!! stop devise confirmation. Don't remove this method
     def send_on_create_confirmation_instructions
@@ -241,6 +243,14 @@ module Smartrent
         if self.class.smartrent_statuses[smartrent_status].nil?
           errors.add(:smartrent_status, "is invalid")
         end
+      end
+      
+      def set_balance
+        if smartrent_status_changed? && smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED 
+          self.balance = 0
+        end
+        
+        true
       end
   end
 end
