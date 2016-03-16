@@ -1,7 +1,7 @@
 module Smartrent
   class ResidentCreator
     def self.queue
-      :crm_immediate
+      :crm_import
     end
   
     def self.perform(resident_id, unit_id)
