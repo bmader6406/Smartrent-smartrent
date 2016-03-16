@@ -7,7 +7,7 @@ module Smartrent
       :crm_immediate
     end
   
-    def self.perform(time = nil, scheduled_run = true)
+    def self.perform(time = nil, scheduled_run = true, created_at = nil)
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
       
@@ -16,11 +16,13 @@ module Smartrent
       pp "period_start: #{period_start}"
       total = 0
       
-      Smartrent::Resident.includes(:resident_properties => :property).find_in_batches do |residents|
+      query = Smartrent::Resident
+      query = query.where("created_at > ?", Time.parse(created_at).utc.to_s(:db)) if created_at
+      
+      query.includes(:resident_properties => :property).find_in_batches do |residents|
         residents.each do |r|
           # it is good to catch any resident which cause the below code fail rather than stop the calculation
           begin
-
             # important: ignore resident who not move in any properties before the execution date, otherwise their status will changed from Active to Inactive
             next if r.resident_properties.all? {|rp| rp.move_in_date > period_start.end_of_month }
             
@@ -96,7 +98,7 @@ module Smartrent
             p "ERROR: #{error_details}"
 
             ::Notifier.system_message("[Smartrent::MonthlyStatusUpdater] FAILURE", "ERROR DETAILS: #{error_details}",
-              ::Notifier::DEV_ADDRESS, {"from" => ::Notifier::EXIM_ADDRESS})#.deliver_now
+              ::Notifier::DEV_ADDRESS, {"from" => ::Notifier::EXIM_ADDRESS}).deliver_now
             
           end
         end
