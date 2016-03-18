@@ -16,6 +16,8 @@ module Smartrent
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
       
+      @type = type
+      
       if type == "welcome"
         export_welcome_email_residents(time)
         
@@ -55,7 +57,7 @@ module Smartrent
       ftp.passive = true
       ftp.connect("ftp.hy.ly")
       ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/welcome/#{file_name}")
+      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/welcome/#{file_name}")
       ftp.close
     end
     
@@ -89,7 +91,7 @@ module Smartrent
       ftp.passive = true
       ftp.connect("ftp.hy.ly")
       ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/statement/#{file_name}")
+      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/statement/#{file_name}")
       ftp.close
     end
     
@@ -107,7 +109,13 @@ module Smartrent
         r.crm_resident = crm_residents[r.email.to_s.downcase]
         
         if r.crm_resident
-          csv << [r.name, r.email, "$#{ActionController::Base.helpers.number_with_delimiter(r.total_rewards.to_i)}", r.smartrent_status, "#{batch_name}: #{r.smartrent_status}"]
+          csv << [
+            r.name,
+            r.email,
+            "$#{ActionController::Base.helpers.number_with_delimiter(r.total_rewards.to_i)}",
+            r.smartrent_status,
+            @type == "welcome" ? "#{batch_name}" : "#{batch_name}: #{r.smartrent_status}"
+          ]
         else
           pp "CRM Resident not found for SR Resident ID: #{r.id}, #{r.email}"
         end
