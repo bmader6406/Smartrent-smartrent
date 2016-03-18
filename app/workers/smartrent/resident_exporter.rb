@@ -12,12 +12,16 @@ module Smartrent
       :crm_immediate
     end
     
-    def self.perform(time = Time.now)
+    def self.perform(time = Time.now, type = "welcome")
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
       
-      export_welcome_email_residents(time)
-      export_statement_email_residents(time)
+      if type == "welcome"
+        export_welcome_email_residents(time)
+        
+      else
+        export_statement_email_residents(time)
+      end
       
       Notifier.system_message("[SmartRent] ResidentExporter - SUCCESS", "Executed at #{Time.now}", Notifier::DEV_ADDRESS).deliver_now
     end
@@ -103,7 +107,7 @@ module Smartrent
         r.crm_resident = crm_residents[r.email.to_s.downcase]
         
         if r.crm_resident
-          csv << [r.name, r.email, r.total_rewards.to_i, r.smartrent_status, "#{batch_name}: #{r.smartrent_status}"]
+          csv << [r.name, r.email, "$#{ActionController::Base.helpers.number_with_delimiter(r.total_rewards.to_i)}", r.smartrent_status, "#{batch_name}: #{r.smartrent_status}"]
         else
           pp "CRM Resident not found for SR Resident ID: #{r.id}, #{r.email}"
         end

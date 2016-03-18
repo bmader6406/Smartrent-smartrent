@@ -20,11 +20,15 @@ module Smartrent
         Resque.enqueue(Smartrent::WeeklyPropertyXmlImporter, time)
       end
     
-      if time.day == 1 && time.hour == 1 #execute at the begining of month
+      if time.day == 1 && time.hour == 4 #execute at the begining of month
         Resque.enqueue(Smartrent::MonthlyStatusUpdater, time.prev_month)
 
         # wait for MonthlyStatusUpdater executed
-        Resque.enqueue_at(time + 2.hours, Smartrent::ResidentExporter, time.prev_month)
+        Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "welcome")
+        
+        if time.month == time.beginning_of_quarter.month
+          Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "statement")
+        end
 
         #- app.hy.ly import should be run at midnight ET + 4hours
         #- email should be scheduled around 7AM ET
