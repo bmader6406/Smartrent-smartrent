@@ -46,7 +46,7 @@ module Smartrent
           params["status"] = "Active"
         end
         
-        ["_id", "email", "first_name", "last_name", "status", "balance_min", "balance_max", "move_in_min", "move_in_max", "property_id", "activated"].each do |k|
+        ["_id", "email", "first_name", "last_name", "status", "balance_min", "balance_max", "move_in_min", "move_in_max", "property_id", "activated", "subscribed"].each do |k|
           next if params[k].blank?
           val = params[k].strip
           if k == "_id"
@@ -87,6 +87,9 @@ module Smartrent
             
           elsif k == "activated" && params[k] == "true"
             arr << "confirmed_at IS NOT NULL"
+            
+          elsif k == "subscribed" && params[k] == "true"
+            arr << "subscribed = 1"
             
           else
             arr << "#{k} = :#{k}"

@@ -32,10 +32,10 @@ module Smartrent
     def self.TYPE_MONTHLY_AWARDS
       2
     end
-    def self.TYPE_CHAMPION
+    def self.TYPE_BUYER
       3
     end
-    def self.TYPE_CHAMPION
+    def self.TYPE_BUYER
       3
     end
 
@@ -44,7 +44,7 @@ module Smartrent
         self.TYPE_INITIAL_REWARD => "Initial Balance",
         self.TYPE_SIGNUP_BONUS => "Sign Up",
         self.TYPE_MONTHLY_AWARDS => "Monthly Awards",
-        self.TYPE_CHAMPION => "Champion"
+        self.TYPE_BUYER => "Buyer"
       }
     end
     

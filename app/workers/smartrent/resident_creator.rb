@@ -127,7 +127,7 @@ module Smartrent
       
       if months_earned >= 1
         initial_amount = Smartrent::Setting.monthly_award*months_earned
-        initial_amount = 10000 if initial_amount > 10000
+        initial_amount = 9900 if initial_amount > 9900 # 100 will be added by sign up bonus
       end
       
       pp "#{sr.id}, #{sr.email}, months_earned: #{months_earned}, initial_amount: #{initial_amount}"

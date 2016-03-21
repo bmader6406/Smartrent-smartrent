@@ -18,17 +18,19 @@
     
     <div class="form-group date-field">
       Move-In greater than or equal to
-      <%= text_field_tag :move_in_min, params[:move_in_min], :class => "form-control", :placeholder => "Move In" %>
+      <%= text_field_tag :move_in_min, params[:move_in_min], :class => "form-control", :placeholder => "Move In Min" %>
     </div>
     <div class="form-group date-field">
       Move-In less than or equal to
-      <%= text_field_tag :move_in_max, params[:move_in_max], :class => "form-control", :placeholder => "Move In" %>
+      <%= text_field_tag :move_in_max, params[:move_in_max], :class => "form-control", :placeholder => "Move In Max" %>
     </div>
     
     <div class="form-group">
+      Balance greater than or equal to
       <%= number_field_tag :balance_min, params[:balance_min], :class => "form-control", :placeholder => "Balance Min" %>
     </div>
     <div class="form-group">
+      Balance less than or equal to
       <%= number_field_tag :balance_max, params[:balance_max], :class => "form-control", :placeholder => "Balance Max" %>
     </div>
     
@@ -36,12 +38,19 @@
       <%= select_tag :property_id, options_for_select(Property.smartrent.order("name asc").all.collect{|p| [p.name, p.id]}, params[:property_id]), 
         {:include_blank => "--Select Property--", :class => "form-control"} %>
     </div>
+    
     <div class="form-group">
+      <label style="margin-right:15px;">
+        <%= check_box_tag :subscribed, true, params[:subscribed] %>
+        Subscribed
+      </label>
+      
       <label>
         <%= check_box_tag :activated, true, params[:activated] %>
         Activated
       </label>
     </div>
+    
     <%= hidden_field_tag "search", "1" %>
     <%= submit_tag "Search", :class => "btn btn-default btn-block search" %>
   <% end %>

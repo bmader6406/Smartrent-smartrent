@@ -23,6 +23,7 @@ module Smartrent
     validate :valid_smartrent_status
     
     before_save :set_balance
+    before_save :set_email_check_and_subscribed
 
     ## !!! stop devise confirmation. Don't remove this method
     def send_on_create_confirmation_instructions
@@ -39,9 +40,13 @@ module Smartrent
     def self.SMARTRENT_STATUS_EXPIRED
       "Expired"
     end
+    
+    def self.SMARTRENT_STATUS_MAXIMUM
+      "Maximum"
+    end
 
-    def self.SMARTRENT_STATUS_CHAMPION
-      "Champion"
+    def self.SMARTRENT_STATUS_BUYER
+      "Buyer"
     end
 
     def self.SMARTRENT_STATUS_ARCHIVE
@@ -52,15 +57,16 @@ module Smartrent
       {
         self.SMARTRENT_STATUS_ACTIVE => "Active", 
         self.SMARTRENT_STATUS_INACTIVE => "Inactive", 
-        self.SMARTRENT_STATUS_EXPIRED => "Expired", 
-        self.SMARTRENT_STATUS_CHAMPION => "Champion", 
+        self.SMARTRENT_STATUS_EXPIRED => "Expired",
+        self.SMARTRENT_STATUS_MAXIMUM => "Maximum",
+        self.SMARTRENT_STATUS_BUYER => "Buyer", 
         self.SMARTRENT_STATUS_ARCHIVE => "Archive"
       }
     end
 
     def self.changable_smartrent_statuses
       {
-        self.SMARTRENT_STATUS_CHAMPION => "Champion",
+        self.SMARTRENT_STATUS_BUYER => "Buyer",
         self.SMARTRENT_STATUS_ARCHIVE => "Archive"
       }
     end
@@ -120,29 +126,34 @@ module Smartrent
       end
     end
 
-    def can_become_champion_in_property?(property)
-      if self.smartrent_status == self.class.SMARTRENT_STATUS_ACTIVE
+    def can_become_buyer_in_property?(property)
+      if [self.class.SMARTRENT_STATUS_ACTIVE, self.class.SMARTRENT_STATUS_MAXIMUM].include?(self.smartrent_status)
         resident_property = self.resident_properties.detect{|rp| 
           rp.property_id == property.id && (
-            ( rp.move_out_date.nil? && Time.now.difference_in_months(rp.move_in_date) >= 12 ) || 
-            ( rp.move_out_date.present? && rp.move_out_date.difference_in_months(rp.move_in_date) >= 12 )
+            ( rp.move_out_date.blank? && Time.now.difference_in_months(rp.move_in_date) >= 12 ) || 
+            ( rp.move_out_date.present? && (rp.move_out_date >= Time.now ? Time.now : rp.move_out_date ).difference_in_months(rp.move_in_date) >= 12 )
           )
         }
         resident_property.present?
       end
     end
-
-    def become_champion(amount)
+    
+    def become_buyer(amount)
       amount = amount.to_f
+      
       if amount == 0
         errors.add(:amount, "should be greater than 0")
+        
       elsif amount > total_rewards
         errors.add(:amount, "should be less than total rewards")
+        
       else
-        rewards.create!(:amount => amount, :type_ => Reward.TYPE_CHAMPION, :period_start => Time.now)
-        update_attributes!(:smartrent_status => self.class.SMARTRENT_STATUS_CHAMPION, :champion_amount => amount)
+        rewards.create!(:amount => amount, :type_ => Reward.TYPE_BUYER, :period_start => Time.now)
+        update_attributes!(:smartrent_status => self.class.SMARTRENT_STATUS_BUYER, :buyer_amount => amount)
+        
         return true
       end
+      
       return false
     end
     
@@ -187,24 +198,22 @@ module Smartrent
         monthly_amount = 0
       else
         monthly_amount = self.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).sum(:amount).to_f
-        # if (sign_up_bonus + initial_reward + monthly_amount - champion_amount) > 10000
-        #   monthly_amount = monthly_amount - (sign_up_bonus + initial_reward - champion_amount)
-        #   monthly_amount > 0 ? monthly_amount : 0
-        # end
       end
       monthly_amount
     end
 
-    def champion_amount
-      rewards.where(:type_ => Reward.TYPE_CHAMPION).sum(:amount).to_f
+    def buyer_amount
+      rewards.where(:type_ => Reward.TYPE_BUYER).sum(:amount).to_f
     end
 
     def total_rewards
       if smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
         total = 0
+        
       else
-        total = sign_up_bonus + initial_reward + monthly_awards_amount - champion_amount
+        total = sign_up_bonus + initial_reward + monthly_awards_amount
         total = 10000 if total > 10000
+        total = total - buyer_amount
       end
 
       total
@@ -246,7 +255,21 @@ module Smartrent
           self.balance = 0
         end
         
+        if balance == 10000
+          self.smartrent_status = self.class.SMARTRENT_STATUS_MAXIMUM
+        end
+        
         true
       end
+      
+      def set_email_check_and_subscribed
+        if email.include?("@noemail")
+          self.email_check = "Bad"
+          self.subscribed = false
+        end
+        
+        true
+      end
+      
   end
 end

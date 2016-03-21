@@ -105,7 +105,9 @@ module Smartrent
         
       end # /find in batch
       
-      Notifier.system_message("[SmartRent] MonthlyStatusUpdater - SUCCESS", "Executed at #{Time.now}", Notifier::DEV_ADDRESS).deliver_now
+      if scheduled_run
+        Notifier.system_message("[SmartRent] MonthlyStatusUpdater - SUCCESS", "Executed at #{Time.now}", Notifier::DEV_ADDRESS).deliver_now
+      end
       
     end # /perform
     

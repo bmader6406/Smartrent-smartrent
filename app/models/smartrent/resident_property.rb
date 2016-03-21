@@ -68,7 +68,7 @@ module Smartrent
         
         if months_earned >= 1
           initial_amount = Setting.monthly_award*months_earned
-          initial_amount = 10000 if initial_amount > 10000
+          initial_amount = 9900 if initial_amount >= 9900 # 100 will be added by sign up bonus
         end
         
         if !rewards.detect{|r| r.type_ == Reward.TYPE_INITIAL_REWARD }
