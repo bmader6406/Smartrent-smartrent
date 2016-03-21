@@ -69,6 +69,10 @@ module Smartrent
       smartrent_status
     end
     
+    def subscribe_status
+      subscribed ? "Yes" : "No"
+    end
+    
     def self.types
       {0 => "First Type"}
     end
@@ -83,14 +87,6 @@ module Smartrent
     # preload
     def crm_resident=(r)
       @crm_resident = r
-    end
-    
-    def first_move_in_date
-      resident_properties.order("move_in_date asc").limit(1).first.move_in_date
-    end
-    
-    def last_move_out_date
-      resident_properties.order("move_out_date desc").limit(1).first.move_out_date
     end
     
     # share crm info

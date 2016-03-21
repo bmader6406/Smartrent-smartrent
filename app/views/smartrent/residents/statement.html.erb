@@ -27,8 +27,8 @@
     </div>
 
     <div class="movein">
-      <% if @resident.first_move_in_date %>
-        <span class="label">First Move-In Date:</span> <%= @resident.first_move_in_date.to_s(:short_date) %>
+      <% if @resident.first_move_in %>
+        <span class="label">First Move-In Date:</span> <%= @resident.first_move_in.to_s(:short_date) %>
       <% end %>
     </div>
 

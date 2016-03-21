@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for(:ui_center) do %>
-  <div class="listing">
+  <div class="listing balances">
     <div class="links pull-right">
       <%= link_to 'Export', export_admin_balances_path, :class => "btn btn-primary export" %>
     </div>
@@ -12,14 +12,17 @@
     <% if @balances.present? %>
       <table class="table">
         <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
+          <th><%= sortable(:first_name, "First Name") %></th>
+          <th><%= sortable(:last_name, "Last Name") %></th>
+          <th><%= sortable(:email, "Email") %></th>
           <th>Current Property</th>
           <th>Past Properties</th>
-          <th>Status</th>
-          <th>Balance</th>
-          <th>Activation Date</th>
+          <th><%= sortable(:smartrent_status, "Status") %></th>
+          <th><%= sortable(:balance, "Balance") %></th>
+          <th><%= sortable(:first_move_in, "Move-In") %></th>
+          <th><%= sortable(:email_check, "Email Check") %></th>
+          <th><%= sortable(:subscribed, "Subscribe Status") %></th>
+          <th><%= sortable(:confirmed_at, "Activation Date") %></th>
           <th width="100px">Detail</th>
         </tr>
         <% @balances.each do |resident| %>
@@ -44,6 +47,9 @@
             <td><%= truncate(past.collect{|p| p.name.to_s }.join(", "), :length => 70) if past.length > 0 %></td>
             <td><%= resident.smartrent_status %></td>
             <td><%= number_to_currency resident.balance, :precision => 0 %></td>
+            <td><%= resident.first_move_in ? resident.first_move_in.strftime("%Y-%m-%d") : "" %></td>
+            <td><%= resident.email_check %></td>
+            <td><%= resident.subscribe_status %></td>
             <td><%= resident.confirmed_at ? resident.confirmed_at.strftime("%Y-%m-%d") : "" %></td>
             <td>
               <% if curr || past[0] %>
@@ -74,6 +80,10 @@
       $.get(this.href, $('#balance-search form').serialize(), 'script');
       return false;
     });
+    
+    var searchForm = $('#balance-search');
+    
+    searchForm.find('.date-field :text').datepicker({format: 'yyyy-mm-dd'});
     
   });
 </script>

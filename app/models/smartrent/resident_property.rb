@@ -10,6 +10,7 @@ module Smartrent
     #validates :move_in_date, :uniqueness => {:scope => [:resident_id, :property_id]}
     
     after_create :create_initial_signup_rewards
+    after_create :set_first_move_in
     
     attr_accessor :disable_rewards
     
@@ -91,6 +92,11 @@ module Smartrent
           })
         end
         
+      end
+      
+      def set_first_move_in
+        first_move_in = resident.resident_properties.order("move_in_date asc").limit(1).first.move_in_date
+        resident.update_attributes(:first_move_in => first_move_in )
       end
       
   end

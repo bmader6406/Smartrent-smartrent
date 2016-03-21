@@ -56,3 +56,11 @@
 .paging-info .pagination {
   overflow: hidden;
 }
+
+.balances th a {
+  color: #5f5d5b;
+}
+
+.balances .current {
+  color: #7ccddc;
+}

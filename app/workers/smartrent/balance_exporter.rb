@@ -18,7 +18,7 @@ module Smartrent
       arr = []
       hash = {}
       
-      ["_id", "email", "first_name", "last_name", "status", "balance_min", "balance_max", "property_id", "activated"].each do |k|
+      ["_id", "email", "first_name", "last_name", "status", "balance_min", "balance_max", "move_in_min", "move_in_max", "property_id", "activated"].each do |k|
         next if @params[k].blank?
         val = @params[k].strip
         if k == "_id"
@@ -40,6 +40,14 @@ module Smartrent
         elsif k == "balance_max"
           arr << "balance <= :#{k}"
           hash[k.to_sym] = "#{val.to_i}"
+          
+        elsif k == "move_in_min" && (Date.parse(val) rescue nil)
+          arr << "first_move_in >= :#{k}"
+          hash[k.to_sym] = Date.parse(val).to_s(:db)
+
+        elsif k == "move_in_max" && (Date.parse(val) rescue nil)
+          arr << "first_move_in <= :#{k}"
+          hash[k.to_sym] = Date.parse(val).to_s(:db)
           
         elsif k == "first_name"
           arr << "#{k} LIKE :#{k}"
@@ -71,7 +79,7 @@ module Smartrent
       file_name = "SmartRentBalance_#{Time.now.strftime('%Y%m%d')}.csv"
 
       csv_string = CSV.generate() do |csv|
-        csv << ["First Name", "Last Name", "Email", "Current Property", "Past Properties", "Status", "Balance", "Activation Date"]
+        csv << ["First Name", "Last Name", "Email", "Current Property", "Past Properties", "Status", "Balance", "Move In", "Email Check", "Subscribe Status", "Activation Date"]
         
         balances.includes(:resident_properties => :property).find_in_batches do |bs|
           bs.each do |b|
@@ -95,6 +103,9 @@ module Smartrent
               past.collect{|p| p.name.to_s }.join(", "),
               b.smartrent_status,
               b.balance,
+              b.first_move_in ? b.first_move_in.strftime("%Y-%m-%d") : "",
+              b.email_check,
+              b.subscribe_status,
               b.confirmed_at ? b.confirmed_at.strftime("%Y-%m-%d") : ""
             ]
           end
