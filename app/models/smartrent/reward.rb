@@ -51,7 +51,7 @@ module Smartrent
     private
     
       def update_resident_balance
-        resident.update_attributes(:balance => resident.total_rewards)
+        resident.update_attributes(:balance => resident.total_rewards, :disable_email_validation => true)
         true
       end
     

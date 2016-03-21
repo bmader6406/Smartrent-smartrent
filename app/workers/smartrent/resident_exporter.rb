@@ -43,10 +43,16 @@ module Smartrent
       CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
         csv << ["Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"]
         
+        # first welcome export should use first_move_in < March 1st
+        if time.end_of_month <= Time.parse("2016-04-01 00:00:00 -0500")
+          conditions = "smartrent_status IN (?) AND first_move_in < #{Time.parse("2016-03-31 00:00:00 -0500").to_s(:db)}"
+        else
+          conditions = "smartrent_status IN (?) AND created_at #{(time.beginning_of_month..time.end_of_month).to_s(:db)}"
+        end
+        
         Smartrent::Resident.includes(:rewards)
-          .where("smartrent_status IN (?) AND created_at #{(time.beginning_of_month..time.end_of_month).to_s(:db)}", [
-            Smartrent::Resident.SMARTRENT_STATUS_ACTIVE, 
-            Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
+          .where(conditions, [
+            Smartrent::Resident.SMARTRENT_STATUS_ACTIVE
           ]).find_in_batches do |residents|
             add_csv_row(csv, residents, batch_name)
         end

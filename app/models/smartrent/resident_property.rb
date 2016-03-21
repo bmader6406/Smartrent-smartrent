@@ -96,7 +96,7 @@ module Smartrent
       
       def set_first_move_in
         first_move_in = resident.resident_properties.order("move_in_date asc").limit(1).first.move_in_date
-        resident.update_attributes(:first_move_in => first_move_in )
+        resident.update_attributes(:first_move_in => first_move_in, :disable_email_validation => true)
       end
       
   end

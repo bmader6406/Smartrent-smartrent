@@ -31,7 +31,7 @@ module Smartrent
       sr_property.save
       
       if sr_property.status == Smartrent::ResidentProperty.STATUS_CURRENT
-        sr.update_attributes(:current_property_id => unit.property_id, :current_unit_id => unit.unit_id)
+        sr.update_attributes(:current_property_id => unit.property_id, :current_unit_id => unit.unit_id, :disable_email_validation => true)
       end
       
       Smartrent::MonthlyStatusUpdater.set_status(sr) if set_status

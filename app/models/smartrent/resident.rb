@@ -24,6 +24,8 @@ module Smartrent
     
     before_save :set_balance
     before_save :set_email_check_and_subscribed
+    
+    attr_accessor :disable_email_validation
 
     ## !!! stop devise confirmation. Don't remove this method
     def send_on_create_confirmation_instructions
@@ -270,6 +272,53 @@ module Smartrent
         
         true
       end
+      
+    
+    protected
+      
+      # Some residents have this email format:
+      #- Allie.donovan@hotmail.co.uk; alex.donovan@hilton.com
+      #- KatCzeck21@hotmail.com, kspedden2005@yahoo.com
+      #- Burt0096@UMN,edu
+      #- Christian.Motsebo@yahoo,com
+      
+      def yardi_email_pair?
+        return true if disable_email_validation
+        
+        email = self.email.to_s
+        
+        if email.include?(";") && email.scan("@").length > 1
+          return true
+        
+        elsif email.include?("/") && email.scan("@").length > 1
+          return true
+          
+        elsif email.include?("and") && email.scan("@").length > 1
+          return true
+        
+        elsif email.include?(":") && email.scan("@").length > 1
+          return true
+          
+        elsif email.include?("---") && email.scan("@").length > 1
+          return true
+          
+        elsif email.include?(",") && email.scan("@").length > 1
+          return true
+        
+        end
+        
+        return false
+      end
+      
+      # override devise methods to disable validation for yardi email
+      def email_required?
+        !yardi_email_pair?
+      end
+      
+      def email_changed?
+        !yardi_email_pair?
+      end
+      
       
   end
 end
