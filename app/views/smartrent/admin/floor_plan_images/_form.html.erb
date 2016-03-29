@@ -1,3 +1,14 @@
+<% if @home.updated_by == "xml_feed" %>
+  <div class="well well-sm">
+    This floor plan image is updated by BHI XML feed, the changes you make here will be overridden by the feed
+    <br>
+    <small>
+      You can edit following fields:
+      Caption
+    </small>
+  </div>
+<% end %>
+
 <%= form_for([:admin, @home, @more_home, @floor_plan_image], html: {:class => "form-horizontal"}) do |f| %>
   <%= render "layouts/error_messages", :target => @floor_plan_image %>
   <fieldset>
@@ -15,6 +26,14 @@
       <%= f.label :caption, :class => "col-md-4 control-label" %>
       <div class="col-md-7">
         <%= f.text_field :caption, :class => "form-control" %>
+      </div>
+    </div>
+    <div class="field">
+      <div class="form-group">
+        <%= f.label :is_visible, :class => "col-md-4 control-label" %>
+        <div class="col-md-7" style="margin-top:5px;">
+          <%= f.check_box :is_visible %> Yes
+        </div>
       </div>
     </div>
     <div class="form-group">

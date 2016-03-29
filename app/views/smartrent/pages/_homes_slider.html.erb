@@ -1,7 +1,7 @@
 <div id="slides">
   <div class="slides_container">
     <% i = 0 %>
-    <% homes = Smartrent::Home.order('position asc').all %>
+    <% homes = Smartrent::Home.visible.order('position asc').all %>
     <% homes.each do |home|%>
       <% if i%3 == 0 %>
         <div class="threeWide">
@@ -11,7 +11,12 @@
         <%= link_to home_path(home) do %>
           <%= image_tag home.image(:home_page) %>
           <div class="caption">
-            <strong><%= home.title %></strong><%= home.home_page_desc %>
+            <strong><%= home.title %></strong>
+            <% if !home.home_page_desc.blank? %>
+              <%= home.home_page_desc %>
+            <% else %>
+              <%= home.description %>
+            <% end %>
           </div>
         <% end %>
       </div>

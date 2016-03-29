@@ -26,11 +26,17 @@ module Smartrent
     
     validates :title, :presence => true, :uniqueness => true
     
+    scope :visible, -> { where(is_visible:  true) }
+    
     before_create :set_position
     before_save :set_url
     
     def to_param
-      title.parameterize
+      url || title.parameterize
+    end
+    
+    def visible_more_homes
+      @visible_more_homes ||= more_homes.collect{|mh| mh if mh.is_visible? }.compact
     end
 
     def self.import(file)
@@ -80,7 +86,7 @@ module Smartrent
     private
     
       def set_url
-        self.url = self.to_param
+        self.url = self.to_param if !self.url
       end
       
       def set_position

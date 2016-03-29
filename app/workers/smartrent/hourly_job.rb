@@ -15,7 +15,11 @@ module Smartrent
       if time.hour == 0
         Resque.enqueue(Smartrent::DailyResidentCreator, time)
       end
-
+      
+      if time.hour == 3
+        Resque.enqueue(Smartrent::DailyHomeXmlImporter, time)
+      end
+      
       if time.wday == 0 && time.hour == 0 #Sunday of the current week
         Resque.enqueue(Smartrent::WeeklyPropertyXmlImporter, time)
       end

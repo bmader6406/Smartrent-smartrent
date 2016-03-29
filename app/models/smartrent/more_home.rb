@@ -8,7 +8,13 @@ module Smartrent
     validates :baths, :beds, :home_id, :sq_ft, :presence => true
     validates_numericality_of :baths, :beds
     
+    scope :visible, -> { where(is_visible:  true) }
+    
     before_create :set_position
+    
+    def fp_images=(arr)
+      # for import, don't remove
+    end
     
     def self.import(file)
       if file.class.to_s == "ActionDispatch::Http::UploadedFile"

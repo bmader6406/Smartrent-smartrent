@@ -6,7 +6,7 @@ module Smartrent
     # GET /homes.json
     def index
       @current_page = "homes"
-      @homes = Home.order('position asc').paginate(:page => params[:page], :per_page => 10)
+      @homes = Home.visible.order('position asc').paginate(:page => params[:page], :per_page => 10)
       respond_to do |format|
         format.html # index.html.erb
         format.json {

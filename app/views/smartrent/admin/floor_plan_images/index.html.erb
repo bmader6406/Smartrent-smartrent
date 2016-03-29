@@ -18,6 +18,7 @@
         <tr>
           <th>Image</th>
           <th>Caption</th>
+          <th>Visible</th>
           <th width="160px">Actions</th>
         </tr>
 
@@ -25,6 +26,7 @@
           <tr>
             <td><%= image_tag floor_plan_image.image, :width => 50 %></td>
             <td><%= floor_plan_image.caption %></td>
+            <th><%= floor_plan_image.is_visible? ? "Yes" : "No" %></th>
             <td>
               <%= link_to 'Show', admin_home_more_home_floor_plan_image_path(@home, @more_home, floor_plan_image) %> &middot;
               <% if current_user.is_admin? %>

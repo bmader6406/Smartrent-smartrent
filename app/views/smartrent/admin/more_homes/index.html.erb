@@ -22,6 +22,7 @@
           <th>Baths</th>
           <th>Sq ft</th>
           <th>Featured</th>
+          <th>Visible</th>
           <th width="250px">Actions</th>
         </tr>
         <% @more_homes.each do |more_home| %>
@@ -32,6 +33,7 @@
             <td><%= more_home.baths %></td>
             <td><%= more_home.sq_ft %></td>
             <td><%= more_home.featured %></td>
+            <td><%= more_home.is_visible? ? "Yes" : "No"  %></td>
             <td>
               <% if current_user.is_admin? %>
                 <%= link_to 'Edit', edit_admin_home_more_home_path(@home, more_home) %> &middot;

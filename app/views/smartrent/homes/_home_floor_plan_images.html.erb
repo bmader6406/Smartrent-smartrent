@@ -1,5 +1,6 @@
 <div class="homeFPImages" id="floor-plan-<%= more_home.id %>">
   <% more_home.floor_plan_images.each do |floor_plan_image| %>
+    <% next if !floor_plan_image.is_visible? %>
     <%= render partial: "home_floor_plan_row", :locals => {:floor_plan_image => floor_plan_image, :featured => "not_featured"} %>
   <% end %>
 </div>

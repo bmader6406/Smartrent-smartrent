@@ -7,7 +7,7 @@ module Smartrent
       :crm_immediate
     end
   
-    def self.perform(time = nil, scheduled_run = true, created_at = nil)
+    def self.perform(time, scheduled_run = true, created_at = nil)
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
       

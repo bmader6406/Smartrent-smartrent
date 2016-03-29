@@ -24,7 +24,17 @@
             <div class="info">
               <h1><%= link_to home.title, home_path(home) %></h1>
               <div class="descHomes">
-                <%= home.search_page_description.to_s.html_safe %>
+                <% if home.subtitle %>
+                  <h2><%= home.subtitle %></h2>
+                <% end %>
+                
+                <p>
+                  <% if !home.search_page_description.blank? %>
+                    <%= home.search_page_description.to_s.html_safe %>
+                  <% else %>
+                    <%= home.description.to_s.html_safe %>
+                  <% end %>
+                </p>
               </div>
               <div class="learn"><%= link_to "Learn More", home_path(home) %></div>
             </div>

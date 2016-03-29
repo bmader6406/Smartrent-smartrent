@@ -2,7 +2,7 @@ module Smartrent
   class FloorPlanImage < ActiveRecord::Base
     belongs_to :more_home
     
-    validates :more_home_id, :image, :caption, :presence => true
+    validates :more_home_id, :image, :presence => true
     
     has_attached_file :image,
       :storage => :s3,
@@ -15,6 +15,8 @@ module Smartrent
          :content_type => ['image/pjpeg', 'image/jpeg', 'image/png', 'image/x-png', 'image/gif'],
          :message => "must be either a JPEG, PNG or GIF image"
         }
+    
+    scope :visible, -> { where(is_visible:  true) }
     
     def self.import(file)
       if file.class.to_s == "ActionDispatch::Http::UploadedFile"

@@ -26,26 +26,6 @@
         <div class="desc">
           <%= @home.description.html_safe %>
         </div>
-        <% if false && @home.more_homes.present? %> <!-- disabled -->
-          <% more_homes = @home.more_homes  %>
-          <div class="more_homes">
-          <div class="title">Homes</div>
-            <%= render "more_homes_table", :locals => {:more_homes => more_homes} %>
-          </div>
-          <div class="fpImageHolder">
-            <%= render "more_home_floor_plan_images", :collection => more_homes, :as => :more_home  %>
-            <div class="clear"></div>
-          </div>
-          <% featured_home = more_homes.where(:featured => true).first %>
-          <% if featured_home %>
-            <div class="featuredHome">
-              <div class="title">
-                Featured Home
-              </div>
-              <%= render "featured_more_home_table", :locals => {:more_home => featured_home} %>
-            </div>
-          <% end %>
-        <% end %>
       </div>
     </div>
     

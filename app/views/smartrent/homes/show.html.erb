@@ -26,8 +26,8 @@
       <div class="desc">
         <%= @home.description.html_safe %>
       </div>
-      <% if @home.more_homes.present? %>
-        <% more_homes = @home.more_homes  %>
+      <% if @home.visible_more_homes.length > 0 %>
+        <% more_homes = @home.visible_more_homes  %>
         <div class="homes">
         <div class="title">Homes</div>
           <%= render partial: "homes_table", :locals => {:more_homes => more_homes} %>
@@ -36,7 +36,7 @@
           <%= render partial: "home_floor_plan_images", :collection => more_homes, :as => :more_home  %>
           <div class="clear"></div>
         </div>
-        <% featured_home = more_homes.where(:featured => true).first %>
+        <% featured_home = more_homes.detect{|mh| mh.featured? } %>
         <% if featured_home %>
           <div class="featuredHome">
             <div class="title">

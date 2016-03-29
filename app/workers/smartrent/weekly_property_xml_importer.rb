@@ -1,5 +1,6 @@
 require 'csv'
 require 'net/ftp'
+
 require Rails.root.join("lib/core_ext", "hash.rb")
 
 module Smartrent
@@ -12,7 +13,7 @@ module Smartrent
       :crm_immediate
     end
 
-    def self.perform(time = nil)
+    def self.perform(time)
       time = Time.parse(time) if time.kind_of?(String)
       # download xml from ftp
       
@@ -58,13 +59,13 @@ module Smartrent
       end
       
       f = File.read("#{TMP_DIR}bozzuto.xml")
-      #f = File.read("/Users/tinnguyen/Desktop/_smartrent/sr-data/bozzuto.xml")
       
       total_updates = 0
       total_creates = 0
       total_ok = 0
       smartrent_property_ids = []
       
+      # we can use nokogiri to parse xml file if from_xml does not work
       properties = Hash.from_xml(f)
       properties["PhysicalProperty"]["Property"].each_with_index do |p, pndx|
         features = p.nest(property_map[:features])

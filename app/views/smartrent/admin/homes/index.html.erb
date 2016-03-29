@@ -19,6 +19,7 @@
           <th>Title</th>
           <th>City</th>
           <th>State</th>
+          <th>Visible</th>
           <th width="250px">Actions</th>
         </tr>
         <% @homes.each do |home| %>
@@ -27,6 +28,7 @@
             <td><%= link_to home.title, admin_home_path(home) %></td>
             <td><%= home.city %></td>
             <td><%= home.state  %></td>
+            <td><%= home.is_visible? ? "Yes" : "No"  %></td>
             <td>
               <% if current_user.is_admin? %> 
                 <%= link_to 'Edit', edit_admin_home_path(home) %> &middot;
