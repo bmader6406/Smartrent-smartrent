@@ -223,7 +223,7 @@ module Smartrent
       capitol_yard = Property.find_by_name("Capitol Yards")
       
       if capitol_yard
-        Property.unscoped.where("name LIKE '%Capitol Yards%'").update_all({
+        Property.unscoped.where("name LIKE '%Capitol Yards%' AND id != #{capitol_yard.id}").update_all({
           :is_smartrent => capitol_yard.is_smartrent,
           :is_visible => 0,
           :smartrent_status => capitol_yard.smartrent_status
