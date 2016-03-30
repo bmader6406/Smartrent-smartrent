@@ -126,7 +126,7 @@ module Smartrent
             elsif key == :image
               
               begin
-                home.image = sub.nest(value) if !home.image # don't override featured image
+                home.image = sub.nest(value) if !home.image_file_name # don't override featured image
               rescue Exception => e
                 pp "saving home image..."
                 pp e.message
@@ -157,7 +157,7 @@ module Smartrent
             more_home_ids = []
             more_homes.each do |mh|
               
-              mh[:name] = mh[:name].gsub("#{home.title} - ", "")
+              mh[:name] = mh[:name].gsub("#{home.title} - ", "").gsub("#{home.title} ", "")
               
               more_home = Smartrent::MoreHome.where(:home_id => home.id, :name => mh[:name]).first
               
@@ -170,7 +170,7 @@ module Smartrent
               # create floor plans images
               fp_image_ids = []
               
-              mh[:fp_images].each_with_index do |img_url, k|                
+              mh[:fp_images].each_with_index do |img_url, k|
                 fpi = Smartrent::FloorPlanImage.where(:more_home_id => more_home.id, :image_file_name => File.basename(img_url)).first
                 
                 begin
