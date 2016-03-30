@@ -120,10 +120,13 @@ module Smartrent
             elsif key == :url
               home.url = url
               
+            elsif key == :description
+              home.description = sub.nest(value) if home.description.blank? # don't override description
+              
             elsif key == :image
               
               begin
-                home.image = sub.nest(value)
+                home.image = sub.nest(value) if !home.image # don't override featured image
               rescue Exception => e
                 pp "saving home image..."
                 pp e.message
@@ -216,7 +219,7 @@ module Smartrent
       end
       
       Notifier.system_message("[SmartRent] DailyHomeXmlImporter - SUCCESS", 
-        "Executed at #{Time.now}, total_creates: #{total_creates}, total_updates: #{total_updates}", Notifier::DEV_ADDRESS)#.deliver_now
+        "Executed at #{Time.now}, total_creates: #{total_creates}, total_updates: #{total_updates}", Notifier::DEV_ADDRESS).deliver_now
       
       pp "total_creates: #{total_creates}, total_updates: #{total_updates}"
       

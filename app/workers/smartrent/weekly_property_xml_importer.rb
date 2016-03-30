@@ -215,8 +215,19 @@ module Smartrent
       # unmark smartrent property which not exist in the xml file
       if !smartrent_property_ids.empty?
         pp "found: #{smartrent_property_ids.length} smartrent property"
-        Property.unscoped.where("id IN (?)", smartrent_property_ids).update_all(:is_smartrent => 1, :smartrent_status => Smartrent::Property.STATUS_CURRENT)
-        Property.unscoped.where("id NOT IN (?)", smartrent_property_ids).update_all(:is_smartrent => 0, :smartrent_status => nil)
+        Property.unscoped.where("id IN (?)", smartrent_property_ids).update_all(:is_smartrent => 1, :is_visible => 1, :smartrent_status => Smartrent::Property.STATUS_CURRENT)
+        Property.unscoped.where("id NOT IN (?)", smartrent_property_ids).update_all(:is_smartrent => 0, :is_visible => 0, :smartrent_status => nil)
+      end
+      
+      # Capitol Yards hack
+      capitol_yard = Property.find_by_name("Capitol Yards")
+      
+      if capitol_yard
+        Property.unscoped.where("name LIKE '%Capitol Yards%'").update_all({
+          :is_smartrent => capitol_yard.is_smartrent,
+          :is_visible => capitol_yard.is_visible,
+          :smartrent_status => capitol_yard.smartrent_status
+        })
       end
       
       Notifier.system_message("[SmartRent] WeeklyPropertyXmlImporter - SUCCESS", 
