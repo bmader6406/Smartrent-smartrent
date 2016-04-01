@@ -1,22 +1,30 @@
-<% if @home.updated_by == "xml_feed" %>
-  <div class="well well-sm">
-    This more home is updated by BHI XML feed, the changes you make here will be overridden by the feed
-    <br>
-    <small>
-      You can edit following fields:
-      Position, Featured
-    </small>
-  </div>
-<% end %>
-
 <%= form_for([:admin, @home, @more_home], html: {:class => "form-horizontal"}) do |f| %>
   <%= render "layouts/error_messages", :target => @more_home %>
   <fieldset>
+    <% if @home.updated_by == "xml_feed" %>
+      <div class="field">
+        <div class="form-group">
+          <label class="col-md-4 control-label"></label>
+          <div class="col-md-7">
+            <div class="well well-sm">
+              Some of the fields (which is disabled) in this form are being automatically updated by the Bozzuto.com XML feed.
+
+              <br><br>
+              The following fields can be edited and will not be replaced by the XML feed: <br>
+              - Position <br>
+              - Featured <br>
+              - Is Visible <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
     <div class="field">
       <div class="form-group">
         <%= f.label :name, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :name, :class => "form-control" %>
+          <%= f.text_field :name, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -24,7 +32,7 @@
       <div class="form-group">
         <%= f.label :beds, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.number_field :beds, :class => "form-control" %>
+          <%= f.number_field :beds, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -32,7 +40,7 @@
       <div class="form-group">
         <%= f.label :baths, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :baths, :class => "form-control" %>
+          <%= f.text_field :baths, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -40,7 +48,7 @@
       <div class="form-group">
         <%= f.label :sq_ft, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :sq_ft, :class => "form-control" %>
+          <%= f.text_field :sq_ft, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -58,8 +66,8 @@
         <div class="col-md-7">
           <%= f.fields_for :floor_plan_images do |builder| %>
             <div>
-              <%= builder.file_field :image, :class => "control-label" %>
-              <%= builder.check_box :_destroy %>
+              <%= builder.file_field :image, :class => "control-label", :disabled => true %>
+              <%= builder.check_box :_destroy, :disabled => true %>
               <%= builder.label :_destroy, "Remove Image", :class => "control-label" %>
               
               <p class="help-block"> Image should be 300x720 pixels and smaller than 10MB. GIF, JPG, PNG</p>

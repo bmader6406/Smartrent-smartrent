@@ -245,7 +245,7 @@ label{
 
 #contentWrapper #slides,
 #contentWrapper #homeContent{
-  width: 607px;
+  width: 770px;
   position: relative;
   left: 274px;
   margin:20px 0 0 0;
@@ -260,21 +260,21 @@ label{
 }
 
 #contentWrapper #slides .slides_container{
-  width:607px;
-  height:146px;
+  width:770px;
+  height:210px;
 }
 
 #slides .threeWide{
-  width:610px;
+  width:770px;
 }
 
 #slides .threeWide .propertySlide{
   float:left;
-  width:194px;
-  margin:0 0 0 12px;
+  width:245px;
+  margin:0 0 0 17px;
   overflow:hidden;
   position:relative;
-  height:146px;
+  height:210px;
 }
 
 #slides .threeWide .propertySlide:first-child{
@@ -282,7 +282,7 @@ label{
 }
 
 #slides .threeWide .propertySlide img{
-  width:194px;
+  width:245px;
   height:auto;
 }
 
@@ -294,6 +294,7 @@ label{
   height:70px;
   padding: 10px 12px;
   font-size:0.8125em;
+  width: 221px;
 }
 
 #slides .threeWide .propertySlide .caption strong{
@@ -376,7 +377,7 @@ label{
 .content{
   width:698px;
   margin:0px auto 0px auto;
-  padding-left:316px;
+  padding-left:110px;
   font-family:'FontSite Sans','Arial Narrow',Arial,sans-serif;
   /*font-family:"nimbus-sans-condensed",Arial,Helvetica Neue,Helvetica,sans-serif;*/
   font-size:1.3em;
@@ -519,7 +520,7 @@ label{
   width:100%;
   max-width:698px;
   margin:0px auto 0px auto;
-  padding-left:316px;
+  padding-left:110px;
   font-family:"nimbus-sans-condensed",Arial,Helvetica Neue,Helvetica,sans-serif;
 }
 
@@ -1114,7 +1115,7 @@ label{
 
 .propDetails{
   width:100%;
-  max-width:940px;
+  max-width:1100px;
   margin:0px auto 0px auto;
   color:#4c4c4c;
 }
@@ -1136,7 +1137,7 @@ label{
 }
 
 .propDetails .propPhoto img{
-  max-width: 257px;
+  width: 252px;
 }
 
 .propDetails .propPhoto .emailUpdates a{
@@ -1176,7 +1177,7 @@ label{
 }
 
 .propDetails .details .desc{
-  max-width:500px;
+  max-width:770px;
   font-size: 1.00em;
   line-height:1.7em;
   width:100%;
@@ -1887,6 +1888,39 @@ label{
   padding-left: 0;
 }
 
+
+
+/* custom style */
+.map-results {
+  width: 100%;
+  height: 400px;
+}
+.fpImageHolder .homeFPImages {
+  display: none;
+  max-width: 770px;
+}
+
+.featuredHome {
+  max-width: 770px; 
+}
+.home-listing {
+  max-width: 770px !important; 
+}
+
+.home-listing .photo {
+  width: 27% !important;
+}
+
+.home-listing .photo img {
+  width: 230px !important;
+  height: 130px !important;
+}
+
+.home-listing .info {
+  width: 41% !important;
+}
+
+
 /* media query styles */
 @media only screen and (max-width:1120px){
   .banner .fixedWidth .images .left{
@@ -1896,6 +1930,19 @@ label{
   .banner .fixedWidth .images .right{
     float:none;
     margin:0 auto 0 auto;
+  }
+  .propDetails{
+    max-width: 848px;
+  }
+  .propDetails .details .desc {
+    max-width: 570px;
+  }
+  .fpImageHolder .homeFPImages {
+    max-width: 570px;
+  }
+
+  .featuredHome {
+    max-width: 570px; 
   }
 }
 
@@ -1979,6 +2026,7 @@ label{
   }
   
   #contactRight{
+    clear: both;
     float:none;
     margin-left:17px;
     margin-right: 17px;
@@ -2038,6 +2086,19 @@ label{
     margin-left: 17px;
     width: 90%;
   }
+  
+  .home-listing .propertyListing .photo {
+    width: 28% !important;
+  }
+  
+  .home-listing .propertyListing .info{ /* must have .propertyListing */
+    width: 39% !important;
+  }
+  
+  .home-listing .learnMoreHomes{
+    margin-left: 0 !important;
+    clear: none !important;
+  }
 }
 
 @media only screen and (max-width:947px){
@@ -2081,7 +2142,15 @@ label{
     clear: left;
     margin-right: 20px;
   }
-
+  
+  .home-listing .propertyListing .photo { /* must have .propertyListing */
+    width: 33% !important;
+  }
+  
+  .home-listing .learnMoreHomes{
+    margin-left: 38% !important;
+    clear: left !important;
+  }
 }
 
 @media only screen and (max-width:771px){
@@ -2145,6 +2214,18 @@ label{
   .ruleContainer .ruleContent img{
     float:none;
     
+  }
+  
+  
+  .home-listing .propertyListing .info{
+    clear:left !important;
+    float: left !important;
+    width: 95% !important;
+    margin: 0 5% 0 0 !important;
+  }
+  
+  .home-listing .learnMoreHomes {
+    margin-left: 0px !important;
   }
 }
 
@@ -2240,7 +2321,7 @@ label{
   .locations .results .propertyListing .info{
     clear:left;
     float: left;
-    width: 95%;
+    width: 95% !important;
     margin: 0 5% 0 0;
   }
   
@@ -2275,15 +2356,3 @@ label{
   }
 }
 /* end media query styles */
-.map-results {
-  width: 100%;
-  height: 400px;
-}
-.fpImageHolder .homeFPImages {
-  display: none;
-  max-width: 600px;
-}
-
-.featuredHome {
-  max-width: 600px; 
-}

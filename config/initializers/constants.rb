@@ -1,1 +1,1 @@
-DEFAULT_EMAIL = Notifier::DEV_ADDRESS
+DEFAULT_EMAIL = ["schapa@bozzuto.com", "ecarter@bozzuto.com", "bozzuto@hy.ly"]

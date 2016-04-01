@@ -1,21 +1,26 @@
-<% if @home.updated_by == "xml_feed" %>
-  <div class="well well-sm">
-    This floor plan image is updated by BHI XML feed, the changes you make here will be overridden by the feed
-    <br>
-    <small>
-      You can edit following fields:
-      Caption
-    </small>
-  </div>
-<% end %>
-
 <%= form_for([:admin, @home, @more_home, @floor_plan_image], html: {:class => "form-horizontal"}) do |f| %>
   <%= render "layouts/error_messages", :target => @floor_plan_image %>
   <fieldset>
+    <% if @home.updated_by == "xml_feed" %>
+      <div class="form-group">
+        <label class="col-md-4 control-label"></label>
+        <div class="col-md-7">
+          <div class="well well-sm">
+            Some of the fields (which is disabled) in this form are being automatically updated by the Bozzuto.com XML feed.
+
+            <br><br>
+            The following fields can be edited and will not be replaced by the XML feed: <br>
+            - Caption <br>
+            - Is Visible <br>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
     <div class="form-group">
       <%= f.label :image, :class => "col-md-4 control-label" %>
       <div class="col-md-7">
-        <%= f.file_field :image %>
+        <%= f.file_field :image, :disabled => true %>
         <p class="help-block"> Image should be 300x720 pixels and smaller than 10MB. GIF, JPG, PNG</p>
         <% if f.object.image && f.object.image.url %>
           <br><img src="<%= f.object.image.url %>" width="160px" />

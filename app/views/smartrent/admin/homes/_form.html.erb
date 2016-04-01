@@ -1,22 +1,36 @@
-<% if @home.updated_by == "xml_feed" %>
-  <div class="well well-sm">
-    This home is updated by BHI XML feed, the changes you make here will be overridden by the feed
-    <br>
-    <small>
-      You can edit following fields:
-      Subtitle, Home Page Description, Search Page Description, Description, Image, Image Description, Position
-    </small>
-  </div>
-<% end %>
-
 <%= form_for([:admin, @home], :html => {:class => "form-horizontal"}) do |f| %>
   <%= render "layouts/error_messages", :target => @home %>
   <fieldset>
+    
+    <% if @home.updated_by == "xml_feed" %>
+      <div class="field">
+        <div class="form-group">
+          <label class="col-md-4 control-label"></label>
+          <div class="col-md-7">
+            <div class="well well-sm">
+              Some of the fields (which is disabled) in this form are being automatically updated by the Bozzuto.com XML feed.
+
+              <br><br>
+              The following fields can be edited and will not be replaced by the XML feed: <br>
+              - Subtitle <br>
+              - Home Page Description <br>
+              - Search Page Description <br>
+              - Description <br>
+              - Image <br>
+              - Image Description <br>
+              - Position <br>
+              - Is Visible <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
     <div class="field">
       <div class="form-group">
         <%= f.label :title, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :title, :class => "form-control" %>
+          <%= f.text_field :title, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -32,7 +46,7 @@
       <div class="form-group">
         <%= f.label :video_url, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.url_field :video_url, :class => "form-control" %>
+          <%= f.url_field :video_url, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -40,7 +54,7 @@
       <div class="form-group">
         <%= f.label :phone_number, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :phone_number, :class => "form-control" %>
+          <%= f.text_field :phone_number, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -48,7 +62,7 @@
       <div class="form-group">
         <%= f.label :address, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :address, :class => "form-control" %>
+          <%= f.text_field :address, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -56,7 +70,7 @@
       <div class="form-group">
         <%= f.label :city, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :city, :class => "form-control" %>
+          <%= f.text_field :city, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -64,7 +78,7 @@
       <div class="form-group">
         <%= f.label :state, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :state, :class => "form-control" %>
+          <%= f.text_field :state, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -72,7 +86,7 @@
       <div class="form-group">
         <%= f.label :website, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.url_field :website, :class => "form-control" %>
+          <%= f.url_field :website, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -104,7 +118,7 @@
       <div class="form-group">
         <%= f.label :latitude, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :latitude, :class => "form-control" %>
+          <%= f.text_field :latitude, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -112,7 +126,7 @@
       <div class="form-group">
         <%= f.label :longitude, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
-          <%= f.text_field :longitude, :class => "form-control" %>
+          <%= f.text_field :longitude, :class => "form-control", :disabled => true %>
         </div>
       </div>
     </div>
@@ -121,7 +135,7 @@
         <%= f.label :image, :class => "col-md-4 control-label" %>
         <div class="col-md-7">
           <%= f.file_field :image %>
-          <p class="help-block"> Image should be 400x300 pixels and smaller than 10MB. GIF, JPG, PNG</p>
+          <p class="help-block"> Image should be 870x375 pixels and smaller than 10MB. GIF, JPG, PNG</p>
           <% if f.object.image && f.object.image.url %>
             <br><img src="<%= f.object.image.url %>" width="160px" />
           <% end %>

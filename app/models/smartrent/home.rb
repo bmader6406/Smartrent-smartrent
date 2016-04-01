@@ -10,8 +10,9 @@ module Smartrent
     
     has_attached_file :image,
       :styles => {
-        :home_page => "195x145>",
-        :search_page => "149x112>"
+        :home_page => "245x210>",
+        :search_page => "230x125>",
+        :desc_page => "252x375>"
       },
       :storage => :s3,
       :s3_credentials => "#{Rails.root.to_s}/config/s3.yml",
