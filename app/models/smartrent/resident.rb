@@ -96,8 +96,9 @@ module Smartrent
       @crm_resident ||= begin
         cr = ::Resident::where(:email_lc => email.to_s.downcase).first
         if !cr
-          ::Resident::find(crm_resident_id) rescue nil
+          cr = ::Resident::find(crm_resident_id) rescue nil
         end
+        cr
       end
     end
     

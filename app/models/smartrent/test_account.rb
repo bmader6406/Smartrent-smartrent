@@ -30,7 +30,7 @@ module Smartrent
       
       def revert_smartrent_resident_email_if_delete
         if deleted_at_changed? && deleted_at_was.nil?
-          resident.update_attribute(:email, origin_email)
+          resident.update_attributes(:email => origin_email, :confirmed_at => nil)
           
           if resident.errors.empty?
             return true
