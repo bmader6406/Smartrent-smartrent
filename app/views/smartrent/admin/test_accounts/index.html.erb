@@ -1,0 +1,119 @@
+<% content_for(:ui_west) do %>
+  <div>
+    search form
+  </div>
+<% end %>
+
+<% content_for(:ui_center) do %>
+  <div class="listing" id="test-accounts">
+    <h3>Listing Test Accounts</h3>
+    
+    <%= form_for([:admin, @test_account], :html => {:class => "form well"}) do |f| %>
+      <%= render "layouts/error_messages", :target => @test_account %>
+
+      <div class="row">
+        <div class="col-md-3">
+          <%= f.label :origin_email, "Real Resident Email" %><br>
+          <%= f.text_field :origin_email, :class => "form-control" %>
+          <small class="help-block">
+            E.g: t0198381@noemail.yardi
+          </small>
+        </div>
+        <div class="col-md-3">
+          <%= f.label :new_email, "Test Resident Email" %><br>
+          <%= f.text_field :new_email, :class => "form-control" %>
+          <small class="help-block">
+            E.g: schapa@bozzuto.com
+          </small>
+        </div>
+        <div class="col-md-3">
+          <label>&nbsp;</label><br>
+          <%= f.submit "Create Test Account", :class => "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Resident Id</th>
+          <th>Full Name</th>
+          <th>Real Email</th>
+          <th>Test Email</th>
+          <th>Activation Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @test_accounts.each do |test_account| %>
+          <%= render "tr", :test_account => test_account %>
+        <% end %>
+      </tbody>
+    </table>
+    
+    <% if @test_accounts.empty? %>
+      <div class="well well-sm not-found">No test accounts found</div>
+    <% end %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $(function(){
+    App.initPageLayout(null, null, null, true);
+    
+    var testAccounts = $('#test-accounts'),
+      form = testAccounts.find('form');
+    
+    form.ajaxForm({
+      dataType: 'script',
+      beforeSubmit: function(){
+        form.mask('Please wait...');
+      },
+      success: function(data){
+        form.unmask();
+      }
+    });
+    
+    testAccounts.on('click', '.delete', function(){
+      var t = $(this);
+      
+      bootbox.confirm("Sure you want to delete this test accocunt?", function(result) {
+        if (result) {
+          testAccounts.mask('Please wait...');
+          
+          $.post(t.attr('href'), {_method: 'delete'}, function(){
+            testAccounts.unmask();
+          }, 'script');
+        }
+      });
+      
+      return false;
+      
+    }).on('click', '.reset-password', function(){
+      var t = $(this);
+      
+      testAccounts.mask('Please wait...');
+      
+      $.post(t.attr('href'), function(){
+        msgbox("Password was reset successfully");
+        testAccounts.unmask();
+      }, 'json');
+      
+      return false;
+      
+    }).on('click', '.reset-activation-date', function(){
+      var t = $(this);
+      
+      testAccounts.mask('Please wait...');
+      
+      $.post(t.attr('href'), function(){
+        msgbox("Activation Date was reset successfully");
+        testAccounts.unmask();
+      }, 'json');
+      
+      return false;
+    });
+    
+  });
+</script>

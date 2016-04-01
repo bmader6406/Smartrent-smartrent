@@ -1,0 +1,23 @@
+<% resident = test_account.resident %>
+<tr data-id="<%= test_account.id %>">
+  <td><%= test_account.resident_id %></td>
+  <td><%= resident.full_name if resident %></td>
+  <td><%= test_account.origin_email %></td>
+  <td><%= test_account.new_email %></td>
+  <td>
+    <%= resident.confirmed_at.strftime("%Y-%m-%d") if resident && resident.confirmed_at %>
+  </td>
+  <td>
+    <%= link_to 'Reset Password', reset_password_admin_test_account_path(test_account), :class => "btn btn-default btn-sm reset-password" %>
+    
+    <% if resident && resident.confirmed_at %>
+      <%= link_to 'Reset Activation Date', reset_activation_date_admin_test_account_path(test_account), :class => "btn btn-default btn-sm reset-activation-date" %>
+    <% end %>
+    
+    <% if resident %>
+      <%= link_to 'View Details', admin_balances_path(:_id => resident.id, :status => ""), :class => "btn btn-default btn-sm", :target => "_blank" %>
+    <% end %>
+    
+    <%= link_to 'Delete', admin_test_account_path(test_account), :class => "btn btn-danger btn-sm delete" %>
+  </td>
+</tr>

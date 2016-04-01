@@ -50,7 +50,7 @@ module Smartrent
           next if params[k].blank?
           val = params[k].strip
           if k == "_id"
-            arr << "id = :id"
+            arr << "smartrent_residents.id = :id"
             hash[:id] = "#{val}"
             
           elsif k == "status"
@@ -82,6 +82,10 @@ module Smartrent
             hash[k.to_sym] = "%#{val}%"
             
           elsif k == "last_name"
+            arr << "#{k} LIKE :#{k}"
+            hash[k.to_sym] = "%#{val}%"
+            
+          elsif k == "email" && (!val.include?("@") || val.start_with?("@"))
             arr << "#{k} LIKE :#{k}"
             hash[k.to_sym] = "%#{val}%"
             

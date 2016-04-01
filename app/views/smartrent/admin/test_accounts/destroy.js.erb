@@ -1,0 +1,9 @@
+<% if @test_account.errors.empty? %>
+  msgbox('Test account was successfully deleted');
+  
+	$('#test-accounts tr[data-id=<%= @test_account.id %>]').remove();
+	
+<% else %>
+  msgbox("<%= j @test_account.errors.full_messages %>", "danger");
+  
+<% end %>

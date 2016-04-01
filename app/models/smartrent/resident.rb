@@ -81,6 +81,10 @@ module Smartrent
       subscribed ? "Yes" : "No"
     end
     
+    def full_name
+      "#{first_name} #{last_name}".strip
+    end
+    
     def self.types
       {0 => "First Type"}
     end
@@ -89,7 +93,12 @@ module Smartrent
       # search by email is better than crm_resident_id
       # because the id "link" will be broken when the user do the full upload, result in duplicated sr resident
       # (mysql is not case sensitive but mongodb is)
-      @crm_resident ||= ::Resident::where(:email_lc => email.to_s.downcase).first
+      @crm_resident ||= begin
+        cr = ::Resident::where(:email_lc => email.to_s.downcase).first
+        if !cr
+          ::Resident::find(crm_resident_id) rescue nil
+        end
+      end
     end
     
     # preload

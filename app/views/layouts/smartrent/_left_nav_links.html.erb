@@ -11,9 +11,20 @@
   <li class="<%= "active" if controller_name == "balances" %>">
     <a href="<%= raw admin_balances_path %>"> <i class="fa fa-usd fa-fw"></i> Balances </a>
   </li>
+  
+  <li class="<%= "active" if controller_name == "test_accounts" %>">
+    <a href="<%= raw admin_test_accounts_path %>"> <i class="fa fa-check-square-o fa-fw"></i> Test Accounts </a>
+  </li>
+  
   <li class="<%= "active" if controller_name == "rewards" %>" style="display:none">
     <a href="<%= raw admin_rewards_path %>"> <i class="fa fa-trophy fa-fw"></i> Rewards </a>
   </li>
+  
+<% else %>
+  <li class="<%= "active" if controller_name == "balances" %>">
+    <a href="<%= raw admin_balances_path %>"> <i class="fa fa-usd fa-fw"></i> Balances </a>
+  </li>
+  
 <% end %>
 
 <li>

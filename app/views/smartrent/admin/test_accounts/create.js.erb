@@ -1,0 +1,13 @@
+<% if @error %>
+  msgbox("<%= j @error %>", "danger");
+  
+<% elsif @test_account.errors.empty? %>
+  
+  $('#test-accounts tbody').prepend("<%= j(render 'tr', :test_account => @test_account)%>");
+
+  msgbox('Test account was successfully created');
+	
+<% else %>
+  msgbox("<%= j @test_account.errors.full_messages.join("; ") %>", "danger");
+  
+<% end %>

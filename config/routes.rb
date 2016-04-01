@@ -40,6 +40,14 @@ Smartrent::Engine.routes.draw do
     
     resources :rewards
     resources :settings
+    
+    resources :test_accounts do
+      member do
+        post :reset_password
+        post :reset_activation_date
+      end
+    end
+    
   end
   
   # smartrent website
