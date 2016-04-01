@@ -6,6 +6,7 @@ module Smartrent
     
     has_attached_file :image,
       :storage => :s3,
+      :s3_protocol => :https,
       :s3_credentials => "#{Rails.root.to_s}/config/s3.yml",
       :path => ":class/:attachment/:id/:style/:filename"
   
