@@ -320,14 +320,11 @@ module Smartrent
       end
       
       # override devise methods to disable validation for yardi email
+      # Don't override email_changed?, it will break the password reset by clearing the reset password token
+      
       def email_required?
         !yardi_email_pair?
       end
-      
-      def email_changed?
-        !yardi_email_pair?
-      end
-      
       
   end
 end
