@@ -10,8 +10,8 @@ module Smartrent
     
     has_attached_file :image,
       :styles => {
-        :home_page => "245x210>",
-        :search_page => "230x125>",
+        :home_page => "245x210#",
+        :search_page => "230x130#",
         :desc_page => "252x375#"
       },
       :storage => :s3,
