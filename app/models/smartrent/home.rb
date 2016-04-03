@@ -12,7 +12,7 @@ module Smartrent
       :styles => {
         :home_page => "245x210#",
         :search_page => "230x130#",
-        :desc_page => "252x375#"
+        :desc_page => "320x200#"
       },
       :storage => :s3,
       :s3_protocol => :https,
