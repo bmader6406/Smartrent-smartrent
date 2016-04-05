@@ -98,7 +98,7 @@
       $.post(t.attr('href'), function(){
         msgbox("Password was reset successfully");
         testAccounts.unmask();
-      }, 'json');
+      }, 'script');
       
       return false;
       
@@ -110,7 +110,7 @@
       $.post(t.attr('href'), function(){
         msgbox("Activation Date was reset successfully");
         testAccounts.unmask();
-      }, 'json');
+      }, 'script');
       
       return false;
     });

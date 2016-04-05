@@ -24,6 +24,7 @@ module Smartrent
     
     before_save :set_balance
     before_save :set_email_check_and_subscribed
+    before_save :set_activation_date
     
     attr_accessor :disable_email_validation
 
@@ -304,6 +305,13 @@ module Smartrent
       
       def email_required?
         !yardi_email_pair?
+      end
+      
+      # fixed test accounts, balance listing display issue
+      def set_activation_date
+        if reset_password_sent_at_changed? && confirmed_at.blank?
+          self.confirmed_at = reset_password_sent_at
+        end
       end
       
   end

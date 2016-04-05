@@ -48,12 +48,13 @@ module Smartrent
       @test_account.resident.send_reset_password_instructions
       @test_account.resident.update_attribute(:confirmed_at, Time.now) if @test_account.resident.confirmed_at.blank?
       
-      render :json => {:success => true}
+      render :action => "update.js.erb"
     end
     
     def reset_activation_date
       @test_account.resident.update_attribute(:confirmed_at, nil)
-      render :json => {:success => true}
+      
+      render :action => "update.js.erb"
     end
 
     private

@@ -1,0 +1,10 @@
+<% if @error %>
+  msgbox("<%= j @error %>", "danger");
+  
+<% elsif @test_account.errors.empty? %>
+  $('#test-accounts tr[data-id=<%= @test_account.id %>]').replaceWith("<%= j(render 'tr', :test_account => @test_account)%>");
+	
+<% else %>
+  msgbox("<%= j @test_account.errors.full_messages.join("; ") %>", "danger");
+  
+<% end %>
