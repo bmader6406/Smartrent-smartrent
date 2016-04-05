@@ -14,8 +14,18 @@ module Smartrent
     def self.create_smartrent_resident(resident, unit, set_status = true, disable_rewards = false)
       # Initialize by email is better than crm_resident_id
       # because the id "link" will be broken when the user do the full upload, result in duplicated sr resident
-      sr = Smartrent::Resident.find_or_initialize_by(email: resident.email)
-      sr.email = resident.email
+      
+      # check test accounts
+      pp "resident.email: #{resident.email}"
+      test_account = Smartrent::TestAccount.find_by_origin_email(resident.email)
+      
+      if test_account
+        pp "found test_account: #{test_account.origin_email}, #{test_account.new_email}"
+        sr = Smartrent::Resident.find_or_initialize_by(email: test_account.new_email)
+      else
+        sr = Smartrent::Resident.find_or_initialize_by(email: resident.email)
+      end
+      
       sr.first_name = resident.first_name
       sr.last_name = resident.last_name
       sr.crm_resident_id = resident.id.to_i # link smartrent resident with crm resident
