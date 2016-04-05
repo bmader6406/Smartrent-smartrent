@@ -247,6 +247,7 @@ module Smartrent
         if smartrent_status_changed? && smartrent_status == STATUS_EXPIRED 
           rewards.create!(:amount => -balance, :type_ => Reward::TYPE_EXPIRED, :period_start => Time.now.beginning_of_month )
           self.balance = 0
+          self.subscribed = false
         end
         
         true
