@@ -20,7 +20,7 @@ module Smartrent
       sr.last_name = resident.last_name
       sr.crm_resident_id = resident.id.to_i # link smartrent resident with crm resident
       # set initial status for validation
-      sr.smartrent_status = Smartrent::Resident.SMARTRENT_STATUS_ACTIVE if sr.smartrent_status.blank?
+      sr.smartrent_status = Smartrent::Resident::STATUS_ACTIVE if sr.smartrent_status.blank?
       sr.save(:validate => false)
       
       sr_property = sr.resident_properties.find_or_initialize_by(property_id: unit.property_id, unit_code: unit.unit_code)
@@ -30,17 +30,18 @@ module Smartrent
       sr_property.disable_rewards = disable_rewards
       sr_property.save
       
-      if sr_property.status == Smartrent::ResidentProperty.STATUS_CURRENT
+      if sr_property.status == Smartrent::ResidentProperty::STATUS_CURRENT
         sr.update_attributes(:current_property_id => unit.property_id, :current_unit_id => unit.unit_id, :disable_email_validation => true)
       end
       
       Smartrent::MonthlyStatusUpdater.set_status(sr) if set_status
     end
     
-    def self.delete_and_create_all_residents
+    def self.delete_and_create_all_residents(cal_time = Time.now)
       # for *manual* run in rails console after the first full yardi file import
       # it will reset the smartrent resident database (account, rewards)
       # This task should be only run ONE TIME to create the smartrent database
+      now = Time.now
       
       pp "delete_and_create_all_residents start: #{Time.now}"
       
@@ -66,7 +67,7 @@ module Smartrent
       
       ::Resident.each do |r|
         r.units.each do |u|
-          if smartrent_dict[u.property_id.to_i] && !u.roommate? && u.move_in && u.move_in.to_time <= Time.now
+          if smartrent_dict[u.property_id.to_i] && !u.roommate? && u.move_in && u.move_in.to_time <= now
             total += 1
             pp "total: #{total}, r._id: #{r._id}, u._id.to_s: #{u._id.to_s}"
             create_smartrent_resident(r, u, false, true)
@@ -77,18 +78,16 @@ module Smartrent
       # create initial and sign up rewards
       Smartrent::Resident.includes(:resident_properties => :property).find_in_batches do |residents|
         residents.each do |sr|
-          create_initial_signup_rewards(sr)
+          create_initial_signup_rewards(sr, cal_time)
         end
       end
       
       # set smartrent status here to speed up this task
-      MonthlyStatusUpdater.perform(Time.now.prev_month, false)
+      MonthlyStatusUpdater.perform(cal_time.prev_month, false)
       pp "delete_and_create_all_residents done: #{Time.now}"
     end
     
-    def self.create_initial_signup_rewards(sr)
-      now = Time.now
-      
+    def self.create_initial_signup_rewards(sr, cal_time = Time.now)
       first_rp = nil
       first_move_in = nil
       
@@ -112,13 +111,13 @@ module Smartrent
       months_earned = 0
       
       eligible_properties.each do |rp|
-        if rp.move_out_date.blank? || rp.move_out_date && rp.move_out_date > now
-          months_earned += (Time.now.difference_in_months(rp.move_in_date) rescue 0)
-          #pp "months_earned: #{months_earned}, #{Time.now.difference_in_months(rp.move_in_date)}, #{rp.move_in_date}"
+        if rp.move_out_date.blank? || rp.move_out_date && rp.move_out_date > cal_time
+          months_earned += (cal_time.difference_in_months(rp.move_in_date) rescue 0)
+          pp "months_earned: #{months_earned}, #{cal_time.difference_in_months(rp.move_in_date)}, #{rp.move_in_date}, #{cal_time}"
           
         else
           months_earned += (rp.move_out_date.difference_in_months(rp.move_in_date) rescue 0)
-          #pp "months_earned2: #{months_earned}, #{rp.move_out_date.difference_in_months(rp.move_in_date)}, #{rp.move_in_date}, #{rp.move_out_date}"
+          pp "months_earned2: #{months_earned}, #{rp.move_out_date.difference_in_months(rp.move_in_date)}, #{rp.move_in_date}, #{rp.move_out_date}, #{cal_time}"
           
           # count incomplete month for moved out resident
           months_earned += 1
@@ -137,7 +136,7 @@ module Smartrent
           :property_id => first_rp.property_id,
           :resident_id => sr.id,
           :amount => initial_amount,
-          :type_ => Reward.TYPE_INITIAL_REWARD,
+          :type_ => Reward::TYPE_INITIAL_REWARD,
           :period_start => first_move_in,
           :months_earned => months_earned
         })
@@ -146,7 +145,7 @@ module Smartrent
           :property_id => first_rp.id,
           :resident_id => sr.id,
           :amount => Smartrent::Setting.sign_up_bonus,
-          :type_ => Reward.TYPE_SIGNUP_BONUS,
+          :type_ => Reward::TYPE_SIGNUP_BONUS,
           :period_start => first_move_in
         })
       end

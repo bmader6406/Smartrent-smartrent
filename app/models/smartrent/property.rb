@@ -8,23 +8,15 @@ module Smartrent
     
     before_create :set_smartrent
     
-    def self.STATUS_ACTIVE
-      "Active"
-    end
+    STATUS_ACTIVE = "Active"
+    STATUS_INACTIVE = "Inactive"
+    STATUS_CURRENT = "Current"
     
-    def self.STATUS_INACTIVE
-      "Inactive"
-    end
-    
-    def self.STATUS_CURRENT
-      "Current"
-    end
-
     def self.statuses
       {
-        "Active" => self.STATUS_ACTIVE,
-        "Inactive" => self.STATUS_INACTIVE,
-        "Current" => self.STATUS_CURRENT
+        STATUS_ACTIVE => "Active",
+        STATUS_INACTIVE => "Inactive",
+        STATUS_CURRENT => "Current"
       }
     end
     
@@ -174,7 +166,7 @@ module Smartrent
     
     # only create reward for the eligible property
     def eligible?
-      smartrent_status.to_s.include?(Property.STATUS_CURRENT) && is_smartrent?
+      smartrent_status.to_s.include?(STATUS_CURRENT) && is_smartrent?
     end
     
     private

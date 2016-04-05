@@ -14,28 +14,17 @@ module Smartrent
     
     attr_accessor :disable_rewards
     
-    def self.STATUS_CURRENT
-      "Current"
-    end
-    
-    def self.STATUS_PAST
-      "Past"
-    end
-    
-    def self.STATUS_NOTICE
-      "Notice"
-    end
-    
-    def self.STATUS_FUTURE
-      "Future"
-    end
+    STATUS_CURRENT = "Current"
+    STATUS_PAST = "Past"
+    STATUS_NOTICE = "Notice"
+    STATUS_FUTURE = "Future"
     
     def self.statuses
       {
-        self.STATUS_CURRENT => "Current", 
-        self.STATUS_PAST => "Past", 
-        self.STATUS_NOTICE => "Notice",
-        self.STATUS_FUTURE => "Future"
+        STATUS_CURRENT => "Current", 
+        STATUS_PAST => "Past", 
+        STATUS_NOTICE => "Notice",
+        STATUS_FUTURE => "Future"
       }
     end
     
@@ -71,23 +60,23 @@ module Smartrent
           initial_amount = 9900 if initial_amount >= 9900 # 100 will be added by sign up bonus
         end
         
-        if !rewards.detect{|r| r.type_ == Reward.TYPE_INITIAL_REWARD }
+        if !rewards.detect{|r| r.type_ == Reward::TYPE_INITIAL_REWARD }
           Reward.create!({
             :property_id => property.id,
             :resident_id => resident.id,
             :amount => initial_amount,
-            :type_ => Reward.TYPE_INITIAL_REWARD,
+            :type_ => Reward::TYPE_INITIAL_REWARD,
             :period_start => creation_date,
             :months_earned => months_earned
           })
         end
         
-        if !rewards.detect{|r| r.type_ == Reward.TYPE_SIGNUP_BONUS }
+        if !rewards.detect{|r| r.type_ == Reward::TYPE_SIGNUP_BONUS }
           Reward.create!({
             :property_id => property.id,
             :resident_id => resident.id,
             :amount => Setting.sign_up_bonus,
-            :type_ => Reward.TYPE_SIGNUP_BONUS,
+            :type_ => Reward::TYPE_SIGNUP_BONUS,
             :period_start => creation_date
           })
         end

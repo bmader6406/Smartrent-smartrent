@@ -10,7 +10,23 @@ module Smartrent
     validate :valid_type
     
     after_save :update_resident_balance
+    
+    TYPE_INITIAL_REWARD = 0
+    TYPE_SIGNUP_BONUS = 1
+    TYPE_MONTHLY_AWARDS = 2
+    TYPE_BUYER = 3
+    TYPE_EXPIRED = 4
 
+    def self.types
+      {
+        TYPE_INITIAL_REWARD => "Initial Balance",
+        TYPE_SIGNUP_BONUS => "Sign Up",
+        TYPE_MONTHLY_AWARDS => "Monthly Awards",
+        TYPE_BUYER => "Buyer",
+        TYPE_EXPIRED => "Expired"
+      }
+    end
+    
     def period_start_greater_than_period_end
       if period_start.present? and period_end.present?
         errors[:period_end] << "should be less than period start" if period_start > period_end
@@ -23,35 +39,12 @@ module Smartrent
       end
     end
 
-    def self.TYPE_INITIAL_REWARD
-      0
-    end
-    def self.TYPE_SIGNUP_BONUS
-      1
-    end
-    def self.TYPE_MONTHLY_AWARDS
-      2
-    end
-    def self.TYPE_BUYER
-      3
-    end
-    def self.TYPE_BUYER
-      3
-    end
-
-    def self.types
-      {
-        self.TYPE_INITIAL_REWARD => "Initial Balance",
-        self.TYPE_SIGNUP_BONUS => "Sign Up",
-        self.TYPE_MONTHLY_AWARDS => "Monthly Awards",
-        self.TYPE_BUYER => "Buyer"
-      }
-    end
-    
     private
     
       def update_resident_balance
-        resident.update_attributes(:balance => resident.total_rewards, :disable_email_validation => true)
+        if type_ != TYPE_EXPIRED
+          resident.update_attributes(:balance => resident.total_rewards, :disable_email_validation => true)
+        end
         true
       end
     

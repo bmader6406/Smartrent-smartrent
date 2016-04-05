@@ -3,7 +3,7 @@
     <h2>Sign up</h2>
 
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-      <%= hidden_field_tag "resident[status]", Smartrent::Resident.SMARTRENT_STATUS_ACTIVE %>
+      <%= hidden_field_tag "resident[status]", Smartrent::Resident::STATUS_ACTIVE %>
       <%= devise_error_messages! %>
 
       <div class="field">

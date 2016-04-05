@@ -51,7 +51,7 @@ module Smartrent
         
         Smartrent::Resident.includes(:rewards)
           .where(conditions, [
-            Smartrent::Resident.SMARTRENT_STATUS_ACTIVE
+            Smartrent::Resident::STATUS_ACTIVE
           ]).find_in_batches do |residents|
             add_csv_row(csv, residents, batch_name)
         end
@@ -84,8 +84,8 @@ module Smartrent
         
         Smartrent::Resident.includes(:rewards)
           .where("smartrent_status IN (?) AND created_at < '#{(time.end_of_quarter - 2.months).to_s(:db)}'", [
-            Smartrent::Resident.SMARTRENT_STATUS_ACTIVE, 
-            Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
+            Smartrent::Resident::STATUS_ACTIVE, 
+            Smartrent::Resident::STATUS_INACTIVE
           ]).find_in_batches do |residents|
             add_csv_row(csv, residents, batch_name)
         end
@@ -117,8 +117,8 @@ module Smartrent
         
         Smartrent::Resident.includes(:rewards)
           .where("smartrent_status IN (?) AND first_move_in <= '2016-03-31 04:59:59'", [
-            Smartrent::Resident.SMARTRENT_STATUS_ACTIVE, 
-            Smartrent::Resident.SMARTRENT_STATUS_INACTIVE
+            Smartrent::Resident::STATUS_ACTIVE, 
+            Smartrent::Resident::STATUS_INACTIVE
           ]).find_in_batches do |residents|
             add_csv_row(csv, residents, nil)
         end

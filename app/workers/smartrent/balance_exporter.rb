@@ -91,9 +91,9 @@ module Smartrent
             
             b.resident_properties.each do |rp|
               next if !rp.property
-              if rp.status == Smartrent::ResidentProperty.STATUS_CURRENT
+              if rp.status == Smartrent::ResidentProperty::STATUS_CURRENT
                 curr = rp.property
-              elsif rp.status == Smartrent::ResidentProperty.STATUS_PAST
+              elsif rp.status == Smartrent::ResidentProperty::STATUS_PAST
                 past << rp.property
               end
             end

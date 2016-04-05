@@ -31,45 +31,26 @@ module Smartrent
     def send_on_create_confirmation_instructions
     end
     
-    def self.SMARTRENT_STATUS_ACTIVE
-      "Active"
-    end
-
-    def self.SMARTRENT_STATUS_INACTIVE
-      "Inactive"
-    end
-
-    def self.SMARTRENT_STATUS_EXPIRED
-      "Expired"
-    end
-    
-    def self.SMARTRENT_STATUS_MAXIMUM
-      "Maximum"
-    end
-
-    def self.SMARTRENT_STATUS_BUYER
-      "Buyer"
-    end
-
-    def self.SMARTRENT_STATUS_ARCHIVE
-      "Archive"
-    end
+    STATUS_ACTIVE = "Active"
+    STATUS_INACTIVE = "Inactive"
+    STATUS_EXPIRED = "Expired"
+    STATUS_BUYER = "Buyer"
+    STATUS_ARCHIVE = "Archive"
 
     def self.smartrent_statuses
       {
-        self.SMARTRENT_STATUS_ACTIVE => "Active", 
-        self.SMARTRENT_STATUS_INACTIVE => "Inactive", 
-        self.SMARTRENT_STATUS_EXPIRED => "Expired",
-        self.SMARTRENT_STATUS_MAXIMUM => "Maximum",
-        self.SMARTRENT_STATUS_BUYER => "Buyer", 
-        self.SMARTRENT_STATUS_ARCHIVE => "Archive"
+        STATUS_ACTIVE => "Active", 
+        STATUS_INACTIVE => "Inactive", 
+        STATUS_EXPIRED => "Expired",
+        STATUS_BUYER => "Buyer", 
+        STATUS_ARCHIVE => "Archive"
       }
     end
 
     def self.changable_smartrent_statuses
       {
-        self.SMARTRENT_STATUS_BUYER => "Buyer",
-        self.SMARTRENT_STATUS_ARCHIVE => "Archive"
+        STATUS_BUYER => "Buyer",
+        STATUS_ARCHIVE => "Archive"
       }
     end
 
@@ -139,7 +120,7 @@ module Smartrent
     end
 
     def can_become_buyer_in_property?(property)
-      if [self.class.SMARTRENT_STATUS_ACTIVE, self.class.SMARTRENT_STATUS_MAXIMUM].include?(self.smartrent_status)
+      if [STATUS_ACTIVE, STATUS_INACTIVE].include?(self.smartrent_status)
         resident_property = self.resident_properties.detect{|rp| 
           rp.property_id == property.id && (
             ( rp.move_out_date.blank? && Time.now.difference_in_months(rp.move_in_date) >= 12 ) || 
@@ -160,8 +141,8 @@ module Smartrent
         errors.add(:amount, "should be less than total rewards")
         
       else
-        rewards.create!(:amount => amount, :type_ => Reward.TYPE_BUYER, :period_start => Time.now)
-        update_attributes!(:smartrent_status => self.class.SMARTRENT_STATUS_BUYER, :buyer_amount => amount)
+        rewards.create!(:amount => amount, :type_ => Reward::TYPE_BUYER, :period_start => Time.now)
+        update_attributes!(:smartrent_status => STATUS_BUYER, :buyer_amount => amount)
         
         return true
       end
@@ -187,7 +168,7 @@ module Smartrent
     end
     
     def current_community
-      rp = resident_properties.includes(:property).detect{|rp| rp.status == Smartrent::ResidentProperty.STATUS_CURRENT }
+      rp = resident_properties.includes(:property).detect{|rp| rp.status == Smartrent::ResidentProperty::STATUS_CURRENT }
       if rp && rp.property
         rp.property.name
       else
@@ -198,28 +179,28 @@ module Smartrent
     #### Rewards ####
     
     def sign_up_bonus
-      rewards.find_by_type_(Reward.TYPE_SIGNUP_BONUS).amount rescue 0.0
+      rewards.find_by_type_(Reward::TYPE_SIGNUP_BONUS).amount rescue 0.0
     end
     
     def initial_reward
-      rewards.where(:type_ => Reward.TYPE_INITIAL_REWARD).first.amount rescue 0.0
+      rewards.where(:type_ => Reward::TYPE_INITIAL_REWARD).first.amount rescue 0.0
     end
     
     def monthly_awards_amount
-      if smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
+      if smartrent_status == STATUS_EXPIRED
         monthly_amount = 0
       else
-        monthly_amount = self.rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).sum(:amount).to_f
+        monthly_amount = self.rewards.where(:type_ => Reward::TYPE_MONTHLY_AWARDS).sum(:amount).to_f
       end
       monthly_amount
     end
 
     def buyer_amount
-      rewards.where(:type_ => Reward.TYPE_BUYER).sum(:amount).to_f
+      rewards.where(:type_ => Reward::TYPE_BUYER).sum(:amount).to_f
     end
 
     def total_rewards
-      if smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED
+      if smartrent_status == STATUS_EXPIRED
         total = 0
         
       else
@@ -232,8 +213,8 @@ module Smartrent
     end
     
     def total_months
-      total_months = rewards.find_by_type_(Reward.TYPE_INITIAL_REWARD).months_earned rescue 0
-      total_months += rewards.where(:type_ => Reward.TYPE_MONTHLY_AWARDS).count
+      total_months = rewards.find_by_type_(Reward::TYPE_INITIAL_REWARD).months_earned rescue 0
+      total_months += rewards.where(:type_ => Reward::TYPE_MONTHLY_AWARDS).count
     end
 
 
@@ -263,12 +244,9 @@ module Smartrent
       end
       
       def set_balance
-        if smartrent_status_changed? && smartrent_status == self.class.SMARTRENT_STATUS_EXPIRED 
+        if smartrent_status_changed? && smartrent_status == STATUS_EXPIRED 
+          rewards.create!(:amount => -balance, :type_ => Reward::TYPE_EXPIRED, :period_start => Time.now.beginning_of_month )
           self.balance = 0
-        end
-        
-        if balance == 10000
-          self.smartrent_status = self.class.SMARTRENT_STATUS_MAXIMUM
         end
         
         true
