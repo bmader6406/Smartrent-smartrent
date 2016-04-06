@@ -93,7 +93,7 @@ module Smartrent
       end
       
       # set smartrent status here to speed up this task
-      MonthlyStatusUpdater.perform(cal_time, false)
+      MonthlyStatusUpdater.perform(cal_time.prev_month, false)
       pp "delete_and_create_all_residents done: #{Time.now}"
     end
     
@@ -143,7 +143,7 @@ module Smartrent
         initial_amount = 9900 if initial_amount > 9900 # 100 will be added by sign up bonus
       end
       
-      pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}" #, months_earned
+      pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #, months_earned
       
       if !eligible_properties.empty?
         Smartrent::Reward.create!({
@@ -156,7 +156,7 @@ module Smartrent
         })
         
         Smartrent::Reward.create!({
-          :property_id => first_rp.id,
+          :property_id => first_rp.property_id,
           :resident_id => sr.id,
           :amount => Smartrent::Setting.sign_up_bonus,
           :type_ => Reward::TYPE_SIGNUP_BONUS,
@@ -176,7 +176,6 @@ module Smartrent
         # we don't count "2015/03" if t1 is 2015/03/15, t2 is  2015/03/20 or 2015/03/01, t2 is  2015/03/31
         
         return [] if t1 > t2
-        return [] if t1.strftime("%Y/%m") == t2.strftime("%Y/%m")
         
         months = [t1.strftime("%Y/%m")]
 

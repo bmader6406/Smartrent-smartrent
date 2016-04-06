@@ -7,8 +7,16 @@
     <div class="links pull-right">
       <%= link_to 'Export', export_admin_balances_path, :class => "btn btn-primary export" %>
     </div>
-    <h3>Listing balances</h3>
-
+    <h3 style="margin-bottom: 12px;">
+      Listing balances
+      
+      <% if @balances.total_entries > 0 %>
+        <span style="font-size: 16px; display:block; margin-top: 12px;">
+          <%= number_with_delimiter @balances.total_entries %> <%= @balances.total_entries == 1 ? "Resident" : "Residents" %> found
+        </span>
+      <% end %>
+    </h3>
+    
     <% if @balances.present? %>
       <table class="table">
         <tr>
@@ -60,13 +68,13 @@
         <% end %>
       </table>
       <div class="paging-info">
-        <%= page_entries_info @balances, :model => "balance" %>
+        <%= page_entries_info @balances, :model => "resident" %>
         <%= page_navigation_links @balances %>
       </div>
     <% elsif params[:search] == "1" %>
-      <div class="alert alert-warning">No balances found</div>
+      <div class="alert alert-warning">No residents found</div>
     <% else %>
-      <div class="alert alert-warning">No balances have been added yet.</div>
+      <div class="alert alert-warning">No residents have been added yet.</div>
     <% end %>
   </div>
 <% end %>
