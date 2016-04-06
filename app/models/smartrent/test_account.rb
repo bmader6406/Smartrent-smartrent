@@ -21,18 +21,23 @@ module Smartrent
     private
     
       def change_smartrent_resident_email
+        crm_resident = resident.crm_resident # must fetch crm resident before email change
         resident.update_attribute(:email, new_email)
         
         if !resident.errors.empty?
           errors.add(:origin_email, "is not unique")
+        else
+          crm_resident.update_attribute(:email, new_email)
         end
       end
       
       def revert_smartrent_resident_email_if_delete
         if deleted_at_changed? && deleted_at_was.nil?
+          crm_resident = resident.crm_resident # must fetch crm resident before email change
           resident.update_attributes(:email => origin_email, :confirmed_at => nil)
           
           if resident.errors.empty?
+            crm_resident.update_attribute(:email, origin_email)
             return true
           else
             errors.add(:base, resident.errors.full_messages)

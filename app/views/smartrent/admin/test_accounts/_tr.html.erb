@@ -1,7 +1,18 @@
 <% resident = test_account.resident %>
 <tr data-id="<%= test_account.id %>">
   <td><%= test_account.resident_id %></td>
-  <td><%= resident.full_name if resident %></td>
+  
+  <% if resident %>
+    <td><%= resident.full_name %></td>
+    <td><%= resident.smartrent_status %></td>
+    <td>$<%= number_to_currency resident.balance, :precision => 0 %></td>
+    
+  <% else %>
+    <td></td>
+    <td></td>
+    <td></td>
+  <% end %>
+  
   <td><%= test_account.origin_email %></td>
   <td><%= test_account.new_email %></td>
   <td>
