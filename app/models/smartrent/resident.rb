@@ -249,6 +249,8 @@ module Smartrent
           rewards.create!(:amount => -balance, :type_ => Reward::TYPE_EXPIRED, :period_start => Time.now.beginning_of_month )
           self.balance = 0
           self.subscribed = false
+          
+          self.lock_access!(:send_instructions => false) if !access_locked?
         end
         
         true
