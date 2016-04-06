@@ -22,7 +22,7 @@
       <div class="col-md-7">
         <%= f.file_field :image, :disabled => true %>
         <p class="help-block"> Image should be 300x720 pixels and smaller than 10MB. GIF, JPG, PNG</p>
-        <% if f.object.image && f.object.image.url %>
+        <% if f.object.image && f.object.image_file_name %>
           <br><img src="<%= f.object.image.url %>" width="160px" />
         <% end %>
       </div>
