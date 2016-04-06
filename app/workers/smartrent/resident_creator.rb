@@ -16,7 +16,7 @@ module Smartrent
       # because the id "link" will be broken when the user do the full upload, result in duplicated sr resident
       
       # check test accounts
-      pp "resident.email: #{resident.email}"
+      #pp "resident.email: #{resident.email}"
       test_account = Smartrent::TestAccount.find_by_origin_email(resident.email)
       
       if test_account
@@ -143,7 +143,7 @@ module Smartrent
         initial_amount = 9900 if initial_amount > 9900 # 100 will be added by sign up bonus
       end
       
-      pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}", months_earned
+      pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}" #, months_earned
       
       if !eligible_properties.empty?
         Smartrent::Reward.create!({
