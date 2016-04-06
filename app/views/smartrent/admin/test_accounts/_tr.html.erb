@@ -5,7 +5,7 @@
   <% if resident %>
     <td><%= resident.full_name %></td>
     <td><%= resident.smartrent_status %></td>
-    <td>$<%= number_to_currency resident.balance, :precision => 0 %></td>
+    <td><%= number_to_currency resident.balance, :precision => 0 %></td>
     
   <% else %>
     <td></td>
