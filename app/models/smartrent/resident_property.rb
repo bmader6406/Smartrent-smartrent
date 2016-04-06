@@ -39,48 +39,12 @@ module Smartrent
         
         return true if !property.eligible?
         
-        creation_date = move_in_date.blank? ? created_at : move_in_date
-        
-        rewards = resident.rewards.all
-        
-        initial_amount = 0
-        months_earned = 0
-        
-        if move_out_date.blank? || move_out_date && move_out_date > Time.now
-          months_earned += (Time.now.difference_in_months(move_in_date) rescue 0)
-          
+        if resident.rewards.where(:type_ => [Reward::TYPE_INITIAL_REWARD, Reward::TYPE_SIGNUP_BONUS]).count == 0
+          pp "create initial rewards..."
+          Smartrent::ResidentCreator.create_initial_signup_rewards(resident, Time.now)
         else
-          months_earned += (move_out_date.difference_in_months(move_in_date) rescue 0)
-          # count incomplete month for moved out resident
-          months_earned += 1
+          pp "initial rewards have been created"
         end
-        
-        if months_earned >= 1
-          initial_amount = Setting.monthly_award*months_earned
-          initial_amount = 9900 if initial_amount >= 9900 # 100 will be added by sign up bonus
-        end
-        
-        if !rewards.detect{|r| r.type_ == Reward::TYPE_INITIAL_REWARD }
-          Reward.create!({
-            :property_id => property.id,
-            :resident_id => resident.id,
-            :amount => initial_amount,
-            :type_ => Reward::TYPE_INITIAL_REWARD,
-            :period_start => creation_date,
-            :months_earned => months_earned
-          })
-        end
-        
-        if !rewards.detect{|r| r.type_ == Reward::TYPE_SIGNUP_BONUS }
-          Reward.create!({
-            :property_id => property.id,
-            :resident_id => resident.id,
-            :amount => Setting.sign_up_bonus,
-            :type_ => Reward::TYPE_SIGNUP_BONUS,
-            :period_start => creation_date
-          })
-        end
-        
       end
       
       def set_first_move_in

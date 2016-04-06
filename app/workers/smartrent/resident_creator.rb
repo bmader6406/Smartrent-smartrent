@@ -93,7 +93,7 @@ module Smartrent
       end
       
       # set smartrent status here to speed up this task
-      MonthlyStatusUpdater.perform(cal_time.prev_month, false)
+      MonthlyStatusUpdater.perform(cal_time, false)
       pp "delete_and_create_all_residents done: #{Time.now}"
     end
     
@@ -118,28 +118,32 @@ module Smartrent
       end
       
       initial_amount = 0
-      months_earned = 0
+      months_earned = []
       
       eligible_properties.each do |rp|
         if rp.move_out_date.blank? || rp.move_out_date && rp.move_out_date > cal_time
-          months_earned += (cal_time.difference_in_months(rp.move_in_date) rescue 0)
-          pp "months_earned: #{months_earned}, #{cal_time.difference_in_months(rp.move_in_date)}, #{rp.move_in_date}, #{cal_time}"
+          arr = collect_months(rp.move_in_date, cal_time)
+          months_earned << arr
+          
+          pp ">> months_earned: #{arr.length}, #{rp.move_in_date}, #{cal_time}" #, arr
+          
           
         else
-          months_earned += (rp.move_out_date.difference_in_months(rp.move_in_date) rescue 0)
-          pp "months_earned2: #{months_earned}, #{rp.move_out_date.difference_in_months(rp.move_in_date)}, #{rp.move_in_date}, #{rp.move_out_date}, #{cal_time}"
+          arr = collect_months(rp.move_in_date, rp.move_out_date)
+          months_earned << arr
+          pp ">> months_earned2: #{arr.length}, #{rp.move_in_date}, #{rp.move_out_date}" #, arr
           
-          # count incomplete month for moved out resident
-          months_earned += 1
         end
       end
       
-      if months_earned >= 1
-        initial_amount = Smartrent::Setting.monthly_award*months_earned
+      months_earned = months_earned.flatten.uniq.sort
+      
+      if months_earned.length >= 1
+        initial_amount = Smartrent::Setting.monthly_award*months_earned.length
         initial_amount = 9900 if initial_amount > 9900 # 100 will be added by sign up bonus
       end
       
-      pp "#{sr.id}, #{sr.email}, months_earned: #{months_earned}, initial_amount: #{initial_amount}"
+      pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}", months_earned
       
       if !eligible_properties.empty?
         Smartrent::Reward.create!({
@@ -148,7 +152,7 @@ module Smartrent
           :amount => initial_amount,
           :type_ => Reward::TYPE_INITIAL_REWARD,
           :period_start => first_move_in,
-          :months_earned => months_earned
+          :months_earned => months_earned.length
         })
         
         Smartrent::Reward.create!({
@@ -160,6 +164,33 @@ module Smartrent
         })
       end
       
+    end
+    
+    def self.collect_months(t1, t2)
+      begin
+        t1 = t1.clone.in_time_zone("Eastern Time (US & Canada)").beginning_of_day
+        t2 = t2.clone.in_time_zone("Eastern Time (US & Canada)").beginning_of_day
+        
+        return [] if t1 > t2
+          
+        months = [t1.strftime("%Y/%m"), t2.strftime("%Y/%m")]
+
+        while t1 < t2
+          t1 += 1.month
+
+          if t1 < t2 || t1.strftime("%Y/%m") == t2.strftime("%Y/%m")
+            #pp "#{t1} vs #{t2}, #{t1.strftime("%Y/%m")} vs #{t2.strftime("%Y/%m")}"
+            months << t1.strftime("%Y/%m")
+          end
+        end
+        
+        months = months.uniq.sort
+        #pp "total: #{months.length}", months
+        
+        months
+      rescue
+        []
+      end
     end
     
   end
