@@ -168,17 +168,22 @@ module Smartrent
     
     def self.collect_months(t1, t2)
       begin
-        t1 = t1.clone.in_time_zone("Eastern Time (US & Canada)").beginning_of_day
-        t2 = t2.clone.in_time_zone("Eastern Time (US & Canada)").beginning_of_day
+        t1 = t1.clone.in_time_zone("Eastern Time (US & Canada)").end_of_month
+        t2 = t2.clone.in_time_zone("Eastern Time (US & Canada)").beginning_of_month
+        
+        # t1.end_of_month, t2.beginning_of_month
+        # this will make sure we don't count "2015/03" if t1 is 2015/01/15, t2 is  2015/03/20
+        # we don't count "2015/03" if t1 is 2015/03/15, t2 is  2015/03/20 or 2015/03/01, t2 is  2015/03/31
         
         return [] if t1 > t2
-          
-        months = [t1.strftime("%Y/%m"), t2.strftime("%Y/%m")]
+        return [] if t1.strftime("%Y/%m") == t2.strftime("%Y/%m")
+        
+        months = [t1.strftime("%Y/%m")]
 
         while t1 < t2
           t1 += 1.month
-
-          if t1 < t2 || t1.strftime("%Y/%m") == t2.strftime("%Y/%m")
+          #pp ">> #{t1}, #{t2}, #{t1 < t2}"
+          if t1 < t2 #|| t1.strftime("%Y/%m") == t2.strftime("%Y/%m")
             #pp "#{t1} vs #{t2}, #{t1.strftime("%Y/%m")} vs #{t2.strftime("%Y/%m")}"
             months << t1.strftime("%Y/%m")
           end
