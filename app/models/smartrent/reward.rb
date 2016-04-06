@@ -11,7 +11,6 @@ module Smartrent
     
     after_save :update_resident_balance
     
-    default_scope { order('period_start desc') }
     
     TYPE_INITIAL_REWARD = 0
     TYPE_SIGNUP_BONUS = 1
