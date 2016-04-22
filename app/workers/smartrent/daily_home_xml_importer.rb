@@ -26,7 +26,6 @@ module Smartrent
         :phone_number => ["SalesOffice", "Phone"],
         :latitude => ["SalesOffice", "Address", "Geocode", "Latitude"],
         :longitude => ["SalesOffice", "Address", "Geocode", "Longitude"],
-        :website => ["SubdivisionName"],
         :website => ["SubWebsite"],
         :video_url => ["SubVideoFile"],
         :description => ["SubDescription"],
