@@ -166,7 +166,7 @@ module Smartrent
                   
                   pp "image_url: #{image_url}"
                   
-                  #property.image = p.nest(value) if !image_url.blank?
+                  property.image = p.nest(value) if !image_url.blank?
                   
                 rescue Exception => e
                   puts e.message
