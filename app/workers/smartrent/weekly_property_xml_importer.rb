@@ -153,7 +153,7 @@ module Smartrent
             else
               if key == :image
                 begin
-                  property.image = p.nest(value)
+                  property.image = p.nest(value).to_s.gsub("http://bozzuto.com/system", "https://www.bozzuto.com/system")
                 rescue Exception => e
                   puts e.message
                   puts e.backtrace.inspect
