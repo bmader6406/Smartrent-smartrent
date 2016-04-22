@@ -63,6 +63,7 @@ module Smartrent
       total_updates = 0
       total_creates = 0
       total_ok = 0
+      errors = []
       smartrent_property_ids = []
       
       # we can use nokogiri to parse xml file if from_xml does not work
@@ -77,9 +78,27 @@ module Smartrent
         next if !origin_id.present? || !name.present? || !features.present? || features.nil? || features.select{|f| f["Name"].downcase == 'smartrent'}.count == 0
 
         total_ok += 1
-        pp ">>>>>>>>> OK: #{total_ok}"
+        pp ">>>>>>>>> total OK: #{total_ok}"
         
-        property = Smartrent::Property.find_by(:origin_id => origin_id)
+        property_arr = Smartrent::Property.where(:origin_id => origin_id).all
+        property = property_arr.first
+        
+        # property is merged in bozzuto.xml but keep as separated on bozzutolink (both will have the same origin_id)
+        # Mariner Bay at Annapolis Towne Centre, Crosswinds at Annapolis Towne Centre => Mariner Bay & Crosswinds
+        if property_arr.length > 1
+          if property.name != name
+            # find the right property to update
+            initial_name = name.split(" ")[0..1].join(" ")
+            property = property_arr.detect{|p| p.name.include?(initial_name) }
+            
+            pp ">>>> initial_name: #{initial_name}, name: #{name}. res: #{ property ? "FOUND" : "not found"}"
+          end
+        end
+        
+        # last try, find by name
+        if !property
+          property = Smartrent::Property.find_by(:name => name)
+        end
         
         if !property
           property = Smartrent::Property.new 
@@ -206,7 +225,10 @@ module Smartrent
             Smartrent::PropertyFeature.where("property_id = ? AND feature_id NOT IN (?)", property.id, feature_ids).delete_all
             
           elsif !property.errors.empty?
-            pp "error: ##{property.id}", property.errors.full_messages.join(", ")
+            err = "error: ##{property.id} (#{name}, #{origin_id}) - #{property.errors.full_messages.join(", ")}"
+            errors << err
+            
+            pp err
           end
           
         end
@@ -231,9 +253,9 @@ module Smartrent
       end
       
       Notifier.system_message("[SmartRent] WeeklyPropertyXmlImporter - SUCCESS", 
-        "Executed at #{Time.now}, total_creates: #{total_creates}, total_updates: #{total_updates}", Notifier::DEV_ADDRESS).deliver_now
+        "Executed at #{Time.now}, total_creates: #{total_creates}, total_updates: #{total_updates}, errors: #{errors.length} -- #{errors.join("<br/>")}", Notifier::DEV_ADDRESS).deliver_now
       
-      pp "total_creates: #{total_creates}, total_updates: #{total_updates}"
+      pp "total_creates: #{total_creates}, total_updates: #{total_updates}, errors: #{errors}"
       
     end #/ perform
   end
