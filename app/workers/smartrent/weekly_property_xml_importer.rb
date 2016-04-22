@@ -1,5 +1,7 @@
 require 'csv'
 require 'net/ftp'
+require 'openssl'
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 require Rails.root.join("lib/core_ext", "hash.rb")
 
@@ -45,7 +47,7 @@ module Smartrent
         :description => ["Information" ,"OverviewText"],
         :short_description => ["Information" ,"OverviewBullet1"],
         :phone => ["PropertyID" ,"Phone" ,"PhoneNumber"],
-        :image => ["Slideshow", "SlideshowImageURL", 0],
+        :image => ["Slideshow", "SlideshowImageURL"],
         :floor_plans => ["Floorplan"],
         :features => ["FeaturedButton"],
         :promotion => ["Promotion"]
@@ -153,7 +155,19 @@ module Smartrent
             else
               if key == :image
                 begin
-                  property.image = p.nest(value).to_s.gsub("http://bozzuto.com/system", "https://www.bozzuto.com/system")
+                  image_url = p.nest(value)
+                  
+                  if image_url.kind_of?(Array)
+                    image_url = image_url.first
+                    pp "image_url IS ARRAY"
+                  end
+                  
+                  image_url.to_s.gsub!("http://bozzuto.com/system", "https://www.bozzuto.com/system")
+                  
+                  pp "image_url: #{image_url}"
+                  
+                  #property.image = p.nest(value) if !image_url.blank?
+                  
                 rescue Exception => e
                   puts e.message
                   puts e.backtrace.inspect
