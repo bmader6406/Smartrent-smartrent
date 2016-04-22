@@ -252,6 +252,18 @@ module Smartrent
         })
       end
       
+      # Crosswinds hack
+      # Mariner Bay at Annapolis Towne Centre, Crosswinds at Annapolis Towne Centre => Mariner Bay & Crosswinds
+      mariner_bay = Property.find_by_name("Mariner Bay & Crosswinds")
+      
+      if mariner_bay
+        Property.unscoped.where("name LIKE '%Crosswinds at Annapolis%' AND id != #{mariner_bay.id}").update_all({
+          :is_smartrent => mariner_bay.is_smartrent,
+          :is_visible => 0,
+          :smartrent_status => mariner_bay.smartrent_status
+        })
+      end
+      
       Notifier.system_message("[SmartRent] WeeklyPropertyXmlImporter - SUCCESS", 
         "Executed at #{Time.now}, total_creates: #{total_creates}, total_updates: #{total_updates}, errors: #{errors.length} -- #{errors.join("<br/>")}", Notifier::DEV_ADDRESS).deliver_now
       
