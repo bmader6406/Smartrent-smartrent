@@ -3,11 +3,15 @@
     <title>Account Activation Request</title>
   </head>
   <body>
-      <p>A request to activate your account was received.  If you did not make this request you can ignore this email, no account information has been created or accessed.</p>
+      <p>A request to activate your account was received. If you did not make this request, you can ignore this email. No account information has been created or accessed.</p>
       <p>
-        <%= link_to 'To activate your account follow this link', confirmation_url(@resource, confirmation_token: @token) %>
+        <%= link_to 'Click here to activate your account', confirmation_url(@resource, confirmation_token: @token) %>
       </p>
-      <p>If the link above does not work copy and paste the following address into a browser <%= confirmation_url(@resource, confirmation_token: @token) %></p>
-      <p>The request will only be active for 12 hours. If you are unable to complete the process in that time you may make another request.</p>
+      <p>If the link above does not work, please copy and paste the following address into a browser: <%= confirmation_url(@resource, confirmation_token: @token) %></p>
+      <p>The request will only be active for 24 hours. If you are unable to complete the process in that time, you may make another request.</p>
+      <p>
+        Thank you,<br><br>
+        The Bozzuto SmartRent Team
+      </p>
   </body>
 </html>
