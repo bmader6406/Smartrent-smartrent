@@ -45,7 +45,7 @@ module Smartrent
       @index = 0
       
       CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
-        csv << ["Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"]
+        csv << ["Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"]
         
         conditions = "smartrent_status IN (?) AND created_at #{(time.beginning_of_month..time.end_of_month).to_s(:db)}"
         
@@ -80,7 +80,7 @@ module Smartrent
       
       #export active/inactive smartrent residents who have been in the system for more than 2 months
       CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
-        csv << ["Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"]
+        csv << ["Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"]
         
         Smartrent::Resident.includes(:rewards)
           .where("smartrent_status IN (?) AND created_at < '#{(time.end_of_quarter - 2.months).to_s(:db)}'", [
@@ -113,7 +113,7 @@ module Smartrent
       
       #export active/inactive smartrent residents who have been in the system for more than 2 months
       CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
-        csv << ["Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"]
+        csv << ["Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"]
         
         Smartrent::Resident.includes(:rewards)
           .where("smartrent_status IN (?) AND first_move_in <= '2016-03-31 04:59:59'", [
@@ -134,7 +134,7 @@ module Smartrent
     end
     
     def self.add_csv_row(csv, residents, batch_name)
-      #"Full Name", "Email", "Smartrent Balance", "Smartrent Status", "Batch"
+      #"Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"
       crm_residents = {}
       ::Resident.where(:email_lc.in => residents.collect{|r| r.email.to_s.downcase }).each do |cr|
         crm_residents[cr.email_lc] = cr

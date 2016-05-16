@@ -26,10 +26,6 @@
     </nav>
 
     <div class="searchOptions clearfix">
-      <div class="contactLink">
-        <%= link_to "Learn More", smartrent.new_contact_path %>
-      </div>
-
       <% if !request.fullpath.include? "member-login" %>
         <div class="memberInfo">
           <% if !resident_signed_in? %>

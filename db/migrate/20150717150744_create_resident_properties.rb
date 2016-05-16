@@ -17,7 +17,7 @@ class CreateResidentProperties < ActiveRecord::Migration
     add_index "smartrent_resident_properties", ["status"]
     #Propeties
     add_index "properties", ["is_smartrent"]
-    #Smartrent Residents
+    #SmartRent Residents
     add_index "smartrent_residents", ["crm_resident_id"]
   end
 end

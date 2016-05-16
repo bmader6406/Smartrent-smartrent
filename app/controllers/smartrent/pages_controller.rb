@@ -39,11 +39,6 @@ module Smartrent
         format.html
       end
     end
-    def contact
-      respond_to do |format|
-        format.html
-      end
-    end
 
     def ny_avenue
       respond_to do |format|

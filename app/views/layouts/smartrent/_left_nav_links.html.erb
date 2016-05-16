@@ -1,12 +1,12 @@
 <% if current_user.is_admin? %>
   <li class="<%= "active" if controller_name == "properties" || controller_name == "floor_plans" %>">
-    <a href="<%= raw admin_properties_path %>"> <i class="fa fa-building-o fa-fw"></i> Properties </a>
+    <a href="<%= raw admin_properties_path %>"> <i class="fa fa-building-o fa-fw"></i> SmartRent Properties </a>
   </li>
   <li class="<%= "active" if controller_name == "features" %>">
     <a href="<%= raw admin_features_path %>"> <i class="fa fa-star fa-fw"></i> Features </a>
   </li>
   <li class="<%= "active" if controller_name == "homes" || controller_name == "more_homes" || controller_name == "floor_plan_images" %>">
-    <a href="<%= raw admin_homes_path %>"> <i class="fa fa-home fa-fw"></i> Homes </a>
+    <a href="<%= raw admin_homes_path %>"> <i class="fa fa-home fa-fw"></i> Homes Communities Edits </a>
   </li>
   <li class="<%= "active" if controller_name == "balances" %>">
     <a href="<%= raw admin_balances_path %>"> <i class="fa fa-usd fa-fw"></i> Balances </a>
@@ -28,5 +28,5 @@
 <% end %>
 
 <li>
-  <a href="<%= raw "http://#{SR_HOST}" %>" target="_blank"> <i class="fa fa-globe fa-fw"></i> Smartrent Website </a>
+  <a href="<%= raw "http://#{SR_HOST}" %>" target="_blank"> <i class="fa fa-globe fa-fw"></i> SmartRent Website </a>
 </li>
