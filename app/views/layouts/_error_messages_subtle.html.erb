@@ -1,0 +1,10 @@
+<% if target && target.errors.any? %>
+  <div id="error-subtle">
+    <p>There were problems with the following fields:</p>
+    <ul>
+      <% target.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

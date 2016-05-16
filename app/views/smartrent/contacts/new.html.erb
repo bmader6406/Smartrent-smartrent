@@ -1,7 +1,7 @@
 <div class="banner dropshadow">
   <div class="fixedWidth">
-    <div class="text">
-      Contact Bozzuto about Bozzuto&#039;s SmartRent Program
+    <div class="text no-transform">
+      Contact Us about Bozzuto’s SmartRent Program
     </div>
   </div>
 </div>
@@ -9,7 +9,7 @@
 <section class="content">
   <p>At Bozzuto, we’re here to help. So feel free to raise any questions or concerns and we’ll do our best to address them as quickly as possible.</p>
   <%= form_for(@contact, :url => submit_contact_path) do |f| %>
-    <%= render "layouts/error_messages", :target => @contact, :header_message => "Message sending failed" %>
+    <%= render "layouts/error_messages_subtle", :target => @contact, :header_message => "Message sending failed" %>
 
     <div class="contactForm">
       <%= f.label :name, "Name*", {:class => "label"} %>

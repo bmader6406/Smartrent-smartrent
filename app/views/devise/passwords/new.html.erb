@@ -10,7 +10,7 @@
       </div>
       <div class="formInputs">
         <%= form_for(resource, as: resource_name, url: member_password_path, html: { method: :post }) do |f| %>
-          <%= render "layouts/error_messages", :target => resource, :header_message => "Password Request Failed" %>
+          <%= render "layouts/contact_on_error", :target => resource, :header_message => "Password Request Failed" %>
           <div class="labelText">
             <%= f.label :email, "Email Address" %>
           </div>
@@ -28,6 +28,8 @@
         <p>If you need to reset your password, please enter your email address. If your email is on file, a link will be sent to you allowing you to create a new password.</p>
 
         <p>For security reasons, this request will be canceled 24 hours after it is submitted. You may re-request your password be reset if that happens.</p>
+        
+        <p style="font-weight:bold;">If you moved in previous to 3/1/2016, please select Request Password Reset</p>
       </div>
     </div>
   </div>

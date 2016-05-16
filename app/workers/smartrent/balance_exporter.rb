@@ -126,7 +126,7 @@ module Smartrent
 
         File.open("#{TMP_DIR}#{file_name}", "wb") { |f| f.write(csv_string) }
 
-        ::Notifier.system_message("Smartrent Balance Data",
+        ::Notifier.system_message("SmartRent Balance Data",
           "Your file was exported successfully.
           <br><br> 
           <a href='http://#{HOST}/downloads/#{file_name}'>Download File</a> 
@@ -147,7 +147,7 @@ module Smartrent
         ::Notifier.system_message("[BalanceExporter] FAILURE", "ERROR DETAILS: #{error_details}",
           ::Notifier::DEV_ADDRESS, {"from" => ::Notifier::EXIM_ADDRESS}).deliver_now
 
-        ::Notifier.system_message("Smartrent Balance Data",
+        ::Notifier.system_message("SmartRent Balance Data",
           "There was an error while exporting your data, please contact help@hy.ly for help",
           @params["recipient"], {"from" => ::Notifier::EXIM_ADDRESS}).deliver_now
       end
