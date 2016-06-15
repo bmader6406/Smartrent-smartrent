@@ -19,7 +19,7 @@
         <% @homes.each do |home| %>
           <div class="propertyListing clearfix">
             <div class="photo">
-              <%= image_tag home.image(:search_page) %>
+              <%= image_tag home.image(:search_page), :class => "home-img", "data-image-tooltip" => home.image(:original) %>
             </div>
             <div class="info">
               <h1><%= link_to home.title, home_path(home) %></h1>

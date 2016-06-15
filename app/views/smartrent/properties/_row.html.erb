@@ -70,7 +70,7 @@
   <% property["properties"].sort{|a, b| a.name.to_s <=> b.name.to_s }.each do |property_| %>
   <div class="propertyListing">
     <div class="photo">
-      <%= image_tag property_.image(:search_page) %>
+      <%= image_tag property_.image(:search_page), :class => "property-img", "data-image-tooltip" => property_.image(:original) %>
     </div>
     <div class="info">
       <h3>
