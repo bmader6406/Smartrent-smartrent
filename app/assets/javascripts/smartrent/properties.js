@@ -32,7 +32,11 @@ $(function(){
       });
 
     }
-  })
+  });
+  
+  $('.property-img').imageTooltip({
+    imgWidth: 580
+  });
 });
 
 Property = {
