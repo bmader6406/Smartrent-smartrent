@@ -36,11 +36,7 @@ module Smartrent
     def self.export_welcome_email_residents(time)
       batch_name = "#{time.strftime("%Y %m")} New Account - SmartRent"
       
-      if Rails.env.production?
-        file_name = "WelcomeEmail_#{batch_name}.csv"
-      else
-        file_name = "stage_WelcomeEmail_#{batch_name}.csv"
-      end
+      file_name = "#{Rails.env}_WelcomeEmail_#{batch_name}.csv"
       
       @index = 0
       
@@ -62,28 +58,23 @@ module Smartrent
       ftp.passive = true
       ftp.connect("ftp.hy.ly")
       ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/welcome/#{file_name}")
+      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/welcome/#{file_name}")
       ftp.close
     end
     
     # statement email is sent quaterly
     def self.export_statement_email_residents(time)
-      batch_name = "#{time.end_of_quarter.strftime("%Y %m")} SmartRent"
+      batch_name = "Statement_#{get_quarter(time)}_#{time.end_of_quarter.strftime("%Y")}"
       
-      if Rails.env.production?
-        file_name = "StatementEmail_#{batch_name}.csv"
-      else
-        file_name = "stage_StatementEmail_#{batch_name}.csv"
-      end
+      file_name = "#{Rails.env}_StatementEmail_#{batch_name}.csv"
       
       @index = 0
       
-      #export active/inactive smartrent residents who have been in the system for more than 2 months
       CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
         csv << ["Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"]
         
         Smartrent::Resident.includes(:rewards)
-          .where("smartrent_status IN (?) AND created_at < '#{(time.end_of_quarter - 2.months).to_s(:db)}'", [
+          .where("smartrent_status IN (?) AND first_move_in #{(time.beginning_of_quarter..time.end_of_quarter).to_s(:db)}", [
             Smartrent::Resident::STATUS_ACTIVE, 
             Smartrent::Resident::STATUS_INACTIVE
           ]).find_in_batches do |residents|
@@ -96,18 +87,14 @@ module Smartrent
       ftp.passive = true
       ftp.connect("ftp.hy.ly")
       ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/statement/#{file_name}")
+      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/statement/#{file_name}")
       ftp.close
     end
     
     def self.export_initial(time)
       batch_name = "Smartrent"
       
-      if Rails.env.production?
-        file_name = "Initial_#{batch_name}.csv"
-      else
-        file_name = "stage_Initial_#{batch_name}.csv"
-      end
+      file_name = "#{Rails.env}_Initial_#{batch_name}.csv"
       
       @index = 0
       
@@ -129,11 +116,11 @@ module Smartrent
       ftp.passive = true
       ftp.connect("ftp.hy.ly")
       ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/initial/#{file_name}")
+      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/initial/#{file_name}")
       ftp.close
     end
     
-    def self.add_csv_row(csv, residents, batch_name)
+    def self.add_csv_row(csv, residents, batch_prefix)
       #"Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"
       crm_residents = {}
       ::Resident.where(:email_lc.in => residents.collect{|r| r.email.to_s.downcase }).each do |cr|
@@ -151,10 +138,11 @@ module Smartrent
         if r.crm_resident
 
           if @type == "statement"
-            batch_name = "#{batch_name}: #{r.smartrent_status}"
+            batch_name = "#{batch_prefix}: #{r.smartrent_status}"
             
           elsif @type == "welcome"
             # keep batch_name as is
+            batch_name = batch_prefix
             
           elsif r.first_move_in
             if r.first_move_in < march01
@@ -179,6 +167,11 @@ module Smartrent
           pp "CRM Resident not found for SR Resident ID: #{r.id}, #{r.email}"
         end
       end
+    end
+    
+    def self.get_quarter(date)
+      quarters = ["Q1", "Q2", "Q3", "Q4"]
+      quarters[(date.month - 1) / 3]
     end
     
   end
