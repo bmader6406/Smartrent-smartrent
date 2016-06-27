@@ -24,6 +24,9 @@ module Smartrent
       elsif type == "statement"
         export_statement_email_residents(time)
         
+      elsif type == "quarter_move_in"
+        export_quarter_move_in_residents(time)
+        
       elsif type == "initial"
         export_initial(time)
         
@@ -36,7 +39,7 @@ module Smartrent
     def self.export_welcome_email_residents(time)
       batch_name = "#{time.strftime("%Y %m")} New Account - SmartRent"
       
-      file_name = "#{Rails.env}_WelcomeEmail_#{batch_name}.csv"
+      file_name = "#{Rails.env}_WelcomeEmail_#{Time.now.strftime("%m%d%Y")}.csv"
       
       @index = 0
       
@@ -63,10 +66,10 @@ module Smartrent
     end
     
     # statement email is sent quaterly
-    def self.export_statement_email_residents(time)
-      batch_name = "Statement_#{get_quarter(time)}_#{time.end_of_quarter.strftime("%Y")}"
+    def self.export_quarter_move_in_residents(time)
+      batch_name = "move in dates in #{get_quarter(time)}_#{time.end_of_quarter.strftime("%Y")}"
       
-      file_name = "#{Rails.env}_StatementEmail_#{batch_name}.csv"
+      file_name = "#{Rails.env}_Quarter_#{Time.now.strftime("%m%d%Y")}.csv"
       
       @index = 0
       
@@ -87,6 +90,35 @@ module Smartrent
       ftp.passive = true
       ftp.connect("ftp.hy.ly")
       ftp.login("bozzuto", "bozzuto0804")
+      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/quarter_move_in/#{file_name}")
+      ftp.close
+    end
+    
+    def self.export_statement_email_residents(time)
+      batch_name = "Smartrent #{get_quarter(time)}/#{time.end_of_quarter.strftime("%Y")}"
+      
+      file_name = "#{Rails.env}_StatementEmail_#{Time.now.strftime("%m%d%Y")}.csv"
+      
+      @index = 0
+      
+      #export active/inactive smartrent residents who have been in the system for more than 2 months
+      CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
+        csv << ["Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"]
+        
+        Smartrent::Resident.includes(:rewards)
+          .where("smartrent_status IN (?) AND created_at < '#{(time.end_of_quarter - 2.months).to_s(:db)}'", [
+            Smartrent::Resident::STATUS_ACTIVE, 
+            Smartrent::Resident::STATUS_INACTIVE
+          ]).find_in_batches do |residents|
+            add_csv_row(csv, residents, batch_name)
+        end
+      end
+      
+      # upload ftp
+      ftp = Net::FTP.new()
+      ftp.passive = true
+      ftp.connect("ftp.hy.ly")
+      ftp.login("bozzuto", "bozzuto0804")
       ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/statement/#{file_name}")
       ftp.close
     end
@@ -94,7 +126,7 @@ module Smartrent
     def self.export_initial(time)
       batch_name = "Smartrent"
       
-      file_name = "#{Rails.env}_Initial_#{batch_name}.csv"
+      file_name = "#{Rails.env}_Initial_#{Time.now.strftime("%m%d%Y")}.csv"
       
       @index = 0
       
@@ -137,7 +169,7 @@ module Smartrent
         
         if r.crm_resident
 
-          if @type == "statement"
+          if ["statement", "quarter_move_in"].include?(@type)
             batch_name = "#{batch_prefix}: #{r.smartrent_status}"
             
           elsif @type == "welcome"
