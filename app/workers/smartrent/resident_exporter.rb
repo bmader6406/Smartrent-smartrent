@@ -26,6 +26,9 @@ module Smartrent
         
       elsif type == "quarter_move_in"
         export_quarter_move_in_residents(time)
+      
+      elsif type == "monthly_move_in"
+        export_monthly_move_in_residents(time)
         
       elsif type == "initial"
         export_initial(time)
@@ -94,6 +97,34 @@ module Smartrent
       ftp.close
     end
     
+    def self.export_monthly_move_in_residents(time)
+      batch_name = "move in dates in #{time.strftime("%m/%Y")}"
+      
+      file_name = "#{Rails.env}_Monthly_#{time.strftime("%m%Y")}.csv"
+      
+      @index = 0
+      
+      CSV.open("#{TMP_DIR}#{file_name}", "w") do |csv|
+        csv << ["Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"]
+        
+        Smartrent::Resident.includes(:rewards)
+          .where("smartrent_status IN (?) AND first_move_in #{(time.beginning_of_month..time.end_of_month).to_s(:db)}", [
+            Smartrent::Resident::STATUS_ACTIVE, 
+            Smartrent::Resident::STATUS_INACTIVE
+          ]).find_in_batches do |residents|
+            add_csv_row(csv, residents, batch_name)
+        end
+      end
+      
+      # upload ftp
+      ftp = Net::FTP.new()
+      ftp.passive = true
+      ftp.connect("ftp.hy.ly")
+      ftp.login("bozzuto", "bozzuto0804")
+      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/monthly_move_in/#{file_name}")
+      ftp.close
+    end
+    
     def self.export_statement_email_residents(time)
       batch_name = "Smartrent #{get_quarter(time)}/#{time.end_of_quarter.strftime("%Y")}"
       
@@ -106,7 +137,7 @@ module Smartrent
         csv << ["Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"]
         
         Smartrent::Resident.includes(:rewards)
-          .where("smartrent_status IN (?) AND created_at < '#{(time.end_of_quarter - 2.months).to_s(:db)}'", [
+          .where("smartrent_status IN (?) AND created_at < '#{time.end_of_quarter.to_s(:db)}'", [
             Smartrent::Resident::STATUS_ACTIVE, 
             Smartrent::Resident::STATUS_INACTIVE
           ]).find_in_batches do |residents|
@@ -169,7 +200,7 @@ module Smartrent
         
         if r.crm_resident
 
-          if ["statement", "quarter_move_in"].include?(@type)
+          if ["statement", "quarter_move_in", "monthly_move_in"].include?(@type)
             batch_name = "#{batch_prefix}: #{r.smartrent_status}"
             
           elsif @type == "welcome"

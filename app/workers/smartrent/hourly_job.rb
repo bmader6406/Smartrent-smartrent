@@ -29,9 +29,10 @@ module Smartrent
 
         # wait for MonthlyStatusUpdater executed
         Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "welcome")
+        Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "monthly_move_in")
         
         if time.month == time.beginning_of_quarter.month
-          Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "quarter_movin")
+          Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "quarter_move_in")
           Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "statement")
         end
 
