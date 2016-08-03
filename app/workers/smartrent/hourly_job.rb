@@ -32,7 +32,8 @@ module Smartrent
         Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "monthly_move_in")
         
         if time.month == time.beginning_of_quarter.month
-          Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "quarter_move_in")
+          # not needed
+          # Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "quarterly_move_in")
           Resque.enqueue_at(time + 3.hours, Smartrent::ResidentExporter, time.prev_month, "statement")
         end
 
