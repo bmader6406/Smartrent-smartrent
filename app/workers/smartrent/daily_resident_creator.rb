@@ -20,7 +20,7 @@ module Smartrent
         end
       end
       
-      Notifier.system_message("[SmartRent] DailyResidentCreator - SUCCESS", "Executed at #{Time.now}", Notifier::DEV_ADDRESS).deliver_now
+      Notifier.system_message("[SmartRent] DailyResidentCreator - SUCCESS", "Executed at #{Time.now}", ADMIN_EMAIL).deliver_now
       
     end # /perform
     

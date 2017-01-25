@@ -102,7 +102,7 @@ module Smartrent
             p "ERROR: #{error_details}"
           
             ::Notifier.system_message("[Smartrent::MonthlyStatusUpdater] FAILURE", "ERROR DETAILS: #{error_details}",
-              ::Notifier::DEV_ADDRESS, {"from" => ::Notifier::EXIM_ADDRESS}).deliver_now
+              ADMIN_EMAIL, {"from" => OPS_EMAIL}).deliver_now
             
           end
         end
@@ -110,7 +110,7 @@ module Smartrent
       end # /find in batch
       
       if scheduled_run
-        Notifier.system_message("[SmartRent] MonthlyStatusUpdater - SUCCESS", "Executed at #{Time.now}", Notifier::DEV_ADDRESS).deliver_now
+        Notifier.system_message("[SmartRent] MonthlyStatusUpdater - SUCCESS", "Executed at #{Time.now}", ADMIN_EMAIL).deliver_now
       end
       
     end # /perform
