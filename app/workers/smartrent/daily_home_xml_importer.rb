@@ -218,7 +218,7 @@ module Smartrent
       end
       
       Notifier.system_message("[SmartRent] DailyHomeXmlImporter - SUCCESS", 
-        "Executed at #{Time.now}, total_creates: #{total_creates}, total_updates: #{total_updates}", Notifier::DEV_ADDRESS).deliver_now
+        "Executed at #{Time.now}, total_creates: #{total_creates}, total_updates: #{total_updates}", ADMIN_EMAIL).deliver_now
       
       pp "total_creates: #{total_creates}, total_updates: #{total_updates}"
       

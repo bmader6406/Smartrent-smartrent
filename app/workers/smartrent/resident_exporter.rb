@@ -35,7 +35,7 @@ module Smartrent
         
       end
       
-      Notifier.system_message("[SmartRent] ResidentExporter - SUCCESS", "Type: #{type}, executed at #{Time.now}", Notifier::DEV_ADDRESS).deliver_now
+      Notifier.system_message("[SmartRent] ResidentExporter - SUCCESS", "Type: #{type}, executed at #{Time.now}", ADMIN_EMAIL).deliver_now
     end
     
     # welcome email is sent monthly
@@ -60,12 +60,7 @@ module Smartrent
       end
       
       # upload ftp
-      ftp = Net::FTP.new()
-      ftp.passive = true
-      ftp.connect("ftp.hy.ly")
-      ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/#{file_name}")
-      ftp.close
+      upload(file_name)
     end
     
     # statement email is sent quaterly
@@ -90,12 +85,7 @@ module Smartrent
       end
       
       # upload ftp
-      ftp = Net::FTP.new()
-      ftp.passive = true
-      ftp.connect("ftp.hy.ly")
-      ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/#{file_name}")
-      ftp.close
+      upload(file_name)
     end
     
     def self.export_monthly_move_in_residents(time)
@@ -118,12 +108,7 @@ module Smartrent
       end
       
       # upload ftp
-      ftp = Net::FTP.new()
-      ftp.passive = true
-      ftp.connect("ftp.hy.ly")
-      ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/#{file_name}")
-      ftp.close
+      upload(file_name)
     end
     
     # not needed
@@ -147,12 +132,7 @@ module Smartrent
       end
       
       # upload ftp
-      ftp = Net::FTP.new()
-      ftp.passive = true
-      ftp.connect("ftp.hy.ly")
-      ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/#{file_name}")
-      ftp.close
+      upload(file_name)
     end
     
     # manual
@@ -177,12 +157,7 @@ module Smartrent
       end
       
       # upload ftp
-      ftp = Net::FTP.new()
-      ftp.passive = true
-      ftp.connect("ftp.hy.ly")
-      ftp.login("bozzuto", "bozzuto0804")
-      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/bulk/#{file_name}")
-      ftp.close
+      upload(file_name)
     end
     
     def self.add_csv_row(csv, residents, batch_prefix)
@@ -237,6 +212,15 @@ module Smartrent
     def self.get_quarter(date)
       quarters = ["Q1", "Q2", "Q3", "Q4"]
       quarters[(date.month - 1) / 3]
+    end
+    
+    def self.upload(file_name)
+      ftp = Net::FTP.new()
+      ftp.passive = true
+      ftp.connect("ftp.hy.ly")
+      ftp.login("bozzuto", "bozzuto0804")
+      ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/#{file_name}")
+      ftp.close
     end
     
   end

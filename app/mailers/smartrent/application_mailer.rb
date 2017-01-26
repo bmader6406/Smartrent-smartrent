@@ -1,6 +1,6 @@
 module Smartrent
   class ApplicationMailer < ActionMailer::Base
-    default from: "smartrent@bozzuto.com"
-    default :return_path => "ses@hy.ly"
+    default from: SMARTRENT_EMAIL
+    default :return_path => OPS_EMAIL
   end
 end
