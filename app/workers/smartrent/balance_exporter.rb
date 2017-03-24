@@ -81,18 +81,18 @@ module Smartrent
     def self.generate_csv
       file_name = "SmartRentBalance_#{Time.now.strftime('%Y%m%d')}.csv"
       
-      tenant_code_dict = {}
+      
       unit_dict = {}
       
       # we can keep it here, it run fast.
       Unit.find_in_batches do |units|
         units.each do |u|
-          unit_dict["#{u.property_id}_#{u.code}"] = u.id
+          unit_dict[u.id] = u.code
         end
       end
       
       csv_string = CSV.generate() do |csv|
-        csv << ["First Name", "Last Name", "Email", "Current Property", "Past Properties", "SmartRent Status", "SmartRent Balance", "Tenant Code", "Unit Code", "Move In", "Email Check", "Subscribe Status", "Activation Date"]
+        csv << ["First Name", "Last Name", "Email", "Current Property", "Current Tenant Code", "Current Unit Code", "Move In", "Past Properties", "SmartRent Status", "SmartRent Balance", "Email Check", "Subscribe Status", "Activation Date"]
         batch_count = 0
         
         
@@ -107,54 +107,61 @@ module Smartrent
           batch_count += 1
           pp "batch_count: #{batch_count}"
           
-          # we should build tenant_code_dict here, it will run fast for just 1000 residents
+          resident_dict = {}
+          
+          # we should build resident_dict here, it will run fast for just 1000 residents
           ::Resident.where(:_id.in => bs.collect{|s| s.crm_resident_id.to_s }).each_with_index do |r, i|
-            pp "  tenant_code_dict #{i}" if i%100==0
-            r.units.each do |u|
-              tenant_code_dict["#{r._id}_#{u.unit_id}"] = u.tenant_code
-            end
+            pp "  resident_dict #{i}" if i%100==0
+            resident_dict[r._id.to_i] = r
           end
           
           bs.each do |b|
-            curr_rp = nil
+            curr_unit = nil
             curr = nil
             past = []
+            r = resident_dict[b.crm_resident_id]
             
             b.resident_properties.each do |rp|
+
               next if !rp.property
               
               if rp.status == Smartrent::ResidentProperty::STATUS_CURRENT
                 if !curr
-                  curr_rp = rp
                   curr = rp.property
                 end
                 
-              elsif rp.status == Smartrent::ResidentProperty::STATUS_NOTICE || rp.status == Smartrent::ResidentProperty::STATUS_FUTURE # make sure the export file will not show blank current property
+                if !curr_unit && r
+                  curr_unit = r.units.detect{|u| u.property_id == rp.property_id.to_s && ["Current", "Future", "Notice"].include?(u.status) }
+                end
+                
+              elsif [Smartrent::ResidentProperty::STATUS_NOTICE, Smartrent::ResidentProperty::STATUS_FUTURE].include?(rp.status)  # make sure the export file will not show blank current property
                 if !curr
-                  curr_rp = rp
                   curr = rp.property
+                end
+                
+                if !curr_unit && r
+                  curr_unit = r.units.detect{|u| u.property_id == rp.property_id.to_s && ["Current", "Future", "Notice"].include?(u.status) }
                 end
                 
               elsif rp.status == Smartrent::ResidentProperty::STATUS_PAST
                 past << rp.property
               end
             end
-            
-            unit_code = curr_rp ? curr_rp.unit_code : nil
-            unit_id =  unit_dict["#{curr_rp.property_id}_#{curr_rp.unit_code}"] if curr_rp
-            tenant_code = tenant_code_dict["#{b.crm_resident_id}_#{unit_id}"] if unit_id
+
+            unit_code = unit_dict[curr_unit ? curr_unit.unit_id.to_i : "unknown"]
+            tenant_code = curr_unit ? curr_unit.tenant_code : nil
             
             csv << [
               b.first_name,
               b.last_name,
               b.email,
               curr ? curr.name : "",
-              past.collect{|p| p.name.to_s }.join(", "),
-              b.smartrent_status,
-              b.balance,
               tenant_code,
               unit_code,
               b.first_move_in ? b.first_move_in.strftime("%Y-%m-%d") : "",
+              past.collect{|p| p.name.to_s }.join(", "),
+              b.smartrent_status,
+              b.balance,
               b.email_check,
               b.subscribe_status,
               b.confirmed_at ? b.confirmed_at.strftime("%Y-%m-%d") : ""
