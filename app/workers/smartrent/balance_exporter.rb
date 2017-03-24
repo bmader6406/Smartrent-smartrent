@@ -95,7 +95,15 @@ module Smartrent
         csv << ["First Name", "Last Name", "Email", "Current Property", "Past Properties", "SmartRent Status", "SmartRent Balance", "Tenant Code", "Unit Code", "Move In", "Email Check", "Subscribe Status", "Activation Date"]
         batch_count = 0
         
-        balances.includes(:resident_properties => :property).find_in_batches do |bs|
+        
+        balances_query = balances
+        query_count = balances_query.count
+        current_page = 0
+        step = 1000
+        
+        while query_count > 0
+          bs = balances_query.includes(:resident_properties => :property).order("first_move_in desc").offset(current_page * step).limit(step).all
+          
           batch_count += 1
           pp "batch_count: #{batch_count}"
           
@@ -152,6 +160,9 @@ module Smartrent
               b.confirmed_at ? b.confirmed_at.strftime("%Y-%m-%d") : ""
             ]
           end
+          
+          query_count-=step
+          current_page+=1
         end
       end
 
@@ -175,7 +186,7 @@ module Smartrent
           <br>
           CRM Team
           <br>
-          #{HELP_EMAIL}", @params["recipient"], {"from" => OPS_EMAIL})#.deliver_now
+          #{HELP_EMAIL}", @params["recipient"], {"from" => OPS_EMAIL}).deliver_now
 
         Resque.enqueue_at(Time.now + 2.hours, DownloadCleaner, file_name)
 
@@ -185,11 +196,11 @@ module Smartrent
         p "ERROR: #{error_details}"
 
         ::Notifier.system_message("[BalanceExporter] FAILURE", "ERROR DETAILS: #{error_details}",
-          ADMIN_EMAIL, {"from" => OPS_EMAIL})#.deliver_now
+          ADMIN_EMAIL, {"from" => OPS_EMAIL}).deliver_now
 
         ::Notifier.system_message("SmartRent Balance Data",
           "There was an error while exporting your data, please contact #{HELP_EMAIL} for help",
-          @params["recipient"], {"from" => OPS_EMAIL})#.deliver_now
+          @params["recipient"], {"from" => OPS_EMAIL}).deliver_now
       end
     end
     
