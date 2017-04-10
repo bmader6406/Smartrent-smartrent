@@ -4,20 +4,6 @@ module Smartrent
     # protect_from_forgery
     layout :layout_by_resource
     
-    before_action :require_http
-    
-    def require_http
-      if request.ssl?
-        redirect_to({:protocol => 'http', :host => request.env['HTTP_HOST'] }.merge(params)) #, :flash => flash
-      end
-    end
-
-    def require_ssl
-      if !request.ssl? && false
-        redirect_to({:protocol => 'https', :host => request.env['HTTP_HOST'] }.merge(params)) #, :flash => flash
-      end
-    end
-    
     def after_sign_in_path_for(resource)
       if resource_name == :resident
         request.env['omniauth.origin'] || stored_location_for(resource) || member_profile_url
