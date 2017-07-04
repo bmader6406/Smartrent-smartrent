@@ -32,6 +32,18 @@ module Smartrent
     
     before_create :set_position
     before_save :set_url
+
+    before_validation :sanitize_xss
+
+    def sanitize_xss
+      exclude_list = [ "description", "home_page_desc", "search_page_description" ];
+      self.attributes.each do |key, value|
+        unless exclude_list.include?(key)
+          self[key] = ActionView::Base.full_sanitizer.sanitize(self[key]) if self[key].is_a? String
+          self[key] = self[key].strip if self[key].respond_to?("strip")
+        end
+      end
+    end
     
     def to_param
       url || title.parameterize

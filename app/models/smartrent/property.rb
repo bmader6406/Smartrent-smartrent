@@ -7,10 +7,21 @@ module Smartrent
     has_many :residents, :through => :resident_properties
     
     before_create :set_smartrent
+    before_validation :sanitize_xss
     
     STATUS_ACTIVE = "Active"
     STATUS_INACTIVE = "Inactive"
     STATUS_CURRENT = "Current"
+
+    def sanitize_xss
+      exclude_list = [ "description"];
+      self.attributes.each do |key, value|
+        unless exclude_list.include?(key)
+          self[key] = ActionView::Base.full_sanitizer.sanitize(self[key]) if self[key].is_a? String
+          self[key] = self[key].strip if self[key].respond_to?("strip")
+        end
+      end
+    end
     
     def self.statuses
       {
