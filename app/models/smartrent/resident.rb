@@ -25,6 +25,7 @@ module Smartrent
     before_save :set_balance
     before_save :set_email_check_and_subscribed
     before_save :set_activation_date
+    before_validation :sanitize_xss
     
     attr_accessor :disable_email_validation
 
@@ -37,6 +38,13 @@ module Smartrent
     STATUS_EXPIRED = "Expired"
     STATUS_BUYER = "Buyer"
     STATUS_ARCHIVE = "Archive"
+
+    def sanitize_xss
+      self.attributes.each do |key, value|
+        self[key] = ActionView::Base.full_sanitizer.sanitize(self[key]) if self[key].is_a? String
+        self[key] = self[key].strip if self[key].respond_to?("strip")
+      end
+    end
 
     def self.smartrent_statuses
       {
