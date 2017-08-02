@@ -14,13 +14,8 @@ module Smartrent
     STATUS_CURRENT = "Current"
 
     def sanitize_xss
-      exclude_list = [ "description"];
-      self.attributes.each do |key, value|
-        unless exclude_list.include?(key)
-          self[key] = ActionView::Base.full_sanitizer.sanitize(self[key]) if self[key].is_a? String
-          self[key] = self[key].strip if self[key].respond_to?("strip")
-        end
-      end
+      exclude_list = [ "description","image_content_type"];
+      SanitizeXss.sanitize(self,exclude_list)
     end
     
     def self.statuses
