@@ -6,7 +6,7 @@ module Smartrent
     def self.queue
       :crm_immediate
     end
-  
+    
     def self.perform(time, scheduled_run = true, created_at = nil)
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
@@ -50,33 +50,33 @@ module Smartrent
                     :smartrent_status => Smartrent::Resident::STATUS_ACTIVE,
                     :expiry_date => nil,
                     :disable_email_validation => true
-                  })
+                    })
                   
                   create_monthly_rewards(r, smartrent_properties, period_start) if scheduled_run
                   
                 else #Resident doesn't live in any smartrent property, set it's expiry to 1 year from the period start
-                  expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start.end_of_month) + 1.year
+                  expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start.end_of_month) + 2.year
                   sr_status = period_start > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
                   r.update_attributes({
                     :smartrent_status => sr_status,
                     :expiry_date => expiry_date,
                     :disable_email_validation => true
-                  })
+                    })
 
                 end
 
               else # resident moved out, not live in any properties, set it's expiry to 60 days from the period start
-                expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start.end_of_month) + 60.days
+                expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start.end_of_month) + 2.year
                 sr_status = period_start > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
                 r.update_attributes({
                   :smartrent_status => sr_status,
                   :expiry_date => expiry_date,
                   :disable_email_validation => true
-                })
+                  })
 
               end
             end
-
+            
             # inactive => expired or inactive => active
             if r.smartrent_status == Smartrent::Resident::STATUS_INACTIVE
 
@@ -90,7 +90,7 @@ module Smartrent
                   :smartrent_status => Smartrent::Resident::STATUS_ACTIVE,
                   :expiry_date => nil,
                   :disable_email_validation => true
-                })
+                  })
 
                 create_monthly_rewards(r, smartrent_properties, period_start) if scheduled_run
               end
@@ -100,7 +100,7 @@ module Smartrent
             error_details = "#{e.class}: #{e}"
             error_details += "\n#{e.backtrace.join("\n")}" if e.backtrace
             p "ERROR: #{error_details}"
-          
+            
             ::Notifier.system_message("[Smartrent::MonthlyStatusUpdater] FAILURE", "ERROR DETAILS: #{error_details}",
               ADMIN_EMAIL, {"from" => OPS_EMAIL}).deliver_now
             
@@ -133,7 +133,7 @@ module Smartrent
             :period_end => period_start.end_of_month,
             :amount => amount,
             :months_earned => 1
-          })
+            })
         end
       end
     end
@@ -162,7 +162,7 @@ module Smartrent
               :smartrent_status => Smartrent::Resident::STATUS_ACTIVE,
               :expiry_date => nil,
               :disable_email_validation => true
-            })
+              })
             
           else #Resident doesn't live in any smartrent property, set it's expiry to 1 year from the period start
             
@@ -173,7 +173,7 @@ module Smartrent
               :smartrent_status => Smartrent::Resident::STATUS_INACTIVE,
               :expiry_date => expiry_date,
               :disable_email_validation => true
-            })
+              })
           end
 
         else # resident moved out, not live in any properties
@@ -185,7 +185,7 @@ module Smartrent
             :smartrent_status => Smartrent::Resident::STATUS_INACTIVE,
             :expiry_date => expiry_date,
             :disable_email_validation => true
-          })
+            })
           
         end
       end
@@ -208,7 +208,7 @@ module Smartrent
             :smartrent_status => Smartrent::Resident::STATUS_ACTIVE,
             :expiry_date => nil,
             :disable_email_validation => true
-          })
+            })
 
         end
       end
