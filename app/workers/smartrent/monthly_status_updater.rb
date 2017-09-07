@@ -7,7 +7,8 @@ module Smartrent
       :crm_immediate
     end
   
-    def self.perform(time, scheduled_run = true, created_at = nil)
+    def self.perform(time, scheduled_run = true, created_at = nil, resident_id = nil)
+      puts YAML::dump(created_at)
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
       
@@ -18,6 +19,7 @@ module Smartrent
       
       query = Smartrent::Resident
       query = query.where("created_at > ?", Time.parse(created_at).utc.to_s(:db)) if created_at
+      query = query.where(:id => resident_id) if resident_id
       
       query.includes(:resident_properties => :property).find_in_batches do |residents|
         residents.each do |r|
@@ -100,16 +102,18 @@ module Smartrent
             error_details = "#{e.class}: #{e}"
             error_details += "\n#{e.backtrace.join("\n")}" if e.backtrace
             p "ERROR: #{error_details}"
-          
-            ::Notifier.system_message("[Smartrent::MonthlyStatusUpdater] FAILURE", "ERROR DETAILS: #{error_details}",
-              ADMIN_EMAIL, {"from" => OPS_EMAIL}).deliver_now
-            
+            if !resident_id
+              p "[SmartRent] MonthlyStatusUpdater - FAILURE"
+              ::Notifier.system_message("[Smartrent::MonthlyStatusUpdater] FAILURE", "ERROR DETAILS: #{error_details}",
+                ADMIN_EMAIL, {"from" => OPS_EMAIL}).deliver_now
+            end
           end
         end
         
       end # /find in batch
       
-      if scheduled_run
+      if scheduled_run && !resident_id
+        p "[SmartRent] MonthlyStatusUpdater - SUCCESS"
         Notifier.system_message("[SmartRent] MonthlyStatusUpdater - SUCCESS", "Executed at #{Time.now}", ADMIN_EMAIL).deliver_now
       end
       

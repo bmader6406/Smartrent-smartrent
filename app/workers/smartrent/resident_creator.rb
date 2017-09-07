@@ -152,6 +152,7 @@ module Smartrent
           :amount => initial_amount,
           :type_ => Reward::TYPE_INITIAL_REWARD,
           :period_start => first_move_in,
+          :period_end => first_move_in.advance(months: months_earned.length),
           :months_earned => months_earned.length
         })
         
