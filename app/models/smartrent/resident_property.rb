@@ -33,24 +33,25 @@ module Smartrent
       pp "Resetting rewards table..."
       self.resident
       resident.rewards.destroy_all
-      create_initial_signup_rewards(Time.now.change(:month => 02,:year => 2016),resident)
-      time = Time.now.change(:month => 03,:year => 2016).beginning_of_month
-        while time < Time.now.beginning_of_month do # TODO: recheck this for possibility of running this at 1st of every month at first second
-          Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
-          time = time.advance(:months=>1)
-        end
-        pp "Reset completed..."
+      create_initial_signup_rewards(Time.now.change(:month => 03,:year => 2016),resident)
+      time = Time.now.change(:month => 04,:year => 2016).beginning_of_month
+      while time <= Time.now.beginning_of_month do # TODO: recheck this for possibility of running this at 1st of every month at first second
+        Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
+        time = time.advance(:months=>1)
       end
+      pp "Reset completed..."
+      return true
+    end
 
-      private
-      
+    private
+
       def create_initial_signup_rewards(time = Time.now,r)
         # monthly reward is created by MonthlyStatusUpdater
         
         # the initial import will create rewards only after the import is done on ResidentCreator
         return true if disable_rewards
         
-        return true if !property.eligible?
+        # return true if !property.eligible?
         
         if r.rewards.where(:type_ => [Reward::TYPE_INITIAL_REWARD, Reward::TYPE_SIGNUP_BONUS]).count == 0
           pp "create initial rewards..."
