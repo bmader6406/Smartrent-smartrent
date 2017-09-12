@@ -152,6 +152,7 @@ module Smartrent
           :amount => initial_amount,
           :type_ => Reward::TYPE_INITIAL_REWARD,
           :period_start => first_move_in,
+          :period_end => first_move_in.advance(months: months_earned.length),
           :months_earned => months_earned.length
         })
         
@@ -168,24 +169,38 @@ module Smartrent
     
     def self.collect_months(t1, t2)
       begin
-        t1 = t1.clone.in_time_zone("Eastern Time (US & Canada)").end_of_month
-        t2 = t2.clone.in_time_zone("Eastern Time (US & Canada)").beginning_of_month
+        return [] if t1 > t2
+
+        t1 = t1.clone.in_time_zone("Eastern Time (US & Canada)")
+        # t1 = t1.end_of_month
+        t2 = t2.clone.in_time_zone("Eastern Time (US & Canada)")
+        # t2 = t2.beginning_of_month
         
         # t1.end_of_month, t2.beginning_of_month
         # this will make sure we don't count "2015/03" if t1 is 2015/01/15, t2 is  2015/03/20
         # we don't count "2015/03" if t1 is 2015/03/15, t2 is  2015/03/20 or 2015/03/01, t2 is  2015/03/31
+        months = []
         
-        return [] if t1 > t2
+        #TODO: if move in date is 16th and move out is next month14th... one month should be considered
         
-        months = [t1.strftime("%Y/%m")]
 
-        while t1 < t2
-          t1 += 1.month
-          #pp ">> #{t1}, #{t2}, #{t1 < t2}"
-          if t1 < t2 #|| t1.strftime("%Y/%m") == t2.strftime("%Y/%m")
-            #pp "#{t1} vs #{t2}, #{t1.strftime("%Y/%m")} vs #{t2.strftime("%Y/%m")}"
+        if(t1.beginning_of_month == t2.beginning_of_month)
+          if ((t2.strftime("%d").to_i - t1.strftime("%d").to_i) >= 15) #TODO: replace with ELIGIBLE_DATE environment variable
             months << t1.strftime("%Y/%m")
           end
+        elsif (t1.strftime("%d").to_i <= 15) #TODO: replace with ELIGIBLE_DATE environment variable
+          months << t1.strftime("%Y/%m")
+        end
+        t1 += 1.month
+        while t1 < t2
+          if (t1.beginning_of_month == t2.beginning_of_month) && (t2.strftime("%d").to_i < 15) #TODO: replace with ELIGIBLE_DATE environment variable
+            t1 += 1.month
+            next
+          end
+          # if t1 < t2
+          months << t1.strftime("%Y/%m")
+          # end
+          t1 += 1.month
         end
         
         months = months.uniq.sort
