@@ -102,8 +102,8 @@ module Smartrent
       first_move_in = nil
       
       eligible_properties = []
-      
-      sr.resident_properties.each do |rp|
+      rps = sr.resident_properties.order('move_in_date ASC')
+      rps.each do |rp|
         if rp.property.eligible?
           first_rp = rp if !first_rp
           first_move_in = rp.move_in_date if !first_move_in
@@ -116,22 +116,28 @@ module Smartrent
           eligible_properties << rp
         end
       end
-      
+
       initial_amount = 0
       months_earned = []
-      
+      balance_days = 0 #if move out of previous property is 10th FEB 2016 and move in of next property is 20th Feb 2016 that month need to be calculated... hence balance_days is used
+    
+
       eligible_properties.each do |rp|
+        t = rp.move_in_date.clone
+        move_in = t.in_time_zone("EST").change(:day=>t.strftime("%d").to_i,:hour=>0)
+        t = rp.move_out_date.clone
+        move_out = t.in_time_zone("EST").change(:day=>t.strftime("%d").to_i,:hour=>0)
         if rp.move_out_date.blank? || rp.move_out_date && rp.move_out_date > cal_time
-          arr = collect_months(rp.move_in_date, cal_time)
+          arr,balance_days = collect_months(move_in, cal_time,balance_days)
           months_earned << arr
           
-          pp ">> months_earned: #{arr.length}, #{rp.move_in_date}, #{cal_time}" #, arr
+          pp ">> months_earned: #{arr.length}, #{move_in}, #{cal_time},balance:#{balance_days}" #, arr
           
           
         else
-          arr = collect_months(rp.move_in_date, rp.move_out_date)
+          arr,balance_days = collect_months(move_in, move_out,balance_days)
           months_earned << arr
-          pp ">> months_earned2: #{arr.length}, #{rp.move_in_date}, #{rp.move_out_date}" #, arr
+          pp ">> months_earned2: #{arr.length}, #{move_in}, #{move_out},balance:#{balance_days}" #, arr
           
         end
       end
@@ -142,38 +148,37 @@ module Smartrent
         initial_amount = Smartrent::Setting.monthly_award*months_earned.length
         initial_amount = 9900 if initial_amount > 9900 # 100 will be added by sign up bonus
       end
-      
+      p months_earned
       pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #, months_earned
       
-      if !eligible_properties.empty?
-        Smartrent::Reward.create!({
-          :property_id => first_rp.property_id,
-          :resident_id => sr.id,
-          :amount => initial_amount,
-          :type_ => Reward::TYPE_INITIAL_REWARD,
-          :period_start => first_move_in,
-          :period_end => first_move_in.advance(months: months_earned.length),
-          :months_earned => months_earned.length
-        })
+      # if !eligible_properties.empty?
+      #   Smartrent::Reward.create!({
+      #     :property_id => first_rp.property_id,
+      #     :resident_id => sr.id,
+      #     :amount => initial_amount,
+      #     :type_ => Reward::TYPE_INITIAL_REWARD,
+      #     :period_start => first_move_in,
+      #     :period_end => first_move_in.advance(months: months_earned.length),
+      #     :months_earned => months_earned.length
+      #   })
         
-        Smartrent::Reward.create!({
-          :property_id => first_rp.property_id,
-          :resident_id => sr.id,
-          :amount => Smartrent::Setting.sign_up_bonus,
-          :type_ => Reward::TYPE_SIGNUP_BONUS,
-          :period_start => first_move_in
-        })
-      end
+      #   Smartrent::Reward.create!({
+      #     :property_id => first_rp.property_id,
+      #     :resident_id => sr.id,
+      #     :amount => Smartrent::Setting.sign_up_bonus,
+      #     :type_ => Reward::TYPE_SIGNUP_BONUS,
+      #     :period_start => first_move_in
+      #   })
+      # end
       
     end
     
-    def self.collect_months(t1, t2)
+    def self.collect_months(t1, t2, pre_balance_days=0)
       begin
         return [] if t1 > t2
-
-        t1 = t1.clone.in_time_zone("Eastern Time (US & Canada)")
+        t1 = t1.clone.in_time_zone("EST").change(:day=>t1.day,:month=>t1.month,:year=>t1.year,:hour=>0)
         # t1 = t1.end_of_month
-        t2 = t2.clone.in_time_zone("Eastern Time (US & Canada)")
+        t2 = t2.clone.in_time_zone("EST").change(:day=>t2.day,:month=>t2.month,:year=>t2.year,:hour=>0)
         # t2 = t2.beginning_of_month
         
         # t1.end_of_month, t2.beginning_of_month
@@ -181,21 +186,24 @@ module Smartrent
         # we don't count "2015/03" if t1 is 2015/03/15, t2 is  2015/03/20 or 2015/03/01, t2 is  2015/03/31
         months = []
         
-        #TODO: if move in date is 16th and move out is next month14th... one month should be considered
-        
+        # TODO: if move in date is 16th and move out is next month14th... one month should be considered
+        # This is already in affect. Need to recheck
 
-        if(t1.beginning_of_month == t2.beginning_of_month)
-          if ((t2.strftime("%d").to_i - t1.strftime("%d").to_i) >= 15) #TODO: replace with ELIGIBLE_DATE environment variable
+        if (t1.beginning_of_month == t2.beginning_of_month)
+          if ((t2.day- t1.day) >= 15) #TODO: replace with ELIGIBLE_DATE environment variable
             months << t1.strftime("%Y/%m")
           end
-        elsif (t1.strftime("%d").to_i <= 15) #TODO: replace with ELIGIBLE_DATE environment variable
+        elsif (t1.day-pre_balance_days <= 15) #TODO: replace with ELIGIBLE_DATE environment variable
           months << t1.strftime("%Y/%m")
         end
         t1 += 1.month
+        t1 = t1.beginning_of_month
+        balance_days = 0
         while t1 < t2
-          if (t1.beginning_of_month == t2.beginning_of_month) && (t2.strftime("%d").to_i < 15) #TODO: replace with ELIGIBLE_DATE environment variable
+          if (t1 == t2.beginning_of_month) && (t2.day < 15) #TODO: replace with ELIGIBLE_DATE environment variable
             t1 += 1.month
-            next
+            balance_days = t2.day
+            break
           end
           # if t1 < t2
           months << t1.strftime("%Y/%m")
@@ -206,7 +214,7 @@ module Smartrent
         months = months.uniq.sort
         #pp "total: #{months.length}", months
         
-        months
+        return months,balance_days
       rescue
         []
       end
