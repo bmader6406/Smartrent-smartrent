@@ -52,11 +52,11 @@ module Smartrent
                     :disable_email_validation => true
                     })
                   
-                  create_monthly_rewards(r, smartrent_properties, period_start) if scheduled_run 
+                  create_monthly_rewards(r, smartrent_properties, period_start) and return if scheduled_run 
                   
                 else #Resident doesn't live in any smartrent property, set it's expiry to 2 year from the period start
-                  expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start.end_of_month) + 2.year
-                  sr_status = period_start > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
+                  expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue time) + 1.year
+                  sr_status = period_start+15.days  > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
                   r.update_attributes({
                     :smartrent_status => sr_status,
                     :expiry_date => expiry_date,
@@ -65,8 +65,8 @@ module Smartrent
                 end
 
               else # resident moved out, not live in any properties, set it's expiry to 60 days from the period start
-                expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start.end_of_month) + 2.year
-                sr_status = period_start > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
+                expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue time) + 3.months
+                sr_status = period_start+15.days > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
                 r.update_attributes({
                   :smartrent_status => sr_status,
                   :expiry_date => expiry_date,
@@ -91,7 +91,7 @@ module Smartrent
                   :disable_email_validation => true
                   })
 
-                create_monthly_rewards(r, smartrent_properties, period_start) if scheduled_run
+                create_monthly_rewards(r, smartrent_properties, period_start) and return if scheduled_run
               end
             end
 
@@ -151,9 +151,10 @@ module Smartrent
     
     def self.set_status(r)
       period_start = Time.now.in_time_zone('Eastern Time (US & Canada)').beginning_of_month
+      time = Time.now.in_time_zone('Eastern Time (US & Canada)')
       
       # get properties that the resident live in
-      live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start.end_of_month &&  (rp.move_out_date.blank? || rp.move_out_date > period_start.end_of_month) }
+      live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= time && (rp.move_out_date.blank? || rp.move_out_date > time) }
       #pp "live_in_properties:", live_in_properties
       
       # get smartrent eligible property
@@ -179,7 +180,7 @@ module Smartrent
             
             # don't mark the record as expired immediately, let's the monthly status update it
             # because the import create the unit sequentialy, we may not have all units at this calculation
-            expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start.end_of_month) + 2.year
+            expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue time) + 1.year
             r.update_attributes({
               :smartrent_status => Smartrent::Resident::STATUS_INACTIVE,
               :expiry_date => expiry_date,
@@ -191,7 +192,7 @@ module Smartrent
           
           # don't mark the record as expired immediately, let's the monthly status update it
           # because the import create the unit sequentialy, we may not have all units at this calculation
-          expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start.end_of_month) + 2.year
+          expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue time) + 3.months
           r.update_attributes({
             :smartrent_status => Smartrent::Resident::STATUS_INACTIVE,
             :expiry_date => expiry_date,
