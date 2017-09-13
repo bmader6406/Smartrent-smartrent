@@ -35,10 +35,10 @@ module Smartrent
             #pp "live_in_properties:", live_in_properties
             
             # get smartrent eligible property
-            smartrent_properties = live_in_properties.select{|rp| rp.property.eligible(time) }
+            smartrent_properties = live_in_properties.select{|rp| rp.property.eligible?(time) }
             #pp "smartrent_properties:", smartrent_properties
             
-            move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date.month == time.month && rp.property.eligible(time) }
+            move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date.month == time.month && rp.property.eligible?(time) }
             #pp "move_out_smartrent_properties", move_out_smartrent_properties
             
             # active => inactive or active => + rewards
@@ -160,10 +160,10 @@ module Smartrent
       #pp "live_in_properties:", live_in_properties
       
       # get smartrent eligible property
-      smartrent_properties = live_in_properties.select{|rp| rp.property.eligible(time) }
+      smartrent_properties = live_in_properties.select{|rp| rp.property.eligible?(time) }
       #pp "smartrent_properties:", smartrent_properties
       
-      move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible(time) }
+      move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible?(time) }
       #pp "move_out_smartrent_properties", move_out_smartrent_properties
 
       # active => inactive or still active

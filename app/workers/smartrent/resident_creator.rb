@@ -151,31 +151,31 @@ module Smartrent
       p months_earned
       pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #, months_earned
       
-      # if !eligible_properties.empty?
-      #   Smartrent::Reward.create!({
-      #     :property_id => first_rp.property_id,
-      #     :resident_id => sr.id,
-      #     :amount => initial_amount,
-      #     :type_ => Reward::TYPE_INITIAL_REWARD,
-      #     :period_start => first_move_in,
-      #     :period_end => first_move_in.advance(months: months_earned.length),
-      #     :months_earned => months_earned.length
-      #   })
+      if !eligible_properties.empty?
+        Smartrent::Reward.create!({
+          :property_id => first_rp.property_id,
+          :resident_id => sr.id,
+          :amount => initial_amount,
+          :type_ => Reward::TYPE_INITIAL_REWARD,
+          :period_start => first_move_in,
+          :period_end => first_move_in.advance(months: months_earned.length),
+          :months_earned => months_earned.length
+        })
         
-      #   Smartrent::Reward.create!({
-      #     :property_id => first_rp.property_id,
-      #     :resident_id => sr.id,
-      #     :amount => Smartrent::Setting.sign_up_bonus,
-      #     :type_ => Reward::TYPE_SIGNUP_BONUS,
-      #     :period_start => first_move_in
-      #   })
-      # end
+        Smartrent::Reward.create!({
+          :property_id => first_rp.property_id,
+          :resident_id => sr.id,
+          :amount => Smartrent::Setting.sign_up_bonus,
+          :type_ => Reward::TYPE_SIGNUP_BONUS,
+          :period_start => first_move_in
+        })
+      end
       
     end
     
     def self.collect_months(t1, t2, pre_balance_days=0)
       begin
-        return [] if t1 > t2
+        return [[],0] if t1 > t2
         t1 = t1.clone.in_time_zone("EST").change(:day=>t1.day,:month=>t1.month,:year=>t1.year,:hour=>0)
         # t1 = t1.end_of_month
         t2 = t2.clone.in_time_zone("EST").change(:day=>t2.day,:month=>t2.month,:year=>t2.year,:hour=>0)
@@ -216,7 +216,7 @@ module Smartrent
         
         return months,balance_days
       rescue
-        []
+        [[],0]
       end
     end
     
