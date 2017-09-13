@@ -174,7 +174,7 @@ module Smartrent
     def eligible?(time=nil)
       if time
         version = versions.where('created_at <= ?', DateTime.parse(time.to_s)).last
-        return version and version.last.reify.is_smartrent? and version.last.reify.smartrent_status.to_s.include?(STATUS_CURRENT)
+        return (version and version.reify.is_smartrent? and version.reify.smartrent_status.to_s.include?(STATUS_CURRENT) )
       end
       smartrent_status.to_s.include?(STATUS_CURRENT) && is_smartrent?
     end
