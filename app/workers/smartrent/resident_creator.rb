@@ -149,9 +149,10 @@ module Smartrent
         initial_amount = 9900 if initial_amount > 9900 # 100 will be added by sign up bonus
       end
       p months_earned
-      pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #, months_earned
       
+
       if !eligible_properties.empty?
+        pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #if first_rp and first_rp.property_id #, months_earned 
         Smartrent::Reward.create!({
           :property_id => first_rp.property_id,
           :resident_id => sr.id,
