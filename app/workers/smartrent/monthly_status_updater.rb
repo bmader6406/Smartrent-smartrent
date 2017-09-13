@@ -35,10 +35,10 @@ module Smartrent
             #pp "live_in_properties:", live_in_properties
             
             # get smartrent eligible property
-            smartrent_properties = live_in_properties.select{|rp| rp.property.eligible? }
+            smartrent_properties = live_in_properties.select{|rp| rp.property.eligible(time) }
             #pp "smartrent_properties:", smartrent_properties
             
-            move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date.month == time.month && rp.property.eligible? }
+            move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date.month == time.month && rp.property.eligible(time) }
             #pp "move_out_smartrent_properties", move_out_smartrent_properties
             
             # active => inactive or active => + rewards
@@ -55,7 +55,8 @@ module Smartrent
                   
                   create_monthly_rewards(r, smartrent_properties, period_start) if scheduled_run 
                   
-                else #Resident doesn't live in any smartrent property, set it's expiry to 2 year from the period start
+                else 
+                  #Resident doesn't live in any smartrent property, set it's expiry to 2 year from the period start
                   expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue time) + 1.year
                   sr_status = period_start+15.days  > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
                   r.update_attributes({
@@ -100,8 +101,8 @@ module Smartrent
             error_details = "#{e.class}: #{e}"
             error_details += "\n#{e.backtrace.join("\n")}" if e.backtrace
             p "ERROR: #{error_details}"
+            p "[SmartRent] MonthlyStatusUpdater - FAILURE" if resident_id
             if !resident_id
-              # p "[SmartRent] MonthlyStatusUpdater - FAILURE"
               ::Notifier.system_message("[Smartrent::MonthlyStatusUpdater] FAILURE", "ERROR DETAILS: #{error_details}",
                 ADMIN_EMAIL, {"from" => OPS_EMAIL}).deliver_now
             end
@@ -110,10 +111,8 @@ module Smartrent
         
       end # /find in batch
       
-      if scheduled_run && !resident_id
-        # p "[SmartRent] MonthlyStatusUpdater - SUCCESS"
-        Notifier.system_message("[SmartRent] MonthlyStatusUpdater - SUCCESS", "Executed at #{Time.now}", ADMIN_EMAIL).deliver_now
-      end
+        p "[SmartRent] MonthlyStatusUpdater - SUCCESS" if resident_id
+        Notifier.system_message("[SmartRent] MonthlyStatusUpdater - SUCCESS", "Executed at #{Time.now}", ADMIN_EMAIL).deliver_now if scheduled_run && !resident_id
       
     end # /perform
     
@@ -161,10 +160,10 @@ module Smartrent
       #pp "live_in_properties:", live_in_properties
       
       # get smartrent eligible property
-      smartrent_properties = live_in_properties.select{|rp| rp.property.eligible? }
+      smartrent_properties = live_in_properties.select{|rp| rp.property.eligible(time) }
       #pp "smartrent_properties:", smartrent_properties
       
-      move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible? }
+      move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible(time) }
       #pp "move_out_smartrent_properties", move_out_smartrent_properties
 
       # active => inactive or still active
