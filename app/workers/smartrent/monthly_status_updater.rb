@@ -32,18 +32,17 @@ module Smartrent
 
             # get properties that the resident live in
             live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= time &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
-            #pp "live_in_properties:", live_in_properties
-            
+            # pp "live_in_properties:", live_in_properties
+
             # get smartrent eligible property
             smartrent_properties = live_in_properties.select{|rp| rp.property.eligible?(time) }
-            #pp "smartrent_properties:", smartrent_properties
-            
+            # pp "smartrent_properties:", smartrent_properties
+
             move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date.month == time.month && rp.property.eligible?(time) }
-            #pp "move_out_smartrent_properties", move_out_smartrent_properties
+            # pp "move_out_smartrent_properties", move_out_smartrent_properties
             
             # active => inactive or active => + rewards
             if r.smartrent_status.blank? || r.smartrent_status == Smartrent::Resident::STATUS_ACTIVE
-
               if !live_in_properties.empty?
 
                 if !smartrent_properties.empty?
@@ -52,7 +51,6 @@ module Smartrent
                     :expiry_date => nil,
                     :disable_email_validation => true
                     })
-                  
                   create_monthly_rewards(r, smartrent_properties, period_start) if scheduled_run 
                   
                 else 
@@ -128,7 +126,7 @@ module Smartrent
             amount = Setting.monthly_award
           end
           
-          amount = 0 if check_month_days
+          amount = 0 if check_month_days(rp,period_start)
 
           resident.rewards.create({
             :property_id => rp.property_id,

@@ -172,11 +172,10 @@ module Smartrent
     
     # only create reward for the eligible property
     def eligible?(time=nil)
-      if time
-        version = versions.where('created_at <= ?', DateTime.parse(time.to_s)).last
-        return (version and version.reify.is_smartrent? and version.reify.smartrent_status.to_s.include?(STATUS_CURRENT) )
-      end
-      smartrent_status.to_s.include?(STATUS_CURRENT) && is_smartrent?
+      status = false
+      version = versions.where('created_at <= ?', DateTime.parse(time.to_s)).last if time
+      status = (version and version.reify.is_smartrent? and version.reify.smartrent_status.to_s.include?(STATUS_CURRENT) )
+      status = (smartrent_status.to_s.include?(STATUS_CURRENT) && is_smartrent?) if status.nil?
     end
 
     private
