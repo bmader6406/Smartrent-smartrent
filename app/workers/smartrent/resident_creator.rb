@@ -97,7 +97,7 @@ module Smartrent
       pp "delete_and_create_all_residents done: #{Time.now}"
     end
     
-    def self.create_initial_signup_rewards(sr, cal_time = Time.now)
+    def self.create_initial_signup_rewards(sr, cal_time = DateTime.now)
       first_rp = nil
       first_move_in = nil
       
