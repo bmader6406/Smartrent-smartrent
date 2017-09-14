@@ -103,15 +103,17 @@ module Smartrent
       
       eligible_properties = []
       rps = sr.resident_properties.order('move_in_date ASC')
+      first_rp = rps.first
+      first_move_in = rps.first.move_in_date
       rps.each do |rp|
         if rp.property.eligible?
-          first_rp = rp if !first_rp
-          first_move_in = rp.move_in_date if !first_move_in
+          # first_rp = rp if !first_rp
+          # first_move_in = rp.move_in_date if !first_move_in
             
-          if rp.move_in_date <= first_move_in
-            first_rp = rp
-            first_move_in = rp.move_in_date
-          end
+          # if rp.move_in_date <= first_move_in
+          #   first_rp = rp
+          #   first_move_in = rp.move_in_date
+          # end
           
           eligible_properties << rp
         end
@@ -131,13 +133,13 @@ module Smartrent
           arr,balance_days = collect_months(move_in, cal_time,balance_days)
           months_earned << arr
           
-          pp ">> months_earned: #{arr.length}, #{move_in}, #{cal_time},balance:#{balance_days}" #, arr
+          # pp ">> months_earned: #{arr.length}, #{move_in}, #{cal_time},balance:#{balance_days}" #, arr
           
           
         else
           arr,balance_days = collect_months(move_in, move_out,balance_days)
           months_earned << arr
-          pp ">> months_earned2: #{arr.length}, #{move_in}, #{move_out},balance:#{balance_days}" #, arr
+          # pp ">> months_earned2: #{arr.length}, #{move_in}, #{move_out},balance:#{balance_days}" #, arr
           
         end
       end
@@ -148,18 +150,20 @@ module Smartrent
         initial_amount = Smartrent::Setting.monthly_award*months_earned.length
         initial_amount = 9900 if initial_amount > 9900 # 100 will be added by sign up bonus
       end
-      p months_earned
+      # pp months_earned
       
 
       if !eligible_properties.empty?
-        pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #if first_rp and first_rp.property_id #, months_earned 
+        # pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #if first_rp and first_rp.property_id #, months_earned 
+        period_end = first_move_in
+        period_end = first_move_in.advance(months: months_earned.length).end_of_month if months_earned.length > 0
         Smartrent::Reward.create!({
           :property_id => first_rp.property_id,
           :resident_id => sr.id,
           :amount => initial_amount,
           :type_ => Reward::TYPE_INITIAL_REWARD,
           :period_start => first_move_in,
-          :period_end => first_move_in.advance(months: months_earned.length),
+          :period_end => period_end,
           :months_earned => months_earned.length
         })
         
@@ -182,12 +186,9 @@ module Smartrent
         t2 = t2.clone.in_time_zone("EST").change(:day=>t2.day,:month=>t2.month,:year=>t2.year,:hour=>0)
         # t2 = t2.beginning_of_month
         
-        # t1.end_of_month, t2.beginning_of_month
-        # this will make sure we don't count "2015/03" if t1 is 2015/01/15, t2 is  2015/03/20
-        # we don't count "2015/03" if t1 is 2015/03/15, t2 is  2015/03/20 or 2015/03/01, t2 is  2015/03/31
         months = []
         
-        # TODO: if move in date is 16th and move out is next month14th... one month should be considered
+        # TODO: if move in date is 16th and move out is next month 14th... one month should be considered
         # This is already in affect. Need to recheck
 
         if (t1.beginning_of_month == t2.beginning_of_month)
