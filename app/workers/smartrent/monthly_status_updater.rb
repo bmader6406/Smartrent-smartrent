@@ -27,11 +27,11 @@ module Smartrent
           # it is good to catch any resident which cause the below code fail rather than stop the calculation
           begin
             # important: ignore resident who not move in any properties before the execution date, otherwise their status will changed from Active to Inactive
-            next if r.resident_properties.all? {|rp| rp.move_in_date > time.beginning_of_month+15.days }
+            next if r.resident_properties.all? {|rp| rp.move_in_date > period_start+15.days }
             total += 1
             pp "total: #{total} - id #{r.id}, email: #{r.email}, #{r.smartrent_status}"
             # get properties that the resident live in
-            live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= time.beginning_of_month+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
+            live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
             # pp "live_in_properties:", live_in_properties
 
             # get smartrent eligible property
@@ -114,17 +114,14 @@ module Smartrent
     
     def self.create_monthly_rewards(resident, smartrent_properties, period_start)
       smartrent_properties.each do |rp|
-
         # create monthly reward if not created for this month
         if resident.rewards.where(:resident_id => resident.id, :type_ => Reward::TYPE_MONTHLY_AWARDS, :period_start => [period_start, period_start.end_of_month]).count == 0
-          
           if resident.balance == 10000
             amount = 0
           else
             amount = Setting.monthly_award
           end
-          
-          amount = 0 if check_month_days(rp,period_start)
+		  amount = 0 if check_month_days(rp,period_start)
 
           resident.rewards.create({
             :property_id => rp.property_id,
@@ -139,9 +136,9 @@ module Smartrent
     end
 
     def self.check_month_days(rp, period_start)
-        if(rp.move_in_date.month == period_start.month && rp.move_in_date.day > 15)
+        if(rp.move_in_date.month == period_start.month && rp.move_in_date.day > 15 && rp.move_in_date.year == period_start.year)
             return true
-        elsif(rp.move_out_date && rp.move_out_date == period_start.month && rp.move_out_date.day < 15)
+        elsif(rp.move_out_date && rp.move_out_date == period_start.month && rp.move_out_date.day < 15 && rp.move_out_date.year == period_start.year)
             return true
         end
         return false 
@@ -152,7 +149,7 @@ module Smartrent
       time = Time.now.in_time_zone('Eastern Time (US & Canada)')
       
       # get properties that the resident live in
-      live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= time.beginning_of_month+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
+      live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
       #pp "live_in_properties:", live_in_properties
       
       # get smartrent eligible property
