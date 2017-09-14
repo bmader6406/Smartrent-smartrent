@@ -249,18 +249,15 @@ module Smartrent
         end
       end
       
-      def set_balance
+      def set_balance(time=Time.now.beginning_of_month)
         if smartrent_status_changed? && smartrent_status == STATUS_EXPIRED 
           if rewards.where(:type_ => Reward::TYPE_EXPIRED).count == 0
-            rewards.create!(:amount => -balance, :type_ => Reward::TYPE_EXPIRED, :period_start => Time.now.beginning_of_month )
+            rewards.create!(:amount => -balance, :type_ => Reward::TYPE_EXPIRED, :period_start => self.expiry_date )
           end
-          
           self.balance = 0
           self.subscribed = false
-          
           self.lock_access!(:send_instructions => false) if !access_locked?
         end
-        
         true
       end
       

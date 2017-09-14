@@ -8,6 +8,8 @@ module Smartrent
     end
   
     def self.perform(time, scheduled_run = true, created_at = nil, resident_id = nil)
+
+
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
       
@@ -55,8 +57,8 @@ module Smartrent
                   
                 else 
                   #Resident doesn't live in any smartrent property, set it's expiry to 2 year from the period start
-                  expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue time) + 1.year
-                  sr_status = period_start+15.days  > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
+                  expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start) + 1.year
+                  sr_status = period_start > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
                   r.update_attributes({
                     :smartrent_status => sr_status,
                     :expiry_date => expiry_date,
@@ -65,8 +67,8 @@ module Smartrent
                 end
 
               else # resident moved out, not live in any properties, set it's expiry to 60 days from the period start
-                expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue time) + 3.months
-                sr_status = period_start+15.days > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
+                expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start) + 2.months
+                sr_status = period_start > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
                 r.update_attributes({
                   :smartrent_status => sr_status,
                   :expiry_date => expiry_date,
@@ -180,7 +182,7 @@ module Smartrent
             
             # don't mark the record as expired immediately, let's the monthly status update it
             # because the import create the unit sequentialy, we may not have all units at this calculation
-            expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue time) + 1.year
+            expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start) + 1.year
             r.update_attributes({
               :smartrent_status => Smartrent::Resident::STATUS_INACTIVE,
               :expiry_date => expiry_date,
@@ -192,7 +194,7 @@ module Smartrent
           
           # don't mark the record as expired immediately, let's the monthly status update it
           # because the import create the unit sequentialy, we may not have all units at this calculation
-          expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue time) + 3.months
+          expiry_date = (move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date rescue period_start) + 3.months
           r.update_attributes({
             :smartrent_status => Smartrent::Resident::STATUS_INACTIVE,
             :expiry_date => expiry_date,
