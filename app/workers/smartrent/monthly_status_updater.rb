@@ -13,7 +13,7 @@ module Smartrent
       
       period_start = time.beginning_of_month
       
-      pp "period_start: #{period_start}"
+      # pp "period_start: #{period_start}"
       total = 0
       
       query = Smartrent::Resident
@@ -27,7 +27,7 @@ module Smartrent
             # important: ignore resident who not move in any properties before the execution date, otherwise their status will changed from Active to Inactive
             next if r.resident_properties.all? {|rp| rp.move_in_date > period_start+15.days }
             total += 1
-            pp "total: #{total} - id #{r.id}, email: #{r.email}, #{r.smartrent_status}"
+            # pp "total: #{total} - id #{r.id}, email: #{r.email}, #{r.smartrent_status}"
 
             # remove duplicate properties of resident
             remove_duplicate_resident_properties(r)
@@ -98,8 +98,8 @@ module Smartrent
           rescue  Exception => e
             error_details = "#{e.class}: #{e}"
             error_details += "\n#{e.backtrace.join("\n")}" if e.backtrace
-            p "ERROR: #{error_details}"
-            p "[SmartRent] MonthlyStatusUpdater - FAILURE" if resident_id
+            # p "ERROR: #{error_details}"
+            # p "[SmartRent] MonthlyStatusUpdater - FAILURE" if resident_id
             if !resident_id
               ::Notifier.system_message("[Smartrent::MonthlyStatusUpdater] FAILURE", "ERROR DETAILS: #{error_details}",
                 ADMIN_EMAIL, {"from" => OPS_EMAIL}).deliver_now
@@ -109,7 +109,7 @@ module Smartrent
         
       end # /find in batch
       
-        p "[SmartRent] MonthlyStatusUpdater - SUCCESS" if resident_id
+        # p "[SmartRent] MonthlyStatusUpdater - SUCCESS" if resident_id
         Notifier.system_message("[SmartRent] MonthlyStatusUpdater - SUCCESS", "Executed at #{Time.now}", ADMIN_EMAIL).deliver_now if scheduled_run && !resident_id
       
     end # /perform
@@ -146,7 +146,7 @@ module Smartrent
         return false 
     end
     
-    def remove_duplicate_resident_properties(resident)
+    def self.remove_duplicate_resident_properties(resident)
       resident.resident_properties.each do |rp1|
         resident.resident_properties.where.not(id: rp1.id).each do |rp2|
           if rp1.attributes.except("id", "created_at", "move_out_date", "updated_at", "status") == rp2.attributes.except("id", "created_at", "move_out_date", "updated_at", "status")
