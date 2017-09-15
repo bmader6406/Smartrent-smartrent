@@ -30,7 +30,7 @@ module Smartrent
     end
 
     def reset_rewards_table
-      pp "Resetting rewards table..."
+      # pp "Resetting rewards table..."
       self.resident
       resident.rewards.destroy_all if resident.rewards.count > 0
       resident.update_attributes(:smartrent_status => Smartrent::Resident::STATUS_ACTIVE)
@@ -38,11 +38,11 @@ module Smartrent
       create_initial_signup_rewards(reward_start_time,resident)
       time = DateTime.now.change(:day =>3,:month => 03,:year => 2016)
       while time <= Time.now do # TODO: recheck this for possibility of running this at 1st of every month at first second
-        pp "award_time:#{time}"
+        # pp "award_time:#{time}"
         Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
         time = time.advance(:months=>1)
       end
-      pp "Reset completed..."
+      # pp "Reset completed..."
       return true
     end
 
@@ -57,10 +57,10 @@ module Smartrent
         # return true if !property.eligible?
         
         if r.rewards.where(:type_ => [Reward::TYPE_INITIAL_REWARD, Reward::TYPE_SIGNUP_BONUS]).count == 0
-          pp "create initial rewards..."
+          # pp "create initial rewards..."
           Smartrent::ResidentCreator.create_initial_signup_rewards(r, time)
         else
-          pp "initial rewards have been created"
+          # pp "initial rewards have been created"
         end
       end
 
