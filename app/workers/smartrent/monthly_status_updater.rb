@@ -8,8 +8,6 @@ module Smartrent
     end
   
     def self.perform(time, scheduled_run = true, created_at = nil, resident_id = nil)
-
-
       time = Time.parse(time) if time.kind_of?(String)
       time = time.in_time_zone('Eastern Time (US & Canada)')
       
@@ -30,6 +28,10 @@ module Smartrent
             next if r.resident_properties.all? {|rp| rp.move_in_date > period_start+15.days }
             total += 1
             pp "total: #{total} - id #{r.id}, email: #{r.email}, #{r.smartrent_status}"
+
+            # remove duplicate properties of resident
+            remove_duplicate_resident_properties(r)
+
             # get properties that the resident live in
             live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
             # pp "live_in_properties:", live_in_properties
@@ -144,10 +146,22 @@ module Smartrent
         return false 
     end
     
+    def remove_duplicate_resident_properties(resident)
+      resident.resident_properties.each do |rp1|
+        resident.resident_properties.where.not(id: rp1.id).each do |rp2|
+          if rp1.attributes.except("id", "created_at", "move_out_date", "updated_at", "status") == rp2.attributes.except("id", "created_at", "move_out_date", "updated_at", "status")
+            resident_property = (rp1.move_out_date.nil? ? rp1 : rp2 )
+            resident_property.destroy
+          end
+        end
+      end
+    end
+
     def self.set_status(r)
       period_start = Time.now.in_time_zone('Eastern Time (US & Canada)').beginning_of_month
       time = Time.now.in_time_zone('Eastern Time (US & Canada)')
       
+      remove_duplicate_resident_properties(r)
       # get properties that the resident live in
       live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
       #pp "live_in_properties:", live_in_properties
@@ -223,3 +237,4 @@ module Smartrent
     
   end
 end
+
