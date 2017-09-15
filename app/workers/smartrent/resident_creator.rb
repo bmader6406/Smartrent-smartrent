@@ -97,7 +97,7 @@ module Smartrent
       pp "delete_and_create_all_residents done: #{Time.now}"
     end
     
-    def self.create_initial_signup_rewards(sr, cal_time = DateTime.now)
+    def self.create_initial_signup_rewards(sr, cal_time = DateTime.now.in_time_zone("EST"))
       first_rp = nil
       first_move_in = nil
       
@@ -107,14 +107,8 @@ module Smartrent
       first_rp = rps.first
       first_move_in = rps.first.move_in_date
       rps.each do |rp|
-        t = rp.move_in_date.clone
-        loop do
-          if rp.property.eligible?(t)          
-            eligible_properties << rp
-            break
-          end
-          t = t.advance(:month=>1)
-          break if (t.month <= cal_time.month)
+        if rp.property.eligible?(rp.move_in_date)          
+          eligible_properties << rp
         end
       end
 
@@ -132,13 +126,13 @@ module Smartrent
           arr,balance_days = collect_months(move_in, cal_time,rp,balance_days)
           months_earned << arr
           
-          pp ">> months_earned: #{arr.length}, #{move_in}, #{cal_time},balance:#{balance_days}" #, arr
+          # pp ">> months_earned: #{arr.length}, #{move_in}, #{cal_time},balance:#{balance_days}" #, arr
           
           
         else
           arr,balance_days = collect_months(move_in, move_out,rp,balance_days)
           months_earned << arr
-          pp ">> months_earned2: #{arr.length}, #{move_in}, #{move_out},balance:#{balance_days}" #, arr
+          # pp ">> months_earned2: #{arr.length}, #{move_in}, #{move_out},balance:#{balance_days}" #, arr
           
         end
       end
@@ -149,13 +143,13 @@ module Smartrent
         initial_amount = Smartrent::Setting.monthly_award*months_earned.length
         initial_amount = 9900 if initial_amount > 9900 # 100 will be added by sign up bonus
       end
-      pp months_earned
+      # pp months_earned
       
 
       if !eligible_properties.empty?
-        pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #if first_rp and first_rp.property_id #, months_earned 
-        period_end = first_move_in
-        period_end = first_move_in.advance(months: months_earned.length).end_of_month if months_earned.length > 0
+        # pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #if first_rp and first_rp.property_id #, months_earned 
+        period_end = first_move_in   
+        period_end = (months_earned.last+"\03").to_time.end_of_month if months_earned.length > 0
         Smartrent::Reward.create!({
           :property_id => first_rp.property_id,
           :resident_id => sr.id,
@@ -178,6 +172,7 @@ module Smartrent
     end
     
     def self.collect_months(t1, t2, rp, pre_balance_days=0)
+      # Initial balance will not be awarded to any month where total stay in that month is less than 15 days
       begin
         return [[],0] if t1 > t2
         t1 = t1.clone.in_time_zone("EST").change(:day=>t1.day,:month=>t1.month,:year=>t1.year,:hour=>0)
@@ -189,15 +184,12 @@ module Smartrent
         
         # TODO: if move in date is 16th and move out is next month 14th... one month should be considered
         # This is already in affect. Need to recheck
-        p ">>>>>>>>>>>>>>>>>>Eligibility>>>>>>>>>>>"
         if (t1.beginning_of_month == t2.beginning_of_month)
           if ((t2.day- t1.day) >= 15) #TODO: replace with ELIGIBLE_DATE environment variable
-            p if rp.property.eligible?(t1)
-            months << t1.strftime("%Y/%m") if rp.property.eligible?(t1)
+            months << t1.strftime("%Y/%m")
           end
         elsif (t1.day-pre_balance_days <= 15) #TODO: replace with ELIGIBLE_DATE environment variable
-          p if rp.property.eligible?(t1)
-          months << t1.strftime("%Y/%m") if rp.property.eligible?(t1) 
+          months << t1.strftime("%Y/%m") 
         end
         t1 += 1.month
         t1 = t1.beginning_of_month
@@ -209,8 +201,7 @@ module Smartrent
             break
           end
           # if t1 < t2
-          p if rp.property.eligible?(t1)
-          months << t1.strftime("%Y/%m") if rp.property.eligible?(t1)
+          months << t1.strftime("%Y/%m")
           # end
           t1 += 1.month
         end
@@ -222,7 +213,7 @@ module Smartrent
       rescue Exception => e
         error_details = "#{e.class}: #{e}"
         error_details += "\n#{e.backtrace.join("\n")}" if e.backtrace
-        p "ERROR: #{error_details}"
+        # p "ERROR: #{error_details}"
         [[],0]
       end
     end
