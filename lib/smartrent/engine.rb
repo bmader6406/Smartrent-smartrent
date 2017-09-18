@@ -3,7 +3,7 @@ module Smartrent
     isolate_namespace Smartrent
     
     initializer :assets do |config|
-      Rails.application.config.assets.precompile += %w( smartrent/application.js smartrent/application.css smartrent/admin.js smartrent/admin.css )
+      Rails.application.config.assets.precompile += %w( smartrent/application.js smartrent/application.css smartrent/admin.js smartrent/admin.css smartrent/_footer.css )
     end
     
     initializer :append_migrations do |app|
