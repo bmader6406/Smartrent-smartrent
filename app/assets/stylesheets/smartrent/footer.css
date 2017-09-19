@@ -1,55 +1,72 @@
 footer div, footer ul, li, footer h1, footer h2, footer h3, footer h4, footer  p {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
+
 footer{
   font-size: .75em;
   line-height: 1.5;
   font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
 }
+
+footer p{
+  text-decoration: none;
+  font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+}
+
+footer h4 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
 footer a {
-    text-decoration: none;
-    color: #080812;
+  text-decoration: none;
+  color: #080812;
 }
 
 footer .text {
-    font-size: 16px;
+  font-size: 16px;
 }
 footer a.text, 
 footer .text a {
-    color: #fff;
+  color: #fff;
 }
 footer .heading.-uppercase {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
 footer li {
-    list-style: none;
+  list-style: none;
 }
 
 footer .column-1-wide {
-    width: 110px;
+  width: 110px;
 }
 
 footer .column-5-wide {
-    width: 550px;
+  width: 550px;
 }
 footer .column-12-wide {
-    width: 100%;
+  width: 100%;
 }
-footer .text.-condensed {
-    font-family: "HelveticaNeueCond";
-    letter-spacing: .1em;
+
+footer .column-2-wide-special {
+  font-family: "HelveticaNeueCond";
+  letter-spacing: .1em;
 }
+
 footer .text.-condensed p{
-    font-family: "HelveticaNeueCond";
-    letter-spacing: .1em;
+  font-family: "HelveticaNeueCond";
+  letter-spacing: .1em;
 }
+
 
 .refresh-container {
   margin: 0 auto;
   position: relative;
   width: 100%;
 }
+
+
 
 @media (min-width:1180px) {
   .refresh-container {
@@ -60,15 +77,16 @@ footer .text.-condensed p{
 .refresh-container.-xtra-narrow {
   width: 790px;
 }
+
 footer .screenreader-only {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
 }
 
 .site-footer {
