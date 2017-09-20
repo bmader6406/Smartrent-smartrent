@@ -241,31 +241,32 @@ button.interactive-icon-button {
 
 
 .memberInfo .loginForm .links a {
-    color: #606060;
-    display: block;
-    margin: 8px 0;
-    line-height: 0.9;
+  color: #606060;
+  display: block;
+  margin: 8px 0;
+  line-height: 0.9;
+  font-size: 14px;
 }
 
 .memberInfo .loginForm .actions input {
-    background-color: #7395bc;
-    border: 0 none;
-    color: #ffffff;
-    font-family: "FontSite Sans",arial,sans-serif;
-    font-size: 14px;
-    height: 24px;
-    width: 64px;
+  background-color: #7395bc;
+  border: 0 none;
+  color: #ffffff;
+  font-family: "FontSite Sans",arial,sans-serif;
+  font-size: 14px;
+  height: 24px;
+  width: 64px;
 }
 
 .memberInfo .loginForm .form-group input {
-    background-color: #eaeaea;
-    border: 1px solid #9b9999;
-    color: #788a8a;
-    font-family: "FontSite Sans",arial,sans-serif;
-    font-size: 1.0em;
-    height: 24px;
-    margin: 7px 0 0;
-    padding: 0 0 0 10px;
-    width: 161px;
+  background-color: #eaeaea;
+  border: 1px solid #9b9999;
+  color: #788a8a;
+  font-family: "FontSite Sans",arial,sans-serif;
+  font-size: 1.0em;
+  height: 24px;
+  margin: 7px 0 0;
+  padding: 0 0 0 10px;
+  width: 161px;
 }
 
