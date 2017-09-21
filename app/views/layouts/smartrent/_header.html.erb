@@ -59,8 +59,29 @@
               </div>
             </div>
             <% else %>
-            <div class="form-group">
-              <input placeholder="EMAIL (MUST MATCH YOUR LEASE)" type="email" name="resident[email]" id="resident_email">
+            <div class="memberInfo">
+              <div class="userInfo">
+                <div class="title">
+                  <%= current_resident.name %>
+                </div>
+                <div class="links">
+                  <div class="link">
+                    <%= link_to "View Your Profile", member_profile_path  %>
+                  </div>
+
+                  <div class="link">
+                    <%= link_to "View Your Statement", member_statement_path  %>
+                  </div>
+
+                  <div class="link">
+                    <%= link_to "Reset Password", change_password_residents_path  %>
+                  </div>
+
+                  <div class="link">
+                    <%= link_to "Logout", destroy_resident_session_path  %>
+                  </div>
+                </div>
+              </div>
             </div>
             <% end %>
             <% end %>

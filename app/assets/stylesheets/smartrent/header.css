@@ -239,6 +239,10 @@ button.interactive-icon-button {
   font-size: 1em;
 }
 
+.userInfo {
+width: 160px
+}
+
 
 .memberInfo .loginForm .links a {
   color: #606060;
@@ -273,4 +277,9 @@ button.interactive-icon-button {
 header ul.site-header__main-nav__list {
    margin-top: 0;
    margin-bottom: 0;
+}
+
+.memberInfo .links .link a {
+    color: #909090;
+    font-size: 15px;
 }
