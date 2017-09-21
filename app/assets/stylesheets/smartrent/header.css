@@ -270,3 +270,7 @@ button.interactive-icon-button {
   width: 161px;
 }
 
+header ul.site-header__main-nav__list {
+   margin-top: 0;
+   margin-bottom: 0;
+}
