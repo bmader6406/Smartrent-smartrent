@@ -280,6 +280,10 @@ header ul.site-header__main-nav__list {
 }
 
 .memberInfo .links .link a {
-    color: #909090;
+    color: #606060;
     font-size: 15px;
+}
+
+.memberInfo .links .link a:hover{
+    color: #303030;
 }
