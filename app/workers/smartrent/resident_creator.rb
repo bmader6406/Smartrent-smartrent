@@ -149,7 +149,7 @@ module Smartrent
       if !eligible_properties.empty?
         # pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #if first_rp and first_rp.property_id #, months_earned 
         period_end = first_move_in   
-        period_end = (months_earned.last+"\03").to_time.end_of_month if months_earned.length > 0
+        period_end = cal_time.end_of_month if months_earned.length > 0
         Smartrent::Reward.create!({
           :property_id => first_rp.property_id,
           :resident_id => sr.id,
