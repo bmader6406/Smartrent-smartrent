@@ -43,8 +43,9 @@ footer .column-1-wide {
 }
 
 footer .column-5-wide {
-  width: 550px;
+  align-self: center;
 }
+
 footer .column-12-wide {
   width: 100%;
 }
@@ -53,6 +54,31 @@ footer .column-2-wide-special {
   font-family: "HelveticaNeueCond";
   letter-spacing: .1em;
 }
+
+@media (max-width:700px) {
+footer .column-5-wide {
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (max-width:700px) {
+footer .column-21-wide {
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (max-width:700px) {
+footer .column-13-wide {
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+}
+
 
 footer .text.-condensed p{
   font-family: "HelveticaNeueCond";
@@ -212,6 +238,14 @@ footer .screenreader-only {
   font-size: 18px;
   margin-bottom: 20px;
 }
+
+
+.footer-section{
+    margin-bottom: 50px;
+}
+
+
+
 
 .site-footer__logo {
   height: 33px;

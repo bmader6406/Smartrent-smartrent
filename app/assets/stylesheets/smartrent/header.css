@@ -23,6 +23,8 @@ header li {
   position: absolute;
 }
 
+
+
 .site-header__main-nav {
   align-items: center;
   display: flex;
@@ -53,9 +55,16 @@ header li {
   }
 }
 
+@media (max-width:600px) {
+  .site-header__logo {
+    align-self: flex-start;
+    margin-left: 10px;
+  }
+}
 
 .site-header__main-nav__list {
   display: flex;
+    margin-right: 40px;
 }
 
 @media (min-width:1168px) {
@@ -70,9 +79,36 @@ header li {
   }
 }
 
+@media (max-width:800px) {
+  .site-header__main-nav__item {
+    margin-right: 15px;
+  }
+}
+
+@media (max-width:700px) {
+  .site-header__main-nav__item {
+      margin-right: 5px;
+  }
+}
+
+
+@media (max-width:600px) {
+  .site-header__main-nav__item {
+    margin-right: 3px;
+  }
+}
+
+@media (max-width:600px) {
+  .site-header__main-nav__list{
+    display: inline-grid;
+    align-self: flex-start;
+    margin-left: 5px;
+  }
+}
+
 
 .site-header__main-nav__item {
-  font-size: 15px;
+  font-size: 17px;
   margin-right: 36px;
   text-transform: uppercase;
 }
@@ -84,42 +120,6 @@ header li {
   }
 }
 
-@media (max-width:520px) {
-  .site-header__main-nav__item {
-    font-size: 14px;
-  }
-}
-
-@media (max-width:900px) {
-  .site-header__main-nav__item {
-    margin-right: 20px;
-  }
-}
-
-@media (max-width:800px) {
-  .site-header__main-nav__item {
-    margin-right: 15px;
-  }
-}
-
-@media (max-width:700px) {
-  .site-header__main-nav__item {
-    margin-right: 5px;
-  }
-}
-
-
-@media (max-width:600px) {
-  .site-header__main-nav__item {
-    margin-right: 3px;
-  }
-}
-
-@media (max-width:500px) {
-  .site-header__main-nav__item {
-    margin-right: 3px;
-  }
-}
 
 .site-header__main-nav__item:last-of-type {
   margin-right: 76px;
@@ -275,6 +275,13 @@ button.interactive-icon-button {
   height: auto;
 }
 
+@media (max-width:600px) {
+button.interactive-icon-button {
+  display: none;
+  
+  }
+}
+
 .memberInfo {
   margin-top: 20px;
   margin-right: 20px;
@@ -296,6 +303,7 @@ button.interactive-icon-button {
   line-height: 0.9;
   font-size: 14px;
 }
+
 
 .memberInfo .loginForm .actions input {
   background-color: #7395bc;
