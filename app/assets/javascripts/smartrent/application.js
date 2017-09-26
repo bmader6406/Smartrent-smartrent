@@ -24,6 +24,7 @@
 //= require smartrent/jquery.blockUI.js
 //= require smartrent/jquery.prettyPhoto
 //= require smartrent/image-tooltip
+//= require smartrent/index
 
 var queryString = function () {
   // This function is anonymous, is executed immediately and

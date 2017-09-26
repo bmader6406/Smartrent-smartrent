@@ -1,94 +1,93 @@
-<header class="header">
-  <div class="fixedWidth">
-    <div class="logo">
-      <%= link_to smartrent.root_url do %>
-        <%= image_tag "BozzutoSmartRent-logo-web1.gif", :alt => "SmartRent" %>
-      <% end %>
-    </div>
-    <nav class="menu">
-      <ul id="menu-main-menu">
-        <li<% if @current_page == 'faq'%> class="current_page_item"<% end %>>
-          <%= link_to "Why SmartRent?", smartrent.faq_path %>
+<header class="site-header">
+  <div class="refresh-container">
+    <nav class="site-header__main-nav">
+      <div class="site-header__logo">
+        <a href="/">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 19"><title>Bozzuto</title><path d="M70.8 13.56V0.3h1.34v13.46c0 2.73 1.32 4.12 3.92 4.12 2.49 0 3.92-1.5 3.92-4.11V0.3h1.34v13.26c0 3.45-1.91 5.44-5.25 5.44C72.57 19 70.8 17.17 70.8 13.56z"></path><polygon points="69.4 17.48 59.99 17.48 69.28 1.56 69.3 1.53 69.3 0.3 59.1 0.3 59.1 1.52 67.86 1.52 58.55 17.47 58.55 18.69 69.4 18.69 "></polygon><polygon points="57.17 17.48 47.75 17.48 57.06 1.53 57.06 0.3 46.86 0.3 46.86 1.52 55.63 1.52 46.32 17.47 46.32 18.69 57.17 18.69 "></polygon><path d="M40.6 0c-4.05 0-6.11 3.2-6.11 9.5 0 6.39 2 9.5 6.11 9.5 2.78 0 6.08-1.65 6.08-9.5C46.68 3.02 44.75 0 40.6 0zM40.6 17.88c-3.3 0-4.77-2.58-4.77-8.38 0-5.56 1.61-8.38 4.77-8.38 3.24 0 4.75 2.66 4.75 8.38C45.34 15.3 43.88 17.88 40.6 17.88z"></path><path d="M98.72 0c-4.05 0-6.11 3.2-6.11 9.5 0 6.39 2 9.5 6.11 9.5 2.78 0 6.09-1.65 6.09-9.5C104.81 3.02 102.87 0 98.72 0zM98.72 17.88c-3.3 0-4.77-2.58-4.77-8.38 0-5.56 1.61-8.38 4.77-8.38 3.24 0 4.75 2.66 4.75 8.38C103.47 15.3 102.01 17.88 98.72 17.88z"></path><polygon points="87.12 18.69 88.46 18.69 88.46 1.52 93.39 1.52 93.39 0.3 82.2 0.3 82.2 1.52 87.12 1.52 "></polygon><path d="M29.92 9.02c1.87-0.47 2.92-1.92 2.92-4.07 0-3.13-1.64-4.65-5.02-4.65h-5.15v18.39h5.31c3.37 0 5.46-1.94 5.46-5.05C33.44 11.15 32.11 9.43 29.92 9.02zM24.03 1.42h3.93c2.38 0 3.54 1.16 3.54 3.53 0 3.1-2.51 3.56-4.01 3.56h-3.46V1.42zM27.59 17.58h-3.56V9.62h3.51c3.11 0 4.56 1.27 4.56 3.99C32.09 16.39 30.74 17.58 27.59 17.58z"></path><polygon points="17.18 12.35 10.52 12.35 13.85 6.65 10.34 0.63 0 18.37 20.68 18.37 "></polygon></svg>
+
+        </a>      
+      </div>
+      <ul class="site-header__main-nav__list js-mainNav">
+        <li class="site-header__main-nav__item">
+          <a href="/faq">Why SmartRent?</a>          
+        </li>
+        <li class="site-header__main-nav__item">
+          <a href="/find-a-smartrent-apartment">Smartrent Apartments</a>
+        </li>
+        <li class="site-header__main-nav__item">
+          <a href="/find-a-new-home">New Homes</a>
+        </li>
+        <li class="site-header__main-nav__item">
+          <a href="/smartrent-quick-program-rules">Program Rules</a>
         </li>
 
-        <li<% if @current_page == 'properties'%> class="current_page_item"<% end %>>
-          <%= link_to "Apartments", smartrent.find_apartments_path %>
-        </li>
+        <li class="site-header__main-nav__search js-headerSearchFormToggle">
+          <button class="interactive-icon-button site-header__main-nav__search__icon js-headerSearchFormButton">
+            <span class="screenreader-only">Search</span>
+            <svg id="Layer_1" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M256,274.1c-75.6,0-137.1-61.5-137.1-137.1S180.4,0,256,0c75.6,0,137.1,61.5,137.1,137.1   S331.6,274.1,256,274.1z M256,20.4c-64.3,0-116.6,52.3-116.6,116.6S191.7,253.7,256,253.7c64.3,0,116.6-52.3,116.6-116.6   S320.3,20.4,256,20.4z"/><path d="M493.9,512c-5.6,0-10.2-4.6-10.2-10.2c0-125.5-102.1-227.6-227.6-227.6c-125.5,0-227.6,102.1-227.6,227.6   c0,5.6-4.6,10.2-10.2,10.2s-10.2-4.6-10.2-10.2c0-66.3,25.8-128.6,72.7-175.4s109.2-72.7,175.4-72.7s128.6,25.8,175.4,72.7   s72.7,109.2,72.7,175.4C504.1,507.4,499.5,512,493.9,512z"/></g></svg>
+          </button>
+          <button class="interactive-icon-button site-header__main-nav__search__icon js-headerSearchFormButton -hidden" aria-hidden="true">
+            <span class="screenreader-only">Close Search</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.984 6.422L13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z"></path></svg>
+          </button>
+          <div class="site-header__main-nav__search__form js-headerSearchForm">
+            <% if !request.fullpath.include? "member-login" %>
+            <% if !resident_signed_in? %>
+            <div class="memberInfo">
+              <div id="loginFields">
+                <div class="title">
+                  Resident Log-In
+                </div>
+                <div class="loginForm">
+                  <form action="/member-login" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="eqrnBiAQkD8Ntqkscc4K/NIucOXICcOh+I5OqQgAQ1RG9w2LPKqyYQhwRbTr3K24T42oxeG4man1AStxkaXo5w==">
+                    <div class="form-group">
+                      <input placeholder="EMAIL (MUST MATCH YOUR LEASE)" type="email" name="resident[email]" id="resident_email">
+                    </div>
+                    <div class="form-group">
+                      <input autocomplete="off" placeholder="PASSWORD" type="password" name="resident[password]" id="resident_password">
+                    </div>
 
-        <li<% if @current_page == 'homes'%> class="current_page_item"<% end %>>
-          <%= link_to "New Homes", smartrent.find_a_new_home_path %>
-        </li>
+                    <div class="actions">
+                      <input type="submit" name="commit" value="GO">
+                    </div>
+                  </form>              
+                  <div class="links">
+                    <a href="/forgot-password">Forgot your password?</a>
+                    <a href="/activation">Activate Your Account</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% else %>
+            <div class="memberInfo">
+              <div class="userInfo">
+                <div class="title">
+                  <%= current_resident.name %>
+                </div>
+                <div class="links">
+                  <div class="link">
+                    <%= link_to "View Your Profile", member_profile_path  %>
+                  </div>
 
-        <li<% if @current_page == 'program_rules'%> class="current_page_item"<% end %>>
-          <%= link_to "Program Rules", smartrent.program_rules_path%>
+                  <div class="link">
+                    <%= link_to "View Your Statement", member_statement_path  %>
+                  </div>
+
+                  <div class="link">
+                    <%= link_to "Reset Password", change_password_residents_path  %>
+                  </div>
+
+                  <div class="link">
+                    <%= link_to "Logout", destroy_resident_session_path  %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% end %>
+            <% end %>
+          </div>
         </li>
       </ul>
     </nav>
-
-    <div class="searchOptions clearfix">
-      <% if !request.fullpath.include? "member-login" %>
-        <div class="memberInfo">
-          <% if !resident_signed_in? %>
-          <div id="loginFields">
-            <div class="title">
-              Resident Log-In
-            </div>
-            <div class="loginForm">
-              <%= form_for(:resident, url: new_member_login_path) do |f| %>
-                <div class="form-group">
-                  <%= f.email_field :email, autofocus: false, :placeholder => "EMAIL (MUST MATCH YOUR LEASE)" %>
-                </div>
-                <div class="form-group">
-                  <%= f.password_field :password, autocomplete: "off", :placeholder => "PASSWORD" %>
-                </div>
-
-                <div class="actions">
-                  <%= f.submit "GO" %>
-                </div>
-              <% end %>
-              <div class="links">
-                <%= link_to "Forgot your password?", new_member_password_path %>
-                <%= link_to "Activate Your Account", new_member_confirmation_path %>
-              </div>
-            </div>
-          </div>
-        <% else %>
-          <div class="title">
-            Logged-In
-          </div>
-          <div class="name">
-            <%= current_resident.name %>
-          </div>
-          <div class="links">
-            <div class="link">
-              <%= link_to "View Your Profile", member_profile_path  %>
-            </div>
-
-            <div class="link">
-              <%= link_to "View Your Statement", member_statement_path  %>
-            </div>
-
-            <div class="link">
-              <%= link_to "Reset Password", change_password_residents_path  %>
-            </div>
-
-            <div class="link">
-              <%= link_to "Logout", destroy_resident_session_path  %>
-            </div>
-          </div>
-        <% end %>
-        </div>
-      <% end %>
-
-      <ul id="special-nav">
-        <li class="arrow">
-          <%= link_to "Lease an Apartment", smartrent.find_apartments_path %>
-        </li>
-
-        <li class="arrow">
-          <%= link_to "Buy a Home", smartrent.find_a_new_home_path %>
-        </li>
-      </ul>
-    </div>
   </div>
 </header>
