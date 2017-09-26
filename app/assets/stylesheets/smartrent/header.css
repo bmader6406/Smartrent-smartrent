@@ -342,6 +342,7 @@ header ul.site-header__main-nav__list {
 }
 
 @media (max-width:600px) {
-.site-header{
-margin-bottom: 0px;
+  .site-header{
+    margin-bottom: 0px;
+  }
 }
