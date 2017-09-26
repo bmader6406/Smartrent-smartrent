@@ -209,6 +209,7 @@ footer .screenreader-only {
   }
 }
 
+
 .no-flexbox .footer-column {
   float: left;
 }
@@ -247,7 +248,6 @@ footer .screenreader-only {
 
 
 
-
 .site-footer__logo {
   height: 33px;
   margin-bottom: 20px;
@@ -257,4 +257,10 @@ footer .screenreader-only {
 
 .site-footer__logo path,.site-footer__logo polygon {
   fill: #fff;
+}
+
+@media (max-width:600px) {
+.footer-column {
+  margin-left: 0px;
+  white-space: nowrap;
 }
