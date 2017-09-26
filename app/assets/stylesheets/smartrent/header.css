@@ -340,8 +340,3 @@ header ul.site-header__main-nav__list {
 .memberInfo .links .link a:hover{
   color: #303030;
 }
-
-@media (max-width:600px) {
-.site-header{
-margin-bottom: 0px;
-}
