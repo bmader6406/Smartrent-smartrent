@@ -260,7 +260,8 @@ footer .screenreader-only {
 }
 
 @media (max-width:600px) {
-.footer-column {
-  margin-left: 0px;
-  white-space: nowrap;
+  .footer-column {
+    margin-left: 0px;
+    white-space: nowrap;
+  }
 }
