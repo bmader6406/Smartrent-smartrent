@@ -138,6 +138,12 @@ module Smartrent
       end
       
       months_earned = months_earned.flatten.uniq.sort
+      # pp "months_earned_before_recheck_execution: #{months_earned}"
+      # time_start = Time.now
+      months_earned = recheck_months_for_expiry(months_earned,cal_time) if months_earned.length > 0
+      # time_end = Time.now
+      # pp "months_earned_after_recheck_execution: #{months_earned}"
+      # pp "Time Taken : #{time_end-time_start}"
       
       if months_earned.length >= 1
         initial_amount = Smartrent::Setting.monthly_award*months_earned.length
@@ -171,6 +177,34 @@ module Smartrent
       
     end
     
+    def self.recheck_months_for_expiry(months_earned,cal_time)
+      # For removing months which have a gap of more than 2 months
+      time = (months_earned.first+"/05").to_time
+      time_end = cal_time.strftime("%Y/%m/05").to_time
+      expiry_count = 0
+      i = 1
+      while (time <= time_end)
+        time = time.advance(:months => 1)
+        if (time.strftime("%Y/%m") != months_earned[i])
+          expiry_count +=1
+          if (expiry_count == 3)
+            if (i>= months_earned.length)
+              months_earned = []
+            else
+              months_earned = months_earned.slice(i,months_earned.length-i)
+            end
+            break if months_earned.length == 0
+            i = 0
+            expiry_count = 0
+          end
+        else
+          expiry_count = 0
+          i+=1
+        end
+      end
+      return months_earned
+    end
+
     def self.collect_months(t1, t2, rp, pre_balance_days=0)
       # Initial balance will not be awarded to any month where total stay in that month is less than 15 days
       begin
