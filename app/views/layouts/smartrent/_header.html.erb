@@ -20,7 +20,7 @@
         <li class="site-header__main-nav__item">
           <a href="/smartrent-quick-program-rules">Program Rules</a>
         </li>
-
+        <%if controller_name.to_s != "sessions"%>
         <li class="site-header__main-nav__search js-headerSearchFormToggle">
           <button class="interactive-icon-button site-header__main-nav__search__icon js-headerSearchFormButton">
             <span class="screenreader-only">Search</span>
@@ -87,6 +87,7 @@
             <% end %>
           </div>
         </li>
+      <% end %>
       </ul>
     </nav>
   </div>

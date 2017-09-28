@@ -100,7 +100,7 @@ header li {
 
 @media (max-width:600px) {
   .site-header__main-nav__list{
-    display: inline-grid;
+    display: block;
     align-self: flex-start;
     margin-left: 5px;
   }
