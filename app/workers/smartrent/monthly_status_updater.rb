@@ -30,7 +30,7 @@ module Smartrent
             # pp "total: #{total} - id #{r.id}, email: #{r.email}, #{r.smartrent_status}"
 
             # remove duplicate properties of resident
-            remove_duplicate_resident_properties(r)
+            # remove_duplicate_resident_properties(r)
 
             # get properties that the resident live in
             live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
