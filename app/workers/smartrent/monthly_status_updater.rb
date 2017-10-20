@@ -35,6 +35,11 @@ module Smartrent
             # get properties that the resident live in
             live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
             # pp "live_in_properties:", live_in_properties
+            
+            if !live_in_properties.empty? && (r.smartrent_status == Smartrent::Resident::STATUS_EXPIRED || r.smartrent_status == Smartrent::Resident::STATUS_INACTIVE)
+              r.smartrent_status = Smartrent::Resident::STATUS_ACTIVE
+              r.save
+            end
 
             # get smartrent eligible property
             smartrent_properties = live_in_properties.select{|rp| rp.property.eligible?(time) }
@@ -116,6 +121,7 @@ module Smartrent
     
     def self.create_monthly_rewards(resident, smartrent_properties, period_start)
       smartrent_properties.each do |rp|
+
         # create monthly reward if not created for this month
         if resident.rewards.where(:resident_id => resident.id, :type_ => Reward::TYPE_MONTHLY_AWARDS, :period_start => [period_start, period_start.end_of_month]).count == 0
           if resident.balance == 10000
