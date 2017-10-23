@@ -187,6 +187,10 @@ module Smartrent
     def sign_up_bonus
       rewards.find_by_type_(Reward::TYPE_SIGNUP_BONUS).amount rescue 0.0
     end
+
+    def expired_amount
+      rewards.find_by_type_(Reward::TYPE_EXPIRED).amount rescue 0.0
+    end
     
     def initial_reward
       rewards.where(:type_ => Reward::TYPE_INITIAL_REWARD).first.amount rescue 0.0
@@ -210,7 +214,7 @@ module Smartrent
         total = 0
         
       else
-        total = sign_up_bonus + initial_reward + monthly_awards_amount
+        total = sign_up_bonus + initial_reward + monthly_awards_amount + expired_amount
         total = 10000 if total > 10000
         total = total - buyer_amount
       end

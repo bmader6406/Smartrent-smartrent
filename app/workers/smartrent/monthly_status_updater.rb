@@ -124,7 +124,7 @@ module Smartrent
 
         # create monthly reward if not created for this month
         if resident.rewards.where(:resident_id => resident.id, :type_ => Reward::TYPE_MONTHLY_AWARDS, :period_start => [period_start, period_start.end_of_month]).count == 0
-          if resident.balance == 10000
+          if resident.total_rewards == 10000
             amount = 0
           else
             amount = Setting.monthly_award
