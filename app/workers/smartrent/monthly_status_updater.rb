@@ -33,6 +33,7 @@ module Smartrent
             # remove_duplicate_resident_properties(r)
 
             # get properties that the resident live in
+            # all Current properties move out date will be blank from resident_creator, hence, it will be taken
             live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
             # pp "live_in_properties:", live_in_properties
             
@@ -85,7 +86,7 @@ module Smartrent
             if r.smartrent_status == Smartrent::Resident::STATUS_INACTIVE
 
               if smartrent_properties.empty?
-                if period_start >= r.expiry_date
+                if period_start.advance(:months => 1,:days=>1) >= r.expiry_date
                   r.update_attributes(:smartrent_status => Smartrent::Resident::STATUS_EXPIRED)
                 end
 
