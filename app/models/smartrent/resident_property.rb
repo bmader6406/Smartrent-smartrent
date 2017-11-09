@@ -12,6 +12,7 @@ module Smartrent
     after_create :reset_rewards_table
     # after_create :create_initial_signup_rewards
     after_create :set_first_move_in
+    after_destroy :remove_resident_if_does_not_live
     
     attr_accessor :disable_rewards
     
@@ -71,5 +72,9 @@ module Smartrent
         resident.update_attributes(:first_move_in => first_move_in, :disable_email_validation => true)
       end
       
+      def remove_resident_if_does_not_live
+        resident.destroy if resident.resident_properties.count == 0
+      end
+
     end
   end
