@@ -187,6 +187,10 @@ module Smartrent
     def sign_up_bonus
       rewards.find_by_type_(Reward::TYPE_SIGNUP_BONUS).amount rescue 0.0
     end
+
+    def expired_amount
+      rewards.find_by_type_(Reward::TYPE_EXPIRED).amount rescue 0.0
+    end
     
     def initial_reward
       rewards.where(:type_ => Reward::TYPE_INITIAL_REWARD).first.amount rescue 0.0
@@ -210,7 +214,7 @@ module Smartrent
         total = 0
         
       else
-        total = sign_up_bonus + initial_reward + monthly_awards_amount
+        total = sign_up_bonus + initial_reward + monthly_awards_amount + expired_amount
         total = 10000 if total > 10000
         total = total - buyer_amount
       end
@@ -249,18 +253,15 @@ module Smartrent
         end
       end
       
-      def set_balance
+      def set_balance(time=Time.now.beginning_of_month)
         if smartrent_status_changed? && smartrent_status == STATUS_EXPIRED 
           if rewards.where(:type_ => Reward::TYPE_EXPIRED).count == 0
-            rewards.create!(:amount => -balance, :type_ => Reward::TYPE_EXPIRED, :period_start => Time.now.beginning_of_month )
+            rewards.create!(:amount => -balance, :type_ => Reward::TYPE_EXPIRED, :period_start => self.expiry_date )
           end
-          
           self.balance = 0
           self.subscribed = false
-          
           self.lock_access!(:send_instructions => false) if !access_locked?
         end
-        
         true
       end
       

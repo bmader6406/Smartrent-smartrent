@@ -36,7 +36,8 @@ module Smartrent
       sr_property = sr.resident_properties.find_or_initialize_by(property_id: unit.property_id, unit_code: unit.unit_code)
       sr_property.status = unit.status
       sr_property.move_in_date = unit.move_in
-      sr_property.move_out_date = unit.move_out
+      # sr_property.move_out_date = unit.move_out
+      sr_property.move_out_date = (unit.status == "Current") ? nil : unit.move_out
       sr_property.disable_rewards = disable_rewards
       sr_property.save
       
@@ -97,61 +98,72 @@ module Smartrent
       pp "delete_and_create_all_residents done: #{Time.now}"
     end
     
-    def self.create_initial_signup_rewards(sr, cal_time = Time.now)
+    def self.create_initial_signup_rewards(sr, cal_time = DateTime.now.in_time_zone("EST"))
       first_rp = nil
       first_move_in = nil
       
       eligible_properties = []
-      
-      sr.resident_properties.each do |rp|
-        if rp.property.eligible?
-          first_rp = rp if !first_rp
-          first_move_in = rp.move_in_date if !first_move_in
-            
-          if rp.move_in_date <= first_move_in
-            first_rp = rp
-            first_move_in = rp.move_in_date
-          end
-          
+
+      rps = sr.resident_properties.order('move_in_date ASC')
+      first_rp = rps.first
+      first_move_in = rps.first.move_in_date
+      rps.each do |rp|
+        if rp.property.eligible?(rp.move_in_date)          
           eligible_properties << rp
         end
       end
-      
+
       initial_amount = 0
       months_earned = []
-      
+      balance_days = 0 #if move out of previous property is 10th FEB 2016 and move in of next property is 20th Feb 2016 that month need to be calculated... hence balance_days is used
+    
+
       eligible_properties.each do |rp|
+        t = rp.move_in_date.clone
+        move_in = t.in_time_zone("EST").change(:day=>t.strftime("%d").to_i,:hour=>0)
+        t = rp.move_out_date.clone rescue cal_time
+        move_out = t.in_time_zone("EST").change(:day=>t.strftime("%d").to_i,:hour=>0)
         if rp.move_out_date.blank? || rp.move_out_date && rp.move_out_date > cal_time
-          arr = collect_months(rp.move_in_date, cal_time)
+          arr,balance_days = collect_months(move_in, cal_time,rp,balance_days)
           months_earned << arr
           
-          pp ">> months_earned: #{arr.length}, #{rp.move_in_date}, #{cal_time}" #, arr
+          # pp ">> months_earned: #{arr.length}, #{move_in}, #{cal_time},balance:#{balance_days}" #, arr
           
           
         else
-          arr = collect_months(rp.move_in_date, rp.move_out_date)
+          arr,balance_days = collect_months(move_in, move_out,rp,balance_days)
           months_earned << arr
-          pp ">> months_earned2: #{arr.length}, #{rp.move_in_date}, #{rp.move_out_date}" #, arr
+          # pp ">> months_earned2: #{arr.length}, #{move_in}, #{move_out},balance:#{balance_days}" #, arr
           
         end
       end
       
       months_earned = months_earned.flatten.uniq.sort
+      # pp "months_earned_before_recheck_execution: #{months_earned}"
+      # time_start = Time.now
+      months_earned = recheck_months_for_expiry(months_earned,cal_time) if months_earned.length > 0
+      # time_end = Time.now
+      # pp "months_earned_after_recheck_execution: #{months_earned}"
+      # pp "Time Taken : #{time_end-time_start}"
       
       if months_earned.length >= 1
         initial_amount = Smartrent::Setting.monthly_award*months_earned.length
         initial_amount = 9900 if initial_amount > 9900 # 100 will be added by sign up bonus
       end
+      # pp months_earned
       
-      pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #, months_earned
-      
+
       if !eligible_properties.empty?
+        # pp "FINAL: #{sr.id}, #{sr.email}, months_earned: #{months_earned.length}, initial_amount: #{initial_amount}, first_rp.property_id #{first_rp.property_id}" #if first_rp and first_rp.property_id #, months_earned 
+        period_end = first_move_in   
+        period_end = cal_time.end_of_month if months_earned.length > 0
         Smartrent::Reward.create!({
           :property_id => first_rp.property_id,
           :resident_id => sr.id,
           :amount => initial_amount,
           :type_ => Reward::TYPE_INITIAL_REWARD,
           :period_start => first_move_in,
+          :period_end => period_end,
           :months_earned => months_earned.length
         })
         
@@ -166,34 +178,78 @@ module Smartrent
       
     end
     
-    def self.collect_months(t1, t2)
-      begin
-        t1 = t1.clone.in_time_zone("Eastern Time (US & Canada)").end_of_month
-        t2 = t2.clone.in_time_zone("Eastern Time (US & Canada)").beginning_of_month
-        
-        # t1.end_of_month, t2.beginning_of_month
-        # this will make sure we don't count "2015/03" if t1 is 2015/01/15, t2 is  2015/03/20
-        # we don't count "2015/03" if t1 is 2015/03/15, t2 is  2015/03/20 or 2015/03/01, t2 is  2015/03/31
-        
-        return [] if t1 > t2
-        
-        months = [t1.strftime("%Y/%m")]
+    def self.recheck_months_for_expiry(months_earned,cal_time)
+      # For removing months which have a gap of more than 2 months
+      time = (months_earned.first+"/05").to_time
+      time_end = cal_time.strftime("%Y/%m/05").to_time
+      expiry_count = 0
+      i = 1
+      while (time <= time_end)
+        time = time.advance(:months => 1)
+        if (time.strftime("%Y/%m") != months_earned[i])
+          expiry_count +=1
+          if (expiry_count == 3)
+            if (i>= months_earned.length)
+              months_earned = []
+            else
+              months_earned = months_earned.slice(i,months_earned.length-i)
+            end
+            break if months_earned.length == 0
+            i = 0
+            expiry_count = 0
+          end
+        else
+          expiry_count = 0
+          i+=1
+        end
+      end
+      return months_earned
+    end
 
-        while t1 < t2
-          t1 += 1.month
-          #pp ">> #{t1}, #{t2}, #{t1 < t2}"
-          if t1 < t2 #|| t1.strftime("%Y/%m") == t2.strftime("%Y/%m")
-            #pp "#{t1} vs #{t2}, #{t1.strftime("%Y/%m")} vs #{t2.strftime("%Y/%m")}"
+    def self.collect_months(t1, t2, rp, pre_balance_days=0)
+      # Initial balance will not be awarded to any month where total stay in that month is less than 15 days
+      begin
+        return [[],0] if t1 > t2
+        t1 = t1.clone.in_time_zone("EST").change(:day=>t1.day,:month=>t1.month,:year=>t1.year,:hour=>0)
+        # t1 = t1.end_of_month
+        t2 = t2.clone.in_time_zone("EST").change(:day=>t2.day,:month=>t2.month,:year=>t2.year,:hour=>0)
+        # t2 = t2.beginning_of_month
+        
+        months = []
+        
+        # TODO: if move in date is 16th and move out is next month 14th... one month should be considered
+        # This is already in affect. Need to recheck
+        if (t1.beginning_of_month == t2.beginning_of_month)
+          if ((t2.day- t1.day) >= 15) #TODO: replace with ELIGIBLE_DATE environment variable
             months << t1.strftime("%Y/%m")
           end
+        elsif (t1.day-pre_balance_days <= 15) #TODO: replace with ELIGIBLE_DATE environment variable
+          months << t1.strftime("%Y/%m") 
+        end
+        t1 += 1.month
+        t1 = t1.beginning_of_month
+        balance_days = 0
+        while t1 < t2
+          if (t1 == t2.beginning_of_month) && (t2.day < 15) #TODO: replace with ELIGIBLE_DATE environment variable
+            t1 += 1.month
+            balance_days = t2.day
+            break
+          end
+          # if t1 < t2
+          months << t1.strftime("%Y/%m")
+          # end
+          t1 += 1.month
         end
         
         months = months.uniq.sort
         #pp "total: #{months.length}", months
         
-        months
-      rescue
-        []
+        return months,balance_days
+      rescue Exception => e
+        error_details = "#{e.class}: #{e}"
+        error_details += "\n#{e.backtrace.join("\n")}" if e.backtrace
+        # p "ERROR: #{error_details}"
+        [[],0]
       end
     end
     
