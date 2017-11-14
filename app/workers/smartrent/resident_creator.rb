@@ -37,7 +37,7 @@ module Smartrent
       sr_property.status = unit.status
       sr_property.move_in_date = unit.move_in
       # sr_property.move_out_date = unit.move_out
-      sr_property.move_out_date = (unit.status == "Current") ? nil : unit.move_out
+      sr_property.move_out_date = (unit.status == "Current" || unit.status == "Notice") ? nil : unit.move_out
       sr_property.disable_rewards = disable_rewards
       sr_property.save
       
