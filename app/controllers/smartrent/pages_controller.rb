@@ -45,5 +45,11 @@ module Smartrent
         format.html
       end
     end
+    def terms_of_use
+      respond_to do |format|
+        format.html
+      end
+    end
+
   end
 end
