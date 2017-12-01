@@ -188,7 +188,7 @@ module Smartrent
         time = time.advance(:months => 1)
         if (time.strftime("%Y/%m") != months_earned[i])
           expiry_count +=1
-          if (expiry_count == 3)
+          if (expiry_count == 25)
             if (i>= months_earned.length)
               months_earned = []
             else
