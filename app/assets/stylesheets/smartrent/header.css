@@ -47,6 +47,7 @@ header li {
 
 .site-header__logo svg {
   fill: #006838;
+  height: 90%;
 }
 
 @media (min-width:1168px) {
@@ -69,7 +70,7 @@ header li {
 
 @media (min-width:1168px) {
   .site-header__main-nav__list {
-    margin-left: 40px;
+    margin-left: 0px;
   }
 }
 
