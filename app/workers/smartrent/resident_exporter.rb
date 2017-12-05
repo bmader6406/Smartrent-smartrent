@@ -218,7 +218,7 @@ module Smartrent
       ftp = Net::FTP.new()
       ftp.passive = true
       ftp.connect("ftp.hy.ly")
-      ftp.login("bozzuto", "bozzuto0804")
+      ftp.login("bozzuto", "TBEj1E5I")
       ftp.putbinaryfile("#{TMP_DIR}#{file_name}", "/smartrent/#{Rails.env}/#{file_name}")
       ftp.close
     end
