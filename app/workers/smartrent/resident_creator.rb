@@ -179,6 +179,7 @@ module Smartrent
     end
     
     def self.recheck_months_for_expiry(months_earned,cal_time)
+      cal_time = DateTime.now.in_time_zone("EST")
       # For removing months which have a gap of more than 2 months
       time = (months_earned.first+"/05").to_time
       time_end = cal_time.strftime("%Y/%m/05").to_time
