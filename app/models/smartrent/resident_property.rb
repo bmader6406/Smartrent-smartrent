@@ -35,7 +35,8 @@ module Smartrent
       self.resident
       resident.rewards.destroy_all if resident.rewards.count > 0
       resident.update_attributes(:smartrent_status => Smartrent::Resident::STATUS_ACTIVE)
-      reward_start_time = DateTime.now.change(:day =>25,:month => 02,:year => 2016) # To awards initial balance till 29 Feb 2016
+      reward_start_time = DateTime.now
+      # .change(:day =>25,:month => 02,:year => 2016) # To awards initial balance till 29 Feb 2016
       create_initial_signup_rewards(reward_start_time,resident)
       time = DateTime.now.change(:day =>3,:month => 03,:year => 2016)
       end_time = Time.now.advance(:months => -1)
