@@ -44,13 +44,22 @@ module Smartrent
         Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
         time = time.advance(:months=>1)
       end
+      if self.resident.smartrent_status == "Expired"
+        Smartrent::Reward.create!({
+          :property_id => self.resident.resident_properties.first.property_id,
+          :resident_id => self.resident.id,
+          :amount => -self.resident.balance,
+          :type_ => Reward::TYPE_EXPIRED,
+          :period_start => self.resident.resident_properties.first.move_in_date
+          })
+      end
       # pp "Reset completed..."
       return true
     end
 
     private
 
-      def create_initial_signup_rewards(time = Time.now,r=resident)
+    def create_initial_signup_rewards(time = Time.now,r=resident)
         # monthly reward is created by MonthlyStatusUpdater
         
         # the initial import will create rewards only after the import is done on ResidentCreator
