@@ -121,8 +121,8 @@ module Smartrent
       eligible_properties.each do |rp|
         t = rp.move_in_date.clone
         move_in = t.in_time_zone("EST").change(:day=>t.strftime("%d").to_i,:hour=>0)
-        t = rp.move_out_date.clone
-        t = cal_time if t.nil?
+        t = rp.move_out_date.clone rescue cal_time
+        # t = cal_time if t.nil?
         move_out = t.in_time_zone("EST").change(:day=>t.strftime("%d").to_i,:hour=>0)
         if rp.move_out_date.blank? || rp.move_out_date && rp.move_out_date > cal_time
           arr,balance_days = collect_months(move_in, cal_time,rp,balance_days)
