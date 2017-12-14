@@ -36,11 +36,16 @@ module Smartrent
       resident.rewards.destroy_all if resident.rewards.count > 0
       resident.update_attributes(:smartrent_status => Smartrent::Resident::STATUS_ACTIVE)
       reward_start_time = DateTime.now.change(:day =>25,:month => 02,:year => 2016) # To awards initial balance till 29 Feb 2016
-      create_initial_signup_rewards(reward_start_time,resident)
+      #initial_expirty_date is used for expiring initial balance if it exceeds 24 months
+      initial_expirty_date = reward_start_time
+      rps = resident.resident_properties.where('move_in_date > ? ', reward_start_time)
+      initial_expirty_date = rps.min_by{|rp| rp.move_in_date }.move_in_date if rps.count > 0
+      pp "initial_expirty_date:#{initial_expirty_date}"
+      create_initial_signup_rewards(reward_start_time,resident,initial_expirty_date)
       time = DateTime.now.change(:day =>3,:month => 03,:year => 2016)
       end_time = Time.now.advance(:months => -1)
       while time <= end_time do # TODO: recheck this for possibility of running this at 1st of every month at first second
-        # pp "award_time:#{time}"
+        pp "award_time:#{time}"
         Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
         time = time.advance(:months=>1)
       end
@@ -59,7 +64,7 @@ module Smartrent
 
     private
 
-    def create_initial_signup_rewards(time = Time.now,r=resident)
+    def create_initial_signup_rewards(time = Time.now,r=resident,time_expiry)
         # monthly reward is created by MonthlyStatusUpdater
         
         # the initial import will create rewards only after the import is done on ResidentCreator
@@ -69,7 +74,7 @@ module Smartrent
         
         if r.rewards.where(:type_ => [Reward::TYPE_INITIAL_REWARD, Reward::TYPE_SIGNUP_BONUS]).count == 0
           # pp "create initial rewards..."
-          Smartrent::ResidentCreator.create_initial_signup_rewards(r, time)
+          Smartrent::ResidentCreator.create_initial_signup_rewards(r, time, time_expiry)
         else
           # pp "initial rewards have been created"
         end
