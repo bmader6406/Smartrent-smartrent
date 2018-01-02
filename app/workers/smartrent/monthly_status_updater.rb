@@ -74,7 +74,9 @@ module Smartrent
 
               else # resident moved out, not live in any properties, set it's expiry to 60 days from the period start
                 move_out_date = move_out_smartrent_properties.max_by{|rp| rp.move_out_date }.move_out_date if move_out_smartrent_properties.count > 0
+                pp "move_out_smartrent_properties #{move_out_smartrent_properties.count}"
                 move_out_date = period_start if move_out_date.nil?
+                 pp "move_out_date #{move_out_date}"
                 expiry_date =  move_out_date + 2.years
                 sr_status = period_start > expiry_date ? Smartrent::Resident::STATUS_EXPIRED : Smartrent::Resident::STATUS_INACTIVE
                 r.update_attributes({

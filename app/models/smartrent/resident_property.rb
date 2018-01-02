@@ -44,21 +44,31 @@ module Smartrent
       create_initial_signup_rewards(reward_start_time,resident,initial_expirty_date)
       time = DateTime.now.change(:day =>3,:month => 03,:year => 2016)
       end_time = Time.now.advance(:months => -1)
-      while time <= end_time do # TODO: recheck this for possibility of running this at 1st of every month at first second
-        pp "award_time:#{time}"
-        Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
-        time = time.advance(:months=>1)
-      end
-      if self.resident.smartrent_status == "Expired"
-        Smartrent::Reward.create!({
-          :property_id => self.resident.resident_properties.first.property_id,
-          :resident_id => self.resident.id,
-          :amount => -self.resident.balance,
-          :type_ => Reward::TYPE_EXPIRED,
-          :period_start => self.resident.resident_properties.first.move_in_date
-          })
-      end
-      # pp "Reset completed..."
+      # if resident.resident_properties.all? {|rp| rp.move_out_date and (rp.move_out_date<time) }
+      #   resident.update_attributes({
+      #     :smartrent_status => "Expired",
+      #     :expiry_date => resident.resident_properties.max_by{|rp| rp.move_out_date }.move_out_date,
+      #     :disable_email_validation => true
+      #     })
+      # else
+        while time <= end_time do # TODO: recheck this for possibility of running this at 1st of every month at first second
+          pp "award_time:#{time}"
+          Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
+          time = time.advance(:months=>1)
+        end
+      # end
+
+      # if self.resident.smartrent_status == "Expired"
+      #   Smartrent::Reward.create!({
+      #     :property_id => self.resident.resident_properties.first.property_id,
+      #     :resident_id => self.resident.id,
+      #     :amount => -self.resident.balance,
+      #     :type_ => Reward::TYPE_EXPIRED,
+      #     :period_start => self.resident.resident_properties.first.move_in_date
+      #     })
+      # end
+      
+      pp "Reset completed..."
       return true
     end
 
