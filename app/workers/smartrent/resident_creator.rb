@@ -98,7 +98,7 @@ module Smartrent
       pp "delete_and_create_all_residents done: #{Time.now}"
     end
     
-    def self.create_initial_signup_rewards(sr, cal_time = DateTime.now.in_time_zone("EST"))
+    def self.create_initial_signup_rewards(sr, cal_time = DateTime.now.in_time_zone("EST"), cal_expiry_time)
       first_rp = nil
       first_move_in = nil
       
@@ -122,6 +122,7 @@ module Smartrent
         t = rp.move_in_date.clone
         move_in = t.in_time_zone("EST").change(:day=>t.strftime("%d").to_i,:hour=>0)
         t = rp.move_out_date.clone rescue cal_time
+        # t = cal_time if t.nil?
         move_out = t.in_time_zone("EST").change(:day=>t.strftime("%d").to_i,:hour=>0)
         if rp.move_out_date.blank? || rp.move_out_date && rp.move_out_date > cal_time
           arr,balance_days = collect_months(move_in, cal_time,rp,balance_days)
@@ -141,7 +142,7 @@ module Smartrent
       months_earned = months_earned.flatten.uniq.sort
       # pp "months_earned_before_recheck_execution: #{months_earned}"
       # time_start = Time.now
-      months_earned = recheck_months_for_expiry(months_earned,cal_time) if months_earned.length > 0
+      months_earned = recheck_months_for_expiry(months_earned,cal_expiry_time) if months_earned.length > 0
       # time_end = Time.now
       # pp "months_earned_after_recheck_execution: #{months_earned}"
       # pp "Time Taken : #{time_end-time_start}"
@@ -179,6 +180,7 @@ module Smartrent
     end
     
     def self.recheck_months_for_expiry(months_earned,cal_time)
+      # cal_time = DateTime.now.in_time_zone("EST")
       # For removing months which have a gap of more than 2 months
       time = (months_earned.first+"/05").to_time
       time_end = cal_time.strftime("%Y/%m/05").to_time
@@ -188,7 +190,7 @@ module Smartrent
         time = time.advance(:months => 1)
         if (time.strftime("%Y/%m") != months_earned[i])
           expiry_count +=1
-          if (expiry_count == 3)
+          if (expiry_count == 25)
             if (i>= months_earned.length)
               months_earned = []
             else
