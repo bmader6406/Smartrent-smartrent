@@ -3,7 +3,7 @@
     <% i = 0 %>
     <% homes = Smartrent::Home.visible.order('position asc').all %>
     <% homes.each do |home|%>
-      <% if i%3 == 0 %>
+      <% if i%4 == 0 %>
         <div class="threeWide">
       <% end %>
       
@@ -23,7 +23,7 @@
       
       <% i+=1 %>
       
-      <% if i%3 == 0 || i == homes.count %>
+      <% if i%4 == 0 || i == homes.count %>
         </div>
       <% end %>
       
