@@ -63,12 +63,12 @@ module Smartrent
         end
       end
 
-      time = DateTime.now.change(:day =>3,:month => 03,:year => 2016)
+      time = DateTime.now.change(:day =>1,:month => 03,:year => 2016)
       end_time = Time.now.advance(:months => -1)
 
       # TODO: recheck this for possibility of running this at 1st of every month at first second
       while time <= end_time do 
-          pp "award_time:#{time}"
+          pp "award_time:  #{time}"
           Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
           time = time.advance(:months=>1)
       end
