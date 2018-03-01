@@ -35,39 +35,41 @@ module Smartrent
       self.resident
       resident.rewards.destroy_all if resident.rewards.count > 0
       resident.update_attributes(:smartrent_status => Smartrent::Resident::STATUS_ACTIVE)
-      reward_start_time = DateTime.now.change(:day =>25,:month => 02,:year => 2016) # To awards initial balance till 29 Feb 2016
+
+      # To awards initial balance till 29 Feb 2016
+      reward_start_time = DateTime.now.change(:day =>25,:month => 02,:year => 2016)
+
       #initial_expirty_date is used for expiring initial balance if it exceeds 24 months
       initial_expirty_date = reward_start_time
       rps = resident.resident_properties.where('move_in_date > ? ', reward_start_time)
       initial_expirty_date = rps.min_by{|rp| rp.move_in_date }.move_in_date if rps.count > 0
-      pp "initial_expirty_date:#{initial_expirty_date}"
+      if rps.count > 0 and rps.first.property.versions.count > 0
+        initial_expirty_date = rps.first.property.versions.last.created_at.advance(:months=>1)
+      end
+
+      pp "initial_expirty_date: #{initial_expirty_date}"
+
       create_initial_signup_rewards(reward_start_time,resident,initial_expirty_date)
+      if resident.smartrent_status != Smartrent::Resident::STATUS_EXPIRED
+        Smartrent::Reward.create!({
+            :property_id => rps.first.property_id,
+            :resident_id => resident.id,
+            :amount => Smartrent::Setting.sign_up_bonus,
+            :type_ => Reward::TYPE_SIGNUP_BONUS,
+            :period_start => initial_expirty_date.beginning_of_month
+        })
+      end
+
       time = DateTime.now.change(:day =>3,:month => 03,:year => 2016)
       end_time = Time.now.advance(:months => -1)
-      # if resident.resident_properties.all? {|rp| rp.move_out_date and (rp.move_out_date<time) }
-      #   resident.update_attributes({
-      #     :smartrent_status => "Expired",
-      #     :expiry_date => resident.resident_properties.max_by{|rp| rp.move_out_date }.move_out_date,
-      #     :disable_email_validation => true
-      #     })
-      # else
-        while time <= end_time do # TODO: recheck this for possibility of running this at 1st of every month at first second
+
+      # TODO: recheck this for possibility of running this at 1st of every month at first second
+      while time <= end_time do 
           pp "award_time:#{time}"
           Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
           time = time.advance(:months=>1)
-        end
-      # end
+      end
 
-      # if self.resident.smartrent_status == "Expired"
-      #   Smartrent::Reward.create!({
-      #     :property_id => self.resident.resident_properties.first.property_id,
-      #     :resident_id => self.resident.id,
-      #     :amount => -self.resident.balance,
-      #     :type_ => Reward::TYPE_EXPIRED,
-      #     :period_start => self.resident.resident_properties.first.move_in_date
-      #     })
-      # end
-      
       pp "Reset completed..."
       return true
     end

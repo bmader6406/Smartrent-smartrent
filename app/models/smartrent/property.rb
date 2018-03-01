@@ -176,7 +176,7 @@ module Smartrent
       version = versions.where('created_at <= ?', DateTime.parse(time.to_s)).last if time
       status = (version and !version.reify.is_smartrent? ) if version
       status = is_smartrent? if status.nil?
-      pp "status  : #{status}"
+      return status
     end
 
     private
