@@ -50,14 +50,17 @@ module Smartrent
       pp "initial_expirty_date: #{initial_expirty_date}"
 
       create_initial_signup_rewards(reward_start_time,resident,initial_expirty_date)
+
       if resident.smartrent_status != Smartrent::Resident::STATUS_EXPIRED and rps.count > 0
-        Smartrent::Reward.create!({
-            :property_id => rps.first.property_id,
-            :resident_id => resident.id,
-            :amount => Smartrent::Setting.sign_up_bonus,
-            :type_ => Reward::TYPE_SIGNUP_BONUS,
-            :period_start => initial_expirty_date.beginning_of_month
-        })
+        unless resident.rewards.all.collect(&:type_).include?(1)
+          Smartrent::Reward.create!({
+              :property_id => rps.first.property_id,
+              :resident_id => resident.id,
+              :amount => Smartrent::Setting.sign_up_bonus,
+              :type_ => Reward::TYPE_SIGNUP_BONUS,
+              :period_start => initial_expirty_date.beginning_of_month
+          })
+        end
       end
 
       time = DateTime.now.change(:day =>3,:month => 03,:year => 2016)
