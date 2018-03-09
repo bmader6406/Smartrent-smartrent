@@ -1,12 +1,13 @@
 <div id="slides">
   <div class="slides_container">
+  <% home_count =  params[:action] == "statement" ? 3 : 4 %>
     <% i = 0 %>
     <% homes = Smartrent::Home.visible.order('position asc').all %>
     <% homes.each do |home|%>
-      <% if i%4 == 0 %>
+      <% if i%home_count == 0 %>
         <div class="threeWide">
       <% end %>
-      
+     
       <div class="propertySlide">
         <%= link_to home.website , target: :_blank do %>
           <%= image_tag home.image(:home_page) %>
@@ -23,7 +24,7 @@
       
       <% i+=1 %>
       
-      <% if i%4 == 0 || i == homes.count %>
+      <% if i%home_count == 0 || i == homes.count %>
         </div>
       <% end %>
       
