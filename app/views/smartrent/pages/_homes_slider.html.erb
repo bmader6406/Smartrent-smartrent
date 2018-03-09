@@ -1,8 +1,6 @@
-<% if params[:action] == "statement"  %>
-<div id="slides" style="float:left;">
-<% else %>
-<div id="slides" style="float:right;>
-<% end  %>
+
+
+<div id="slides">
   <div class="slides_container">
   <% home_count =  params[:action] == "statement" ? 3 : 4 %>
     <% i = 0 %>
