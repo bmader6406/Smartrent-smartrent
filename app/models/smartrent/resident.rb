@@ -245,6 +245,30 @@ module Smartrent
         self.password == self.password_confirmation
     end
 
+    def get_csv
+      resident = ::Resident.where(email: self.email).last 
+      if resident
+        unit = resident.units.where(status: "Current").first || resident.units.first
+        if unit
+          unit_is_smartrent =  unit.property.is_smartrent ? "yes" : "no"
+          roommate_status = resident.roommate ? "Roommate" : "Primary Leaseholder"
+          if self
+            return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
+                    resident.email, roommate_status, resident.first_name, resident.last_name, 
+                    self.smartrent_status, resident.status, resident.gender]
+          else
+            return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
+                    resident.email, roommate_status, resident.first_name, resident.last_name, "NIL", 
+                    resident.status, resident.gender]
+          end
+        else
+           return ["NO UNIT", "NO UNIT", "NO UNIT", resident.email, "NO UNIT" ,resident.first_name, resident.last_name,
+                  "NO UNIT", "NO UNIT", resident.gender]
+        end
+      end
+      return nil
+    end
+
     private
       
       def valid_smartrent_status
@@ -274,7 +298,6 @@ module Smartrent
         true
       end
       
-    
     protected
       
       # Some residents have this email format:
