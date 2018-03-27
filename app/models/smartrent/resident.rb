@@ -245,28 +245,26 @@ module Smartrent
         self.password == self.password_confirmation
     end
 
-    def get_csv
-      resident = ::Resident.where(email: self.email).last 
-      if resident
-        unit = resident.units.where(status: "Current").first || resident.units.where(status: "Notice")
-        if unit
-          unit_is_smartrent =  unit.property.is_smartrent ? "yes" : "no"
-          roommate_status = resident.roommate ? "Roommate" : "Primary Leaseholder"
-          if self
-            return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
-                    resident.email, roommate_status, resident.first_name, resident.last_name, 
-                    self.smartrent_status, resident.status, resident.gender]
-          else
-            return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
-                    resident.email, roommate_status, resident.first_name, resident.last_name, "NIL", 
-                    resident.status, resident.gender]
-          end
-        else
-           return ["Nil", "Nil", "Nil", resident.email, "Nil" ,resident.first_name, resident.last_name,
-                  "Nil", "Nil", resident.gender]
+   def get_csv
+    resident = ::Resident.where(email: self.email).last 
+    return nil if resident.nil?
+    unit = resident.units.where(status: "Current").first || resident.units.where(status: "Notice").first || nil
+    if unit.nil?
+     return ["Nil", "Nil", "Nil", "Nil", resident.email, "Nil" ,resident.first_name, resident.last_name,
+      "Nil", "Nil", resident.gender]
+    else
+     unit_is_smartrent =  unit.property.is_smartrent ? "yes" : "no"
+     roommate_status = resident.roommate ? "Roommate" : "Primary Leaseholder"
+     if self
+      return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
+        resident.email, roommate_status, resident.first_name, resident.last_name, 
+        self.smartrent_status, resident.status, resident.gender]
+      else
+        return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
+          resident.email, roommate_status, resident.first_name, resident.last_name, "NIL", 
+          resident.status, resident.gender]
         end
       end
-      return nil
     end
 
     private
