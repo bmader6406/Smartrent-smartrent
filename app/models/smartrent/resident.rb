@@ -251,7 +251,7 @@ module Smartrent
     unit = resident.units.where(status: "Current").first || resident.units.where(status: "Notice").first || nil
     if unit.nil?
      return ["Nil", "Nil", "Nil", "Nil", resident.email, "Nil" ,resident.first_name, resident.last_name,
-      "Nil", "Nil", resident.gender]
+      self.smartrent_status, resident.status, resident.gender]
     else
      unit_is_smartrent =  unit.property.is_smartrent ? "yes" : "no"
      roommate_status = resident.roommate ? "Roommate" : "Primary Leaseholder"
