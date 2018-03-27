@@ -249,6 +249,7 @@ module Smartrent
     resident = ::Resident.where(email: self.email).last 
     return nil if resident.nil?
     resident_status = resident.unified_status.gsub('resident_','').titleize rescue nil
+    gender = resident.gender || 'Unknown'
     unit = resident.units.where(status: "Current").first || resident.units.where(status: "Notice").first || nil
     if unit.nil?
      return ["Nil", "Nil", "Nil", "Nil", resident.email, "Nil" ,resident.first_name, resident.last_name,
