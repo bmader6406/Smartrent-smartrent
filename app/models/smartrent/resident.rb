@@ -248,21 +248,22 @@ module Smartrent
    def get_csv
     resident = ::Resident.where(email: self.email).last 
     return nil if resident.nil?
+    resident_status = resident.unified_status.gsub('resident_','').titleize rescue nil
     unit = resident.units.where(status: "Current").first || resident.units.where(status: "Notice").first || nil
     if unit.nil?
      return ["Nil", "Nil", "Nil", "Nil", resident.email, "Nil" ,resident.first_name, resident.last_name,
-      self.smartrent_status, resident.unified_status.gsub('resident_','').titleize, resident.gender]
+      self.smartrent_status, resident_status, resident.gender]
     else
      unit_is_smartrent =  unit.property.is_smartrent ? "yes" : "no"
      roommate_status = resident.roommate ? "Roommate" : "Primary Leaseholder"
      if self
       return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
         resident.email, roommate_status, resident.first_name, resident.last_name, 
-        self.smartrent_status, resident.unified_status.gsub('resident_','').titleize, resident.gender]
+        self.smartrent_status, resident_status, resident.gender]
       else
         return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
           resident.email, roommate_status, resident.first_name, resident.last_name, "NIL", 
-          resident.unified_status.gsub('resident_','').titleize, resident.gender]
+          resident_status, resident.gender]
         end
       end
     end
