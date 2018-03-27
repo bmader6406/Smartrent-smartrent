@@ -248,7 +248,7 @@ module Smartrent
     def get_csv
       resident = ::Resident.where(email: self.email).last 
       if resident
-        unit = resident.units.where(status: "Current").first || resident.units.first
+        unit = resident.units.where(status: "Current").first || resident.units.where(status: "Notice")
         if unit
           unit_is_smartrent =  unit.property.is_smartrent ? "yes" : "no"
           roommate_status = resident.roommate ? "Roommate" : "Primary Leaseholder"
@@ -262,8 +262,8 @@ module Smartrent
                     resident.status, resident.gender]
           end
         else
-           return ["NO UNIT", "NO UNIT", "NO UNIT", resident.email, "NO UNIT" ,resident.first_name, resident.last_name,
-                  "NO UNIT", "NO UNIT", resident.gender]
+           return ["Nil", "Nil", "Nil", resident.email, "Nil" ,resident.first_name, resident.last_name,
+                  "Nil", "Nil", resident.gender]
         end
       end
       return nil
