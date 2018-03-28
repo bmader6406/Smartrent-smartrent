@@ -246,7 +246,7 @@ module Smartrent
     end
 
    def get_csv
-    resident = ::Resident.where(email: "self.email").last 
+    resident = ::Resident.where(email: self.email).last 
     return nil if resident.nil? 
     resident_status = resident.unified_status.gsub('resident_','').titleize rescue nil
     smartrent_status = 'Active' if self.smartrent_status == 'Active' || self.smartrent_status == 'Inactive'
