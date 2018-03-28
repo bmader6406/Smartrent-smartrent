@@ -254,12 +254,12 @@ module Smartrent
     smartrent_status = 'Expired' if self.smartrent_status == 'Expired'
     gender = resident.gender || 'Unknown'
     unit = resident.units.where(status: "Current").first || resident.units.where(status: "Notice").first || nil
+    roommate_status = resident.roommate ? "Roommate" : "Primary Leaseholder"
     if unit.nil?
-     return ["Nil", "Nil", "Nil", "Nil", resident.email, "Nil" ,resident.first_name, resident.last_name,
+     return ["Nil", "Nil", "Nil", "Nil", resident.email, roommate_status, resident.first_name, resident.last_name,
       smartrent_status, resident_status, resident.gender]
     else
      unit_is_smartrent =  unit.property.is_smartrent ? "yes" : "no"
-     roommate_status = resident.roommate ? "Roommate" : "Primary Leaseholder"
      if self
       return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
         resident.email, roommate_status, resident.first_name, resident.last_name, 
