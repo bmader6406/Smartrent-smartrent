@@ -14,67 +14,93 @@
 
 <section id="contentWrapper">
   <div class="fixedWidth">
-    <div id="homeContent">
-      <style>
+    <style>
         .sr-page-title{
           color: #7395bc;
         }
-        .sr-col-2{
-          width: 46%;
-          float: left;
+        
+        @keyframes load_up{
+
+            from{opacity:0;left:100%}
+            to{opacity:1;right:0%;}
+            
+        }@-webkit-keyframes load_up{
+            from{opacity:0;left:100%}
+            to{opacity:1;right:0%;}
+            
         }
-        .sr-col-right{
-          float: right;
+        #tpopup{
+          position: absolute;
+          width: 20%;
+          height: 66%;
+          background: #fff;
+          left: 31%;
+          top: 102%;
+          border-radius:5px;
+          padding:60px 0;
+          margin-left:-320px; /* width/2 + padding-left */
+          margin-top:-150px; /* height/2 + padding-top */
+          text-align:center;
+          box-shadow:0 0 10px 0 #000;
+          background-image: url('assets/Emblem-Bozzuto_Image_270x600_V2.jpg');
+          background-size: contain;
+          opacity:0;
+          animation:load_up 5s forwards;
+          -webkit-animation:load_up 2s forwards;
         }
-        .sr-clearfix{
-          clear: both;
-        }
-        .sr-box{
-          float: right;
-          background-color: #f4f6f6;
-          border-radius: 0px;
-          box-shadow: 1px 5px 15px 2px rgba(0, 0, 0, 0.25);
-          padding: 10px;
-        }
-        .sr-box .sr-box-title{
-          color: #7395bc;
-          font-weight: bold;
-          padding: 0px 0px 5px 0px;
-          font-size: 1.2em;
-        }
-        .sr-box .sr-box-body{
-          text-align: left;
+        #tclose{
+          position:absolute;
+          background:black;
+          color:white;
+          right:-15px;
+          top:-15px;
+          border-radius:50%;
+          width:30px;
+          height:30px;
+          line-height:30px;
+          text-align:center;
+          font-size:8px;
+          font-weight:bold;
+          font-family:'Arial Black', Arial, sans-serif;
+          cursor:pointer;
+          box-shadow:0 0 10px 0 #000;
         }
       </style>
+  <div id="tpopup">
+    <!-- <img src="assets/Emblem-Bozzuto_Image_270x600_V2.jpg">  -->
+    <div id="tclose">X</div>    
+  </div>
 
+    <div id="homeContent">
       <h1 class="sr-page-title"> You do the renting. We do the saving. </h1>
       <div>
       With the Bozzuto SmartRent program, purchasing a brand <%= link_to "new home" ,'https://www.bozzuto.com/new-homes/communities', target: :_blank %> is well within reach. Each month that you rent from a Bozzuto participating property, you'll earn a $350 contribution, for a maximum of $10,000, towards the purchase of a brand new <%= link_to "Bozzuto Home",'https://www.bozzuto.com/new-homes/communities', target: :_blank %>. Simple as that. Bozzuto SmartRent credits are applied towards the out-of-pocket costs associated with building a new home, helping to jump start your savings plan. Best of all, there's no cost to you and enrollment is automatic.
       </div>
-      <div>
-        <div class="sr-col-2">
-        <ul>
-            <li>Your rent stays the same, whether you choose to take advantage of SmartRent or not.</li>
-            <li> You will receive monthly email statements to let you know how your credits are adding up.</li>
-            <li> Bozzuto Homes are located throughout the D.C., Baltimore and Annapolis areas and include distinctive condominium, townhome, and single-family home communities.</li>
-        </ul>
-        You may use SmartRent credits for up to 24 months after leaving a Bozzuto apartment property.
-        </div>
-
-        <div class="sr-col-2 sr-col-right">
-          <div class="sr-box">
-            <div class="sr-box-title">
-              The most fun perk of all:
-            </div>
-            <div class="sr-box-body">
-              Bozzuto SmartRenters get priority access to new Bozzuto Homes communities through Bozzuto Backstage. This program gives members behind-the-scenes access to community info, release dates, events, sneak peek tours and special appointment times before we're open to the public! In addition, Backstage members have the ability to reserve and purchase their home before the public at the lowest base prices available and with special Backstage incentives. It doesn't get much better than that!
-          </div>
-          </div>
-        </div>
-        <div class="sr-clearfix"></div>
+      <div >
+      <ul>
+          <li>Your rent stays the same, whether you choose to take advantage of SmartRent or not.</li>
+          <li> You will receive monthly email statements to let you know how your credits are adding up.</li>
+          <li> Bozzuto Homes are located throughout the D.C., Baltimore and Annapolis areas and include distinctive condominium, townhome, and single-family home communities.</li>
+      </ul>
       </div>
+      <div>
+      You may use SmartRent credits for up to 24 months after leaving a Bozzuto apartment property.
+      </div>
+      <br>
+      <div>
+      Bozzuto SmartRenters get priority access to new Bozzuto Homes communities through Bozzuto Backstage. This program gives members behind-the-scenes access to community info, release dates, events, sneak peek tours and special appointment times before we're open to the public! In addition, Backstage members have the ability to reserve and purchase their home before the public at the lowest base prices available and with special Backstage incentives. It doesn't get much better than that!
+      </div>
+      <br>
     </div>
     <%= render partial: "homes_slider" %>
   </div>
 
 </section>
+<script type="text/javascript">
+$(document).ready(function(){
+
+  $("#tclose").click(function(){
+    $("#tpopup").fadeOut();
+  });
+});
+</script>
