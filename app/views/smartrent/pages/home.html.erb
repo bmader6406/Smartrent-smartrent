@@ -1,4 +1,4 @@
-<div class="banner clearfix">
+<div class="homeBanner banner clearfix">
   <div class="fixedWidth">
     <div class="images">
       <div class="left">
@@ -12,41 +12,54 @@
   </div>
 </div>
 
-<section id="contentWrapper">
+<section id="contentWrapper" class="homeContentWrap">
   <div class="fixedWidth">
     <style>
         .sr-page-title{
           color: #7395bc;
         }
-        
+        .homeContentWrap{
+            position: relative;
+        }
         @keyframes load_up{
 
-            from{opacity:0;left:10%}
-            to{opacity:1;right:0%;}
+            from{opacity:0;left:-40%}
+            to{opacity:1;left:0%;}
             
         }@-webkit-keyframes load_up{
-            from{opacity:0;left:10%}
-            to{opacity:1;right:0%;}
+            from{opacity:0;left:-40%}
+            to{opacity:1;left:0%;}
             
         }
         #tpopup{
           position: absolute;
           width: 20%;
-          height: 66%;
+          min-width: 200px;
+          /*height: 66%;*/
           background: #fff;
-          left: 31%;
-          top: 110%;
+          left: -30%;
+          top: 20px;
+          z-index: 1;
           border-radius:5px;
-          padding:60px 0;
-          margin-left:-320px; /* width/2 + padding-left */
-          margin-top:-150px; /* height/2 + padding-top */
+          /*padding:60px 0;*/
+          /*margin-left:-320px;*/ /* width/2 + padding-left */
+          /*margin-top:-150px; *//* height/2 + padding-top */
           text-align:center;
           box-shadow:0 0 10px 0 #000;
-          background-image: url(<%= asset_path 'Emblem-Bozzuto_Image_270x600_V2.jpg' %>);
+          /*background-image: url(<%= asset_path 'Emblem-Bozzuto_Image_270x600_V2.jpg' %>);*/
           background-size: contain;
-          opacity:0;
-          animation:load_up 5s forwards;
-          -webkit-animation:load_up 5s forwards;
+          /*opacity:0;*/
+          /*animation:load_up 5s forwards;
+          -webkit-animation:load_up 5s forwards;*/
+          transition: left 5s ease;
+          -webkit-transition: left 5s ease;
+          -moz-transition: left 5s ease;
+          -o-transition: left 5s ease;
+        }
+        #tpopup img{
+          max-width: 100%;
+          display: block;
+          border-radius: 5px;
         }
         #tclose{
           position:absolute;
@@ -65,9 +78,47 @@
           cursor:pointer;
           box-shadow:0 0 10px 0 #000;
         }
+        #contentWrapper.homeContentWrap .fixedWidth{
+          padding-left:25%;
+          box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+        }
+        #contentWrapper.homeContentWrap #homeContent, #contentWrapper.homeContentWrap #homeContent + #slides{
+          left:0;
+          max-width:770px;
+          width:90%;
+        }
+        @media only screen and (max-width: 1120px) and (min-width:1131px){
+            .homeBanner.banner .fixedWidth .images .left{max-width: calc(100% 880px);}
+        }
+        @media only screen and (max-width: 900px){
+          #contentWrapper.homeContentWrap .fixedWidth{
+              padding-left:240px;
+         }
+        }
+        @media only screen and (max-width: 664px){
+            #contentWrapper.homeContentWrap #homeContent{
+                max-width: 610px;
+            }
+            #contentWrapper.homeContentWrap .fixedWidth{
+              padding-left:0px;
+            }
+            #tpopup{
+              position: relative;
+              width:80%!important;
+              min-width: 0;
+              max-width: 300px;
+              left: auto!important;
+              top:auto!important;
+              margin: 20px auto;
+              display: block;
+              margin-bottom: 20px;
+            }
+            
+        }
       </style>
   <div id="tpopup">
-    <!-- <img src="assets/Emblem-Bozzuto_Image_270x600_V2.jpg">  -->
+    <img src="assets/Emblem-Bozzuto_Image_270x600_V2.jpg"> 
     <div id="tclose">X</div>    
   </div>
 
@@ -103,4 +154,15 @@ $(document).ready(function(){
     $("#tpopup").fadeOut();
   });
 });
+$(window).on('load',function(){
+    popupPos();
+});
+$(window).on('resize',function(){
+  popupPos();
+});
+function popupPos(){
+var marginL = parseInt($('.homeContentWrap > .fixedWidth').css('margin-left'));
+var popWidth = parseInt(parseInt($('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left')) - 40);
+$('#tpopup').css({'left':marginL,'width':popWidth});
+}
 </script>
