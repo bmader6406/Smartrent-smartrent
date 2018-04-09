@@ -51,6 +51,7 @@
           /*opacity:0;*/
           /*animation:load_up 5s forwards;
           -webkit-animation:load_up 5s forwards;*/
+          max-width: 300px;
           transition: left 1s ease;
           -webkit-transition: left 1s ease;
           -moz-transition: left 1s ease;
@@ -119,6 +120,9 @@
               display: block;
               margin-bottom: 20px;
             }
+            .homeContentWrap{
+              min-height: 0!important;
+            }
             
         }
       </style>
@@ -154,20 +158,33 @@
 </section>
 <script type="text/javascript">
 $(document).ready(function(){
-
+  pageMinHt();
   $("#tclose").click(function(){
     $("#tpopup").fadeOut();
   });
 });
 $(window).on('load',function(){
+    
     popupPos();
+    pageMinHt();
+    setTimeout(function(){pageMinHt();},1100);
 });
 $(window).on('resize',function(){
   popupPos();
+  pageMinHt();
 });
 function popupPos(){
-var marginL = parseInt($('.homeContentWrap > .fixedWidth').css('margin-left'));
-var popWidth = parseInt(parseInt($('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left')) - 30);
-$('#tpopup').css({'left':marginL,'width':popWidth});
+  $('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left','');
+  var marginL = parseInt($('.homeContentWrap > .fixedWidth').css('margin-left'));
+  var popWidth = parseInt(parseInt($('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left')) - 30);
+  if(popWidth > 300){
+    popWidth = 330;
+    $('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left','330px');
+  }
+  $('#tpopup').css({'left':marginL,'width':popWidth});
 }
+function pageMinHt(){
+  var h = $('#tpopup').outerHeight() + 20;
+  $('.homeContentWrap').css('min-height',h);
+} 
 </script>
