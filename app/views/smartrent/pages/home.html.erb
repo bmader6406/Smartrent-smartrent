@@ -176,7 +176,7 @@ $(window).on('resize',function(){
 });
 function popupPos(){
   $('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left','');
-  var marginL = parseInt($('.homeContentWrap > .fixedWidth')..offset().left);
+  var marginL = parseInt($('.homeContentWrap > .fixedWidth').offset().left);
   var popWidth = parseInt(parseInt($('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left')) - 30);
   if(popWidth > 300){
     popWidth = 330;
