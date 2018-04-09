@@ -94,9 +94,9 @@
             .homeBanner.banner .fixedWidth .images .left{max-width: calc(100% - 880px);}
         }
         @media only screen and (max-width: 1120px){
-            #contentWrapper.homeContentWrap > .fixedWidth{
+            /*#contentWrapper.homeContentWrap > .fixedWidth{
               max-width:880px;
-            }
+            }*/
         }
         @media only screen and (max-width: 900px){  
           #contentWrapper.homeContentWrap .fixedWidth{
@@ -176,7 +176,7 @@ $(window).on('resize',function(){
 });
 function popupPos(){
   $('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left','');
-  var marginL = parseInt($('.homeContentWrap > .fixedWidth').css('margin-left'));
+  var marginL = parseInt($('.homeContentWrap > .fixedWidth')..offset().left);
   var popWidth = parseInt(parseInt($('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left')) - 30);
   if(popWidth > 300){
     popWidth = 330;
