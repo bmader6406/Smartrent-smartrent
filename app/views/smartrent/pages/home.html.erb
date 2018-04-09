@@ -89,9 +89,14 @@
           width:90%;
         }
         @media only screen and (max-width: 1120px) and (min-width:1131px){
-            .homeBanner.banner .fixedWidth .images .left{max-width: calc(100% 880px);}
+            .homeBanner.banner .fixedWidth .images .left{max-width: calc(100% - 880px);}
         }
-        @media only screen and (max-width: 900px){
+        @media only screen and (max-width: 1120px){
+            #contentWrapper.homeContentWrap > .fixedWidth{
+              max-width:880px;
+            }
+        }
+        @media only screen and (max-width: 900px){  
           #contentWrapper.homeContentWrap .fixedWidth{
               padding-left:240px;
          }
@@ -162,7 +167,7 @@ $(window).on('resize',function(){
 });
 function popupPos(){
 var marginL = parseInt($('.homeContentWrap > .fixedWidth').css('margin-left'));
-var popWidth = parseInt(parseInt($('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left')) - 40);
+var popWidth = parseInt(parseInt($('#contentWrapper.homeContentWrap .fixedWidth').css('padding-left')) - 30);
 $('#tpopup').css({'left':marginL,'width':popWidth});
 }
 </script>
