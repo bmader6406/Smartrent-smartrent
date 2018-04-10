@@ -89,7 +89,8 @@ module Smartrent
     end
     
     def import_xml
-      Resque.enqueue(XmlPropertyImporter, Time.now)
+      import = Import.where(:type => "load_xml_property_importer", :active => true).last
+      Resque.enqueue(XmlPropertyImporter, Time.now, import.id)
       render :json => {:success => true}
     end
 
