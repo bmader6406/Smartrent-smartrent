@@ -89,7 +89,7 @@ module Smartrent
     end
     
     def import_xml
-      Resque.enqueue(Smartrent::WeeklyPropertyXmlImporter, Time.now)
+      Resque.enqueue(XmlPropertyImporter, Time.now)
       render :json => {:success => true}
     end
 

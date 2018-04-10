@@ -21,7 +21,7 @@ module Smartrent
       end
       
       if time.wday == 0 && time.hour == 0 #Sunday of the current week
-        Resque.enqueue(Smartrent::WeeklyPropertyXmlImporter, time)
+        # Resque.enqueue(Smartrent::WeeklyPropertyXmlImporter, time)
       end
     
       if time.day == 1 && time.hour == 4 #execute at the begining of month
