@@ -261,11 +261,11 @@ module Smartrent
     else
      unit_is_smartrent =  unit.property.is_smartrent ? "Yes" : "No"
      if self
-      return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
+      return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip.gsub(/\t/,''),
         resident.email, "Primary Leaseholder", resident.first_name, resident.last_name, 
         smartrent_status, resident_status, resident.gender, address, balance]
       else
-        return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip,
+        return [unit.property.name, unit.property.state.upcase, unit_is_smartrent,  unit.property.zip.gsub(/\t/,''),
           resident.email, "Primary Leaseholder", resident.first_name, resident.last_name, "NIL", 
           resident_status, resident.gender, address, balance]
         end
