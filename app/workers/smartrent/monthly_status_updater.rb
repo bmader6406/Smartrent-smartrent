@@ -25,7 +25,7 @@ module Smartrent
           # it is good to catch any resident which cause the below code fail rather than stop the calculation
           begin
             # important: ignore resident who not move in any properties before the execution date, otherwise their status will changed from Active to Inactive
-            next if r.resident_properties.all? {|rp| rp.move_in_date > period_start+15.days }
+            next if r.resident_properties.all? {|rp| (rp.move_in_date > period_start+15.days && rp.property.is_smartrent) }
             total += 1
             # pp "total: #{total} - id #{r.id}, email: #{r.email}, #{r.smartrent_status}"
 
@@ -34,7 +34,7 @@ module Smartrent
 
             # get properties that the resident live in
             # all Current properties move out date will be blank from resident_creator, hence, it will be taken
-            live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
+            live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) && (rp.property.is_smartrent) }
              # pp "live_in_properties:", live_in_properties
             
             if !live_in_properties.empty? && (r.smartrent_status == Smartrent::Resident::STATUS_EXPIRED || r.smartrent_status == Smartrent::Resident::STATUS_INACTIVE)
@@ -46,7 +46,7 @@ module Smartrent
             smartrent_properties = live_in_properties.select{|rp| rp.property.eligible?(time) }
              # pp "smartrent_properties:", smartrent_properties
 
-            move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date.month == time.month && rp.move_out_date.year == time.year && rp.property.eligible?(time) }
+            move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date.month == time.month && rp.move_out_date.year == time.year && rp.property.eligible?(time) && (rp.property.is_smartrent)  }
             # pp "move_out_smartrent_properties", move_out_smartrent_properties
             
             # active => inactive or active => + rewards
@@ -176,14 +176,14 @@ module Smartrent
       
       remove_duplicate_resident_properties(r)
       # get properties that the resident live in
-      live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) }
+      live_in_properties = r.resident_properties.select{|rp| rp.move_in_date <= period_start+15.days &&  (rp.move_out_date.blank? || rp.move_out_date > time) && (rp.property.is_smartrent) }
       #pp "live_in_properties:", live_in_properties
       
       # get smartrent eligible property
       smartrent_properties = live_in_properties.select{|rp| rp.property.eligible?(time) }
       #pp "smartrent_properties:", smartrent_properties
       
-      move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible?(time) }
+      move_out_smartrent_properties = r.resident_properties.select{|rp| rp.move_out_date && rp.move_out_date <= period_start.end_of_month && rp.property.eligible?(time) && (rp.property.is_smartrent)}
       #pp "move_out_smartrent_properties", move_out_smartrent_properties
 
       # active => inactive or still active
