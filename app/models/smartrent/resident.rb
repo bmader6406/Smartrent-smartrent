@@ -258,7 +258,8 @@ module Smartrent
     if unit.nil?
       property = self.rewards.where("amount != 0").last.property rescue nil
       if property
-         return [property.name, property.state.upcase , property.is_smartrent, property.zip.gsub(/\t/,''), 
+          unit_is_smartrent =  property.is_smartrent ? "Yes" : "No" 
+         return [property.name, property.state.upcase , unit_is_smartrent, property.zip.gsub(/\t/,''), 
           resident.email, "Primary Leaseholder", resident.first_name, resident.last_name,
           smartrent_status, resident_status, resident.gender, address, balance]
       else
