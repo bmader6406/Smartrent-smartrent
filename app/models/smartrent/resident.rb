@@ -256,7 +256,7 @@ module Smartrent
     address = resident.street.to_s + "," + resident.city.to_s + "," + resident.state.to_s + "," + resident.country.to_s
     balance = self.balance
     if unit.nil?
-      property = self.rewards.where("amount != 0").last.property rescue nil
+      property = self.rewards.where("amount > 0").last.property rescue nil
       if property
           unit_is_smartrent =  property.is_smartrent ? "Yes" : "No" 
          return [property.name, property.state.upcase , unit_is_smartrent, property.zip.gsub(/\t/,''), 
