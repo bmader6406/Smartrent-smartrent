@@ -212,16 +212,16 @@ module Smartrent
     def total_rewards
       if smartrent_status == STATUS_EXPIRED
         total = 0
-        
       else
         total = sign_up_bonus + initial_reward + monthly_awards_amount + expired_amount
         total = 10000 if total > 10000
         total = total - buyer_amount
       end
 
-      total
+      # total
+      self.balance
     end
-    
+
     def total_months
       total_months = rewards.find_by_type_(Reward::TYPE_INITIAL_REWARD).months_earned rescue 0
       total_months += rewards.where(:type_ => Reward::TYPE_MONTHLY_AWARDS).count
