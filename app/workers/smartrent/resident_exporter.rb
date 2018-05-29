@@ -85,7 +85,7 @@ module Smartrent
       end
       
       # upload ftp
-      upload(file_name)
+      # upload(file_name)
     end
     
     def self.export_monthly_move_in_residents(time)
