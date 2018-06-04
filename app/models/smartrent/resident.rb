@@ -218,8 +218,8 @@ module Smartrent
         total = total - buyer_amount
       end
 
-      # total
-      self.balance
+      total
+      # self.balance
     end
 
     def total_months

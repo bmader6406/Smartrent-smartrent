@@ -199,7 +199,7 @@ module Smartrent
           csv << [
             r.name,
             r.email,
-            "$#{ActionController::Base.helpers.number_with_delimiter(r.total_rewards.to_i)}",
+            "$#{ActionController::Base.helpers.number_with_delimiter(r.balance.to_i)}",
             r.smartrent_status,
             batch_name
           ]
