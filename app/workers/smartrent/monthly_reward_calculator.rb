@@ -19,12 +19,14 @@ module Smartrent
       end
 
       value = property_months_map.values.flatten.sort.first
-      str = value + "05"
-      time = DateTime.parse(str)
-      time = time.in_time_zone('Eastern Time (US & Canada)')
-      first_month_earned = time.beginning_of_month
+      if value
+        str = value + "05"
+        time = DateTime.parse(str)
+        time = time.in_time_zone('Eastern Time (US & Canada)')
+        first_month_earned = time.beginning_of_month
 
-      destroy_monthly_award_present_before_first_period_start(resident, first_month_earned)
+        destroy_monthly_award_present_before_first_period_start(resident, first_month_earned)
+      end
     end
 
     def self.create_monthly_rewards(resident, smartrent_resident_property, period_start)
