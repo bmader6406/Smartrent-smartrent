@@ -41,14 +41,9 @@ module Smartrent
 
     def self.destroy_monthly_award_present_before_first_period_start(resident, period_start)
       rewards = resident.rewards.where(
-                                      'type_ = ? and period_start <= ? and period_end <= ?', 
+                                      'type_ = ? and period_start < ? and period_end < ?', 
                                       Reward::TYPE_MONTHLY_AWARDS, period_start, period_start.end_of_month
                                     )
-      pp "AAAAAAAAAAAAAAAAAAAAAAA"
-      pp rewards
-      pp period_start
-      pp period_start.end_of_month
-      pp "AAAAAAAAAAAAAAAAAAAAAAA"
       if rewards.present?
         pp "Before first period monthly award exist ===> #{resident.email}"
         rewards.each do |reward|

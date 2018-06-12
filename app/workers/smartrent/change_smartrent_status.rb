@@ -3,7 +3,7 @@ module Smartrent
 
     def self.perform(resident_id)
     	time = Time.now
-    	resident = Smartrent::Resident.find_by_id resident_id
+    	resident = Smartrent::Resident.includes(:rewards, :resident_properties).find_by_id resident_id
     	change_smartrent_status(resident, time) if resident
     end
 
