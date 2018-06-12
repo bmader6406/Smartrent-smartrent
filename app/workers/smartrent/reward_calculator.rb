@@ -36,7 +36,7 @@ module Smartrent
     end
 
     def self.create_sign_up_bonus_reward(r)
-      resident_property = r.resident_properties.min_by{|rp| rp.move_in_date }
+      resident_property = smartrent_properties(r).min_by{|rp| rp.move_in_date }
       sign_up_reward = r.rewards.where(type_: 1).last
       if resident_property
 	      if sign_up_reward
@@ -60,7 +60,7 @@ module Smartrent
     end
 
     def self.create_initial_rewards(r, reward_start_time)
-    	resident_properties = r.resident_properties.select{|rp| 
+    	resident_properties = smartrent_properties(r).select{|rp| 
     																								rp.move_in_date < reward_start_time
     																							}
       earned_months = months_to_be_awarded(resident_properties, reward_start_time)
@@ -97,11 +97,14 @@ module Smartrent
     def self.set_expiry_reward(r)
     	if r.smartrent_status == Smartrent::Resident::STATUS_EXPIRED
     		expiry_reward_exist = r.rewards.where(type_: Reward::TYPE_EXPIRED).last
-    		pp "expiry reward exist ===> ===> #{r.email} ,, Amount: #{expiry_reward_exist.amount}"
+    		pp "expiry reward exist ===> #{r.email} ,, Amount: #{expiry_reward_exist.amount}"
     		expiry_amount = resident_expiry_amount(r)
-    		if expiry_reward_exist && expiry_amount != expiry_reward_exist.amount
+    		if expiry_reward_exist
     			pp "expiry reward updated ===> ===> #{r.email} ,, Amount: #{-expiry_amount}"
-    			expiry_reward_exist.update_attributes(amount: -expiry_amount)
+    			expiry_reward_exist.update_attributes(
+    																						amount: -expiry_amount, 
+    																						period_start: Time.now
+    																					)
     		end
     		if expiry_reward_exist.blank?
     			pp "creating expiry reward ===> #{r.email} ,, Amount: #{-expiry_amount}"
@@ -110,10 +113,19 @@ module Smartrent
 	                                    resident_id: 		nil,
 	                                    amount:         -expiry_amount,
 	                                    type_: 					Reward::TYPE_EXPIRED,
-	                                    period_start: 	expiry_date.beginning_of_month,
+	                                    period_start: 	r.expiry_date.beginning_of_month,
 	                                    period_end: 		nil,
 	                                    months_earned: 	0
 		      													})
+	    	end
+	    else
+	    	# expiry reward may exist before for non expired residents
+	    	# delete the expiry reward
+	    	expiry_reward_exist = r.rewards.where(type_: Reward::TYPE_EXPIRED).last
+	    	if expiry_reward_exist
+	    		pp "expiry reward exist ===> #{r.email} ,, Amount: #{expiry_reward_exist.amount}"
+	    		pp "DELETE expiry reward ===> #{r.email}"
+	    		expiry_reward_exist.destroy
 	    	end
 	    end
     end
@@ -200,6 +212,7 @@ module Smartrent
     	if initial_reward
     		pp "initial_reward exist ===> Amount: #{initial_reward.amount} ,, months_earned: #{initial_reward.months_earned}"
     		initial_reward.update_attributes!(
+    																			property_id: 		fetch_property_id(rps),
 																					amount: 				amount.nil? ? 0 : amount,
 																					period_start: 	move_in,
                             							period_end: 		last_earned,
@@ -218,6 +231,10 @@ module Smartrent
 	        												})
     		pp "created new intial reward ==> Amount: #{amount.nil? ? 0 : amount} ,, months_earned: #{months_earned.count}"
     	end
+    end
+
+    def self.smartrent_properties(r)
+    	smartrent_properties = r.resident_properties.select{|rp| rp.property.is_smartrent }
     end
 
     def self.fetch_property_id(rp)

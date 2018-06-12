@@ -14,20 +14,27 @@ module Smartrent
           time = time.in_time_zone('Eastern Time (US & Canada)')
           period_start = time.beginning_of_month
           pp "start awarding : Property : #{smartrent_resident_property.property_id}  Unit : #{smartrent_resident_property.id}  period_start : #{period_start}"
-          create_monthly_rewards(resident, smartrent_resident_property, period_start, index)
+          create_monthly_rewards(resident, smartrent_resident_property, period_start)
         end
       end
+
+      value = property_months_map.values.flatten.sort.first
+      str = value + "05"
+      time = DateTime.parse(str)
+      time = time.in_time_zone('Eastern Time (US & Canada)')
+      first_month_earned = time.beginning_of_month
+
+      destroy_monthly_award_present_before_first_period_start(resident, first_month_earned)
     end
 
-    def self.create_monthly_rewards(resident, smartrent_resident_property, period_start, index)
-      destroy_monthly_award_present_before_first_period_start(resident, period_start) if index == 0
+    def self.create_monthly_rewards(resident, smartrent_resident_property, period_start)
       reward_exist = resident.rewards.where(
                                             type_:        Reward::TYPE_MONTHLY_AWARDS,
                                             period_start: period_start,
                                             period_end:   period_start.end_of_month
                                           )
       if reward_exist.empty?
-        amount = resident.total_rewards == 10000 ? 0 : Setting.monthly_award
+        amount = resident.total_rewards >= 10000 ? 0 : Setting.monthly_award
         resident.rewards.create({
                                   property_id:    smartrent_resident_property.property_id,
                                   type_:          Reward::TYPE_MONTHLY_AWARDS,
