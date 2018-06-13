@@ -7,7 +7,6 @@ module Smartrent
     def self.perform(resident_id, unit_id)
       resident = ::Resident.find(resident_id)
       unit = resident.units.find(unit_id)
-
       create_smartrent_resident(resident, unit)
     end
     
@@ -36,8 +35,8 @@ module Smartrent
       sr_property = sr.resident_properties.find_or_initialize_by(property_id: unit.property_id, unit_code: unit.unit_code)
       sr_property.status = unit.status
       sr_property.move_in_date = unit.move_in
-      # sr_property.move_out_date = unit.move_out
-      sr_property.move_out_date = (unit.status == "Current" || unit.status == "Notice") ? nil : unit.move_out
+      sr_property.move_out_date = unit.move_out
+      # sr_property.move_out_date = (unit.status == "Current" || unit.status == "Notice") ? nil : unit.move_out
       sr_property.disable_rewards = disable_rewards
       sr_property.save
       
