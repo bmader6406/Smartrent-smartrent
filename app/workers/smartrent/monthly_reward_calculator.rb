@@ -27,6 +27,8 @@ module Smartrent
 
         destroy_monthly_award_present_before_first_period_start(resident, first_month_earned)
       end
+
+      recalculate_monthly_rewards_if_any_missing(resident)
     end
 
     def self.create_monthly_rewards(resident, smartrent_resident_property, period_start)
@@ -34,17 +36,51 @@ module Smartrent
                                             type_:        Reward::TYPE_MONTHLY_AWARDS,
                                             period_start: period_start,
                                             period_end:   period_start.end_of_month
-                                          )
-      if reward_exist.empty?
-        amount = resident.total_rewards >= 10000 ? 0 : Setting.monthly_award
-        resident.rewards.create({
-                                  property_id:    smartrent_resident_property.property_id,
-                                  type_:          Reward::TYPE_MONTHLY_AWARDS,
+                                          ).last
+      create_or_update_monthly_reward(resident, smartrent_resident_property, period_start, reward_exist)
+    end
+
+    def self.create_or_update_monthly_reward(r, rp, period_start, reward)
+      amount = r.total_rewards >= 10000 ? 0 : Setting.monthly_award
+      if reward
+        reward.update_attributes(
+                                  property_id:    rp.property_id,
                                   period_start:   period_start,
                                   period_end:     period_start.end_of_month,
-                                  amount:         amount,
-                                  months_earned:  1
-                                })
+                                  amount:         amount
+                                )
+      else
+        r.rewards.create({
+                          property_id:    rp.property_id,
+                          type_:          Reward::TYPE_MONTHLY_AWARDS,
+                          period_start:   period_start,
+                          period_end:     period_start.end_of_month,
+                          amount:         amount,
+                          months_earned:  1
+                        })
+      end
+    end
+
+    def self.recalculate_monthly_rewards_if_any_missing(resident)
+      monthly_rewards = resident.rewards.where(
+                              type_: Reward::TYPE_MONTHLY_AWARDS
+                            ).order('period_start asc')
+      sign_up_reward = resident.rewards.where(
+                              type_: Reward::TYPE_SIGNUP_BONUS
+                            ).last.amount
+      initial_reward = resident.rewards.where(
+                              type_: Reward::TYPE_INITIAL_REWARD
+                            ).last.amount
+
+      amount = sign_up_reward + initial_reward
+
+      monthly_rewards.each do |reward|
+        if amount >= 10000
+          reward.update_attributes(amount: 0)
+        else
+          reward.update_attributes(amount: Setting.monthly_award)
+          amount += Setting.monthly_award
+        end
       end
     end
 
