@@ -1,6 +1,10 @@
 module Smartrent
   class RewardCalculator
 
+    def self.queue
+      :crm_immediate
+    end
+
     def self.perform(residents = [])
       calculate_rewards(residents)
     end
