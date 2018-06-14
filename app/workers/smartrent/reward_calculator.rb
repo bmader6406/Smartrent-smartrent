@@ -97,16 +97,15 @@ module Smartrent
     def self.set_expiry_reward(r)
     	if r.smartrent_status == Smartrent::Resident::STATUS_EXPIRED
     		expiry_reward_exist = r.rewards.where(type_: Reward::TYPE_EXPIRED).last
-    		pp "expiry reward exist ===> #{r.email} ,, Amount: #{expiry_reward_exist.amount}"
     		expiry_amount = resident_expiry_amount(r)
     		if expiry_reward_exist
+    			pp "expiry reward exist ===> #{r.email} ,, Amount: #{expiry_reward_exist.amount}"
     			pp "expiry reward updated ===> ===> #{r.email} ,, Amount: #{-expiry_amount}"
     			expiry_reward_exist.update_attributes(
     																						amount: -expiry_amount, 
     																						period_start: Time.now
     																					)
-    		end
-    		if expiry_reward_exist.blank?
+    		else
     			pp "creating expiry reward ===> #{r.email} ,, Amount: #{-expiry_amount}"
 	    		Smartrent::Reward.create!({
 	                                    property_id: 		nil,
