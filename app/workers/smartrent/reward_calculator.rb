@@ -109,7 +109,7 @@ module Smartrent
     			pp "creating expiry reward ===> #{r.email} ,, Amount: #{-expiry_amount}"
 	    		Smartrent::Reward.create!({
 	                                    property_id: 		nil,
-	                                    resident_id: 		nil,
+	                                    resident_id: 		r.id,
 	                                    amount:         -expiry_amount,
 	                                    type_: 					Reward::TYPE_EXPIRED,
 	                                    period_start: 	r.expiry_date.beginning_of_month,
