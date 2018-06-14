@@ -2,7 +2,7 @@ module Smartrent
   class RewardCalculator
 
     def self.queue
-      :crm_immediate
+      :crm_import
     end
 
     def self.perform(residents = [])
