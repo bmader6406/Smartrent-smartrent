@@ -107,7 +107,7 @@ module Smartrent
     			pp "expiry reward updated ===> ===> #{r.email} ,, Amount: #{-expiry_amount}"
     			expiry_reward_exist.update_attributes(
     																						amount: -expiry_amount, 
-    																						period_start: Time.now
+    																						period_start: Time.now.beginning_of_month
     																					)
     		else
     			pp "creating expiry reward ===> #{r.email} ,, Amount: #{-expiry_amount}"
