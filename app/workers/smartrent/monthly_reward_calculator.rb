@@ -28,6 +28,16 @@ module Smartrent
         destroy_monthly_award_present_before_first_period_start(resident, first_month_earned)
       end
 
+      value = property_months_map.values.flatten.sort.last
+      if value
+        str = value + "05"
+        time = DateTime.parse(str)
+        time = time.in_time_zone('Eastern Time (US & Canada)')
+        last_month_earned = time.beginning_of_month
+
+        destroy_monthly_award_present_after_last_period_start(resident, last_month_earned)
+      end
+
       recalculate_monthly_rewards_if_any_missing(resident)
     end
 
@@ -92,8 +102,22 @@ module Smartrent
       if rewards.present?
         pp "Before first period monthly award exist ===> #{resident.email}"
         rewards.each do |reward|
-          reward.destroy
           pp "Before first period monthly award destoryed ===> start: #{reward.period_start} ,, end: #{reward.period_end}"
+          reward.destroy
+        end
+      end
+    end
+
+    def self.destroy_monthly_award_present_after_last_period_start(resident, period_start)
+      rewards = resident.rewards.where(
+                                      'type_ = ? and period_start > ? and period_end > ?', 
+                                      Reward::TYPE_MONTHLY_AWARDS, period_start, period_start.end_of_month
+                                    )
+      if rewards.present?
+        pp "After last month period monthly award exist ===> #{resident.email}"
+        rewards.each do |reward|
+          pp "After last month period monthly award destoryed ===> start: #{reward.period_start} ,, end: #{reward.period_end}"
+          reward.destroy
         end
       end
     end
