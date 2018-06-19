@@ -44,7 +44,7 @@ module Smartrent
         sr.update_attributes(:current_property_id => unit.property_id, :current_unit_id => unit.unit_id, :disable_email_validation => true)
       end
       
-      Smartrent::MonthlyStatusUpdater.set_status(sr) if set_status
+      # Smartrent::MonthlyStatusUpdater.set_status(sr) if set_status
     end
     
     def self.delete_and_create_all_residents(cal_time = Time.now)
