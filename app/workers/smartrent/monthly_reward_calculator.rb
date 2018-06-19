@@ -77,10 +77,10 @@ module Smartrent
                             ).order('period_start asc')
       sign_up_reward = resident.rewards.where(
                               type_: Reward::TYPE_SIGNUP_BONUS
-                            ).last.amount
+                            ).last.amount rescue 0
       initial_reward = resident.rewards.where(
                               type_: Reward::TYPE_INITIAL_REWARD
-                            ).last.amount
+                            ).last.amount rescue 0
 
       amount = sign_up_reward + initial_reward
 
