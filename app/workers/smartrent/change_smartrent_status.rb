@@ -2,9 +2,9 @@ module Smartrent
   class ChangeSmartrentStatus
 
     def self.perform(resident_id)
-    	time = Time.now
+    	current_time = DateTime.now - 1.month
     	resident = Smartrent::Resident.includes(:rewards, :resident_properties).find_by_id resident_id
-    	change_smartrent_status(resident, time) if resident
+    	change_smartrent_status(resident, current_time) if resident
     end
 
     def self.live_in_smartrent_properties(resident, time)

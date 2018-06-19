@@ -6,6 +6,7 @@ module Smartrent
     end
 
     def self.perform(residents = [])
+      current_time = DateTime.now - 1.month
       calculate_rewards(residents)
     end
 
@@ -16,12 +17,12 @@ module Smartrent
         pp "calling signup bonus reward ===> #{r.email}"
         create_sign_up_bonus_reward(r)
 
-        reward_start_time = DateTime.now.change(day: 25, month: 02, year: 2016)
+        reward_start_time = current_time.change(day: 25, month: 02, year: 2016)
         
         pp "calling initial reward ===> #{r.email}"
         create_initial_rewards(r, reward_start_time)
 
-        time = DateTime.now.change(day: 1, month: 03, year: 2016) #smartrent_program begins
+        time = current_time.change(day: 1, month: 03, year: 2016) #smartrent_program begins
 
 				property_months_map = smartrent_months_to_be_awarded(r.resident_properties, time)
 
@@ -107,7 +108,7 @@ module Smartrent
     			pp "expiry reward updated ===> ===> #{r.email} ,, Amount: #{-expiry_amount}"
     			expiry_reward_exist.update_attributes(
     																						amount: -expiry_amount, 
-    																						period_start: DateTime.now.beginning_of_month
+    																						period_start: current_time.beginning_of_month
     																					)
     		else
     			pp "creating expiry reward ===> #{r.email} ,, Amount: #{-expiry_amount}"
@@ -174,8 +175,8 @@ module Smartrent
 
     def self.get_smartrent_eligible_months(rp, program_start_time)
     	if rp.move_in_date > program_start_time
-    		if rp.move_out_date.nil? || rp.move_out_date >= DateTime.now
-    			get_months_between(rp.move_in_date, DateTime.now)
+    		if rp.move_out_date.nil? || rp.move_out_date >= current_time
+    			get_months_between(rp.move_in_date, current_time)
     		else
     			if rp.move_out_date
     				get_months_between(rp.move_in_date, rp.move_out_date)
@@ -183,7 +184,7 @@ module Smartrent
     		end
     	else
     		if rp.move_out_date.nil? 
-    			get_months_between(program_start_time, DateTime.now)
+    			get_months_between(program_start_time, current_time)
     		else
     			if rp.move_out_date >= program_start_time
     				get_months_between(program_start_time, rp.move_out_date)
