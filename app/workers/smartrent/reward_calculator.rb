@@ -107,7 +107,7 @@ module Smartrent
     			pp "expiry reward updated ===> ===> #{r.email} ,, Amount: #{-expiry_amount}"
     			expiry_reward_exist.update_attributes(
     																						amount: -expiry_amount, 
-    																						period_start: Time.now.beginning_of_month
+    																						period_start: DateTime.now.beginning_of_month
     																					)
     		else
     			pp "creating expiry reward ===> #{r.email} ,, Amount: #{-expiry_amount}"
@@ -174,8 +174,8 @@ module Smartrent
 
     def self.get_smartrent_eligible_months(rp, program_start_time)
     	if rp.move_in_date > program_start_time
-    		if rp.move_out_date.nil? || rp.move_out_date >= Time.now
-    			get_months_between(rp.move_in_date, Time.now)
+    		if rp.move_out_date.nil? || rp.move_out_date >= DateTime.now
+    			get_months_between(rp.move_in_date, DateTime.now)
     		else
     			if rp.move_out_date
     				get_months_between(rp.move_in_date, rp.move_out_date)
@@ -183,7 +183,7 @@ module Smartrent
     		end
     	else
     		if rp.move_out_date.nil? 
-    			get_months_between(program_start_time, Time.now)
+    			get_months_between(program_start_time, DateTime.now)
     		else
     			if rp.move_out_date >= program_start_time
     				get_months_between(program_start_time, rp.move_out_date)

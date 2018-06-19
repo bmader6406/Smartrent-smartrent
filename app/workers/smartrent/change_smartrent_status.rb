@@ -29,8 +29,7 @@ module Smartrent
     def self.move_out_smartrent_properties(resident, time)
     	move_out_smartrent_properties = smartrent_properties(resident).select{|rp| 
     																		rp.move_out_date and 
-    																		rp.move_out_date.month < time.month and 
-    																		rp.move_out_date.year < time.year
+    																		rp.move_out_date < time
 																			}
     end
 
