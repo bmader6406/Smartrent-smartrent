@@ -6,8 +6,8 @@ module Smartrent
     end
 
     def self.perform(residents = [])
-      time = DateTime.now - 1.month
-      @@current_time = time.end_of_month
+      today = Date.today - 1.month
+      @@current_time = today.end_of_month
       calculate_rewards(residents)
     end
 
