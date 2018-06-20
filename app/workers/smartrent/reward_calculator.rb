@@ -135,7 +135,7 @@ module Smartrent
     end
 
     def self.resident_expiry_amount(r)
-    	r.rewards.collect(&:amount).inject(:+)
+    	r.rewards.where(type_: [0,1,2,3]).collect(&:amount).inject(:+)
     end
 
     def self.smartrent_months_to_be_awarded(resident_properties, program_start_time)
