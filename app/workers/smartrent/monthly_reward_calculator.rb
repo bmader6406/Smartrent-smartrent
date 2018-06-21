@@ -53,12 +53,14 @@ module Smartrent
     def self.create_or_update_monthly_reward(r, rp, period_start, reward)
       amount = r.total_rewards >= 10000 ? 0 : Setting.monthly_award
       if reward
+        pp "monthly_reward exist ===> #{r.email} ,, date: #{reward.period_start} ,, property: #{reward.property_id}"
         reward.update_attributes(
                                   property_id:    rp.property_id,
                                   period_start:   period_start,
                                   period_end:     period_start.end_of_month,
                                   amount:         amount
                                 )
+        pp "monthly_reward UPDATED ===> #{r.email} ,, date: #{period_start} ,, property: #{rp.property_id} ,, Amount: #{amount}"
       else
         r.rewards.create({
                           property_id:    rp.property_id,
@@ -68,6 +70,7 @@ module Smartrent
                           amount:         amount,
                           months_earned:  1
                         })
+        pp "monthly_reward CREATED ===> #{r.email} ,, date: #{period_start} ,, property: #{rp.property_id} ,, Amount: #{amount}"
       end
     end
 

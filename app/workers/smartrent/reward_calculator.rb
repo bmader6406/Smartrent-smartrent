@@ -42,7 +42,7 @@ module Smartrent
     end
 
     def self.create_sign_up_bonus_reward(r)
-      resident_property = smartrent_properties(r).min_by{|rp| rp.move_in_date }
+      resident_property = fetch_min_move_in_smartrent_property(r)
       sign_up_reward = r.rewards.where(type_: 1).last
       if resident_property
 	      if sign_up_reward
@@ -158,7 +158,11 @@ module Smartrent
       eligible_months = []
       resident_properties.each do |rp|
         if rp.property.is_smartrent
-          eligible_months << get_eligible_months(rp, reward_start_time)
+          if resident_property_expired?(rp, @@current_time)
+            next
+          else
+            eligible_months << get_eligible_months(rp, reward_start_time)
+          end
         end
       end
       eligible_months.flatten.uniq.sort
@@ -180,16 +184,24 @@ module Smartrent
     			get_months_between(rp.move_in_date, @@current_time)
     		else
     			if rp.move_out_date
-    				get_months_between(rp.move_in_date, rp.move_out_date)
+            if resident_property_expired?(rp, @@current_time)
+              []
+            else
+    				  get_months_between(rp.move_in_date, rp.move_out_date)
+            end
     			end
     		end
     	else
     		if rp.move_out_date.nil? 
     			get_months_between(program_start_time, @@current_time)
     		else
-    			if rp.move_out_date >= program_start_time
-    				get_months_between(program_start_time, rp.move_out_date)
-    			end
+          if resident_property_expired?(rp, @@current_time)
+            []
+          else
+      			if rp.move_out_date >= program_start_time
+      				get_months_between(program_start_time, rp.move_out_date)
+      			end
+          end
     		end
     	end
     end
@@ -218,16 +230,16 @@ module Smartrent
         if initial_reward
       		pp "initial_reward exist ===> Amount: #{initial_reward.amount} ,, months_earned: #{initial_reward.months_earned}"
       		initial_reward.update_attributes!(
-      																			property_id: 		fetch_property_id(rps),
+      																			property_id: 		fetch_property_id(rps, months_earned),
   																					amount: 				amount.nil? ? 0 : amount,
   																					period_start: 	move_in,
                               							period_end: 		last_earned,
                               							months_earned: 	months_earned.count
     																			)
-      		pp "initial_reward updated ===> Amount: #{amount.nil? ? 0 : amount} ,, months_earned: #{months_earned.count}"
+      		pp "initial_reward updated ===> Amount: #{amount.nil? ? 0 : amount} ,, months_earned: #{months_earned.count} ,, Property: #{fetch_property_id(rps, months_earned)}"
       	else
       		Smartrent::Reward.create!({
-                                      property_id: 		fetch_property_id(rps),
+                                      property_id: 		fetch_property_id(rps, months_earned),
                                       resident_id: 		fetch_resident_id(r),
                                       amount: 				amount.nil? ? 0 : amount,
                                       type_: 					Reward::TYPE_INITIAL_REWARD,
@@ -244,7 +256,27 @@ module Smartrent
     	smartrent_properties = r.resident_properties.select{|rp| rp.property.is_smartrent }
     end
 
-    def self.fetch_property_id(rp)
+    def self.fetch_min_move_in_smartrent_property(r)
+      rps = smartrent_properties(r)
+      #find min_move_in rp witch is not expired
+      min_move_in_rp = nil
+      not_expired_rps = []
+      rps.each do |rp|
+        if resident_property_expired?(rp, @@current_time)
+          next
+        else
+          not_expired_rps << rp
+        end
+      end
+      min_move_in_rp = not_expired_rps.min_by{|rp| rp.move_in_date } if not_expired_rps.present?
+    end
+
+    def self.resident_property_expired?(rp, time)
+      rp.move_out_date && rp.move_out_date + 2.years < time
+    end
+
+    def self.fetch_property_id(rp, months_earned)
+      return nil if months_earned.empty?
     	if rp.present?
     		rp.first.property_id
     	else
