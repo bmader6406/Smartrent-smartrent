@@ -62,6 +62,11 @@ module Smartrent
 	        													})
 	        pp "sign_up_reward created ===> #{r.email} ,, SIGNUP_BONUS_date: #{resident_property.move_in_date.beginning_of_month}"
 	      end
+      else
+        if sign_up_reward
+          pp "destoryed singup reward if exist"
+          sign_up_reward.destroy
+        end
 	    end
     end
 
@@ -262,7 +267,7 @@ module Smartrent
       min_move_in_rp = nil
       not_expired_rps = []
       rps.each do |rp|
-        if resident_property_expired?(rp, @@current_time)
+        if resident_property_expired?(rp, @@current_time) || move_in_after_current_time(rp, @@current_time)
           next
         else
           not_expired_rps << rp
@@ -273,6 +278,10 @@ module Smartrent
 
     def self.resident_property_expired?(rp, time)
       rp.move_out_date && rp.move_out_date + 2.years < time
+    end
+
+    def self.move_in_after_current_time(rp, time)
+      rp.move_in_date && rp.move_in_date > time
     end
 
     def self.fetch_property_id(rp, months_earned)
