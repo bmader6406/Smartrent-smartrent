@@ -4,6 +4,9 @@ module Smartrent
   class MonthlyRewardCalculator
 
     def self.perform(resident_id, property_months_map)
+      today = Date.today - 1.month
+      @@current_time = today.end_of_month
+
       resident = Smartrent::Resident.includes(:rewards).find_by_id resident_id
 
       property_months_map.each do |rp_id, months_earned|
@@ -16,6 +19,10 @@ module Smartrent
           pp "start awarding : Property : #{smartrent_resident_property.property_id}  Unit : #{smartrent_resident_property.id}  period_start : #{period_start}"
           create_monthly_rewards(resident, smartrent_resident_property, period_start)
         end
+      end
+
+      if property_months_map.values.flatten.empty?
+        destroy_monthly_awards_any_after_current_time(resident, @@current_time)
       end
 
       value = property_months_map.values.flatten.sort.first
@@ -100,7 +107,9 @@ module Smartrent
     def self.destroy_monthly_award_present_before_first_period_start(resident, period_start)
       rewards = resident.rewards.where(
                                       'type_ = ? and period_start < ? and period_end < ?', 
-                                      Reward::TYPE_MONTHLY_AWARDS, period_start, period_start.end_of_month
+                                      Reward::TYPE_MONTHLY_AWARDS, 
+                                      period_start, 
+                                      period_start.end_of_month
                                     )
       if rewards.present?
         pp "Before first period monthly award exist ===> #{resident.email}"
@@ -114,12 +123,30 @@ module Smartrent
     def self.destroy_monthly_award_present_after_last_period_start(resident, period_start)
       rewards = resident.rewards.where(
                                       'type_ = ? and period_start > ? and period_end > ?', 
-                                      Reward::TYPE_MONTHLY_AWARDS, period_start, period_start.end_of_month
+                                      Reward::TYPE_MONTHLY_AWARDS, 
+                                      period_start, 
+                                      period_start.end_of_month
                                     )
       if rewards.present?
         pp "After last month period monthly award exist ===> #{resident.email}"
         rewards.each do |reward|
           pp "After last month period monthly award destoryed ===> start: #{reward.period_start} ,, end: #{reward.period_end}"
+          reward.destroy
+        end
+      end
+    end
+
+    def self.destroy_monthly_awards_any_after_current_time(resident, time)
+      rewards = resident.rewards.where(
+                                      'type_ = ? and period_start > ? and period_end > ?', 
+                                      Reward::TYPE_MONTHLY_AWARDS, 
+                                      time.beginning_of_month, 
+                                      time.end_of_month
+                                    )
+      if rewards.present?
+        pp "monthly awards exist after current time: #{time} ===> #{resident.email}"
+        rewards.each do |reward|
+          pp "monthly award destoryed ===> start: #{reward.period_start} ,, end: #{reward.period_end}"
           reward.destroy
         end
       end
