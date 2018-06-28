@@ -33,8 +33,13 @@ module Smartrent
         pp "calling smartrent status worker ===> #{r.email}"
         Smartrent::ChangeSmartrentStatus.perform(r.id)
 
+        r.reload
         pp "calling expiry reward settig method ===> #{r.email} ,, if smartrent_status is EXPIRED"
         set_expiry_reward(r)
+
+        r.reload
+        pp "updating balance ===> #{r.email} ,, current: #{r.balance}"
+        r.update_attributes(balance: r.total_rewards)
 
         pp "finished processing resident ===> #{r.email}"
 
@@ -296,6 +301,7 @@ module Smartrent
     def self.fetch_min_move_in_smartrent_property(r)
       rps = smartrent_properties(r).sort_by {|rp| rp.move_in_date}
       #find min_move_in rp witch is not expired
+
       min_move_in_rp = nil
       not_expired_rps = []
 
@@ -334,7 +340,7 @@ module Smartrent
 
     def self.rp_move_in_date_not_after_current_time?(rp)
       if rp
-        if rp.move_in_date < @@current_time
+        if rp.move_in_date <= @@current_time
           return true
         else
           false
