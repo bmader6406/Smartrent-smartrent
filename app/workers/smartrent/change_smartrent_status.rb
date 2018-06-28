@@ -30,7 +30,7 @@ module Smartrent
     def self.move_out_smartrent_properties(resident, time)
     	move_out_smartrent_properties = smartrent_properties(resident).select{|rp| 
     																		rp.move_out_date and 
-    																		rp.move_out_date < time
+    																		rp.move_out_date <= time
 																			}
     end
 
@@ -50,7 +50,7 @@ module Smartrent
 	    			pp "change smartrent_status ===> #{resident.email} ,, In-Active"
 	    		else
 	    			expiry_date = max_move_out_date + 2.years
-	    			if expiry_date < time
+	    			if expiry_date <= time
 	    				resident.smartrent_status = Smartrent::Resident::STATUS_EXPIRED
 	    				pp "change smartrent_status ===> #{resident.email} ,, Expired"
 	    			else
