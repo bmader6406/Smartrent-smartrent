@@ -9,6 +9,9 @@ module Smartrent
       today = Date.today - 1.month
       @@current_time = today.end_of_month
 
+      @@time_seventhth_flats = @@current_time.change(day: 1, month: 02, year: 2018)
+      @@seventh_flats_id = [12]
+
       time = @@current_time.change(day: 1, month: 03, year: 2016)
 
       @@time_monument_central = @@current_time.change(day: 1, month: 04, year: 2018)
@@ -243,6 +246,9 @@ module Smartrent
     end
 
     def self.get_smartrent_eligible_months(rp, program_start_time)
+      if @@seventh_flats_id.include? rp.property_id
+        @@current_time = @@time_seventhth_flats
+      end
     	if rp.move_in_date > program_start_time
     		if rp.move_out_date.nil? || rp.move_out_date >= @@current_time
     			get_months_between(rp.move_in_date, @@current_time)
@@ -348,6 +354,9 @@ module Smartrent
 
     def self.last_rp_not_expired_with_current_time?(rp)
       if rp
+        if @@seventh_flats_id.include? rp.property_id
+          @@current_time = @@time_seventhth_flats
+        end
         if rp.move_out_date.nil?
           return true
         else
@@ -360,6 +369,9 @@ module Smartrent
 
     def self.rp_move_in_date_not_after_current_time?(rp)
       if rp
+        if @@seventh_flats_id.include? rp.property_id
+          @@current_time = @@time_seventhth_flats
+        end
         if rp.move_in_date <= @@current_time
           return true
         else
