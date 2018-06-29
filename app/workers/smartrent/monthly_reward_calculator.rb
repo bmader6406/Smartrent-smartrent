@@ -7,6 +7,9 @@ module Smartrent
       today = Date.today - 1.month
       @@current_time = today.end_of_month
 
+      @@time_seventhth_flats = @@current_time.change(day: 1, month: 02, year: 2018)
+      @@seventh_flats_id = [12]
+
       resident = Smartrent::Resident.includes(:rewards).find_by_id resident_id
 
       property_months_map.each do |rp_id, months_earned|
@@ -143,10 +146,27 @@ module Smartrent
                                       time.beginning_of_month, 
                                       time.end_of_month
                                     )
+
+      seventh_flats_time = @@time_seventhth_flats
+      seventh_flats_rewards = resident.rewards.where(
+                                      'type_ = ? and property_id = ? and period_start > ? and period_end > ?', 
+                                      Reward::TYPE_MONTHLY_AWARDS,
+                                      @@seventh_flats_id.last,
+                                      seventh_flats_time.beginning_of_month, 
+                                      seventh_flats_time.end_of_month
+                                    )
       if rewards.present?
         pp "monthly awards exist after current time: #{time} ===> #{resident.email}"
         rewards.each do |reward|
           pp "monthly award destoryed ===> start: #{reward.period_start} ,, end: #{reward.period_end}"
+          reward.destroy
+        end
+      end
+
+      if seventh_flats_rewards.present?
+        pp "monthly awards exist after current time: #{seventh_flats_time} for Property 7th flats===> #{resident.email}"
+        seventh_flats_rewards.each do |reward|
+          pp "monthly award destoryed 7th flats property ===> start: #{reward.period_start} ,, end: #{reward.period_end}"
           reward.destroy
         end
       end
