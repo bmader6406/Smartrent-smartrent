@@ -17,14 +17,16 @@ module Smartrent
     																	}
     	live_in_smartrent_properties = live_in_properties.
     																	select{|rp| 
-    																		rp.property.is_smartrent 
+    																		rp.property.is_smartrent or 
+                                        rp.property_id == @@seventh_flats_id.last
     																	}
     end
 
     def self.smartrent_properties(resident)
     	smartrent_properties = resident.resident_properties.
     																		select{|rp| 
-    																			rp.property.is_smartrent 
+    																			rp.property.is_smartrent or 
+                                          rp.property_id == @@seventh_flats_id.last
     																		}
     end
 
