@@ -63,12 +63,13 @@ module Smartrent
       sign_up_reward = r.rewards.where(type_: 1).last
       if resident_property
 	      if sign_up_reward
-	      	pp "sign_up_reward exist ===> #{r.email} ,, SIGNUP_BONUS_date: #{sign_up_reward.period_start}"
+	      	pp "sign_up_reward exist ===> #{r.email} ,, property: #{resident_property.property_id} ,, SIGNUP_BONUS_date: #{sign_up_reward.period_start}"
 	      	sign_up_reward.update_attributes(
 	      																		property_id: 		resident_property.property_id,
 				                                    resident_id: 		r.id,
 				                                    period_start: 	resident_property.move_in_date.beginning_of_month
 	      																	)
+          puts "sign_up_reward updated ===> #{r.email} ,,  property: #{resident_property.property_id} ,, SIGNUP_BONUS_date: #{sign_up_reward.period_start}"
 	      else
 	        Smartrent::Reward.create!({
 	                                    property_id: 		resident_property.property_id,
@@ -77,7 +78,7 @@ module Smartrent
 	                                    type_: 					Reward::TYPE_SIGNUP_BONUS,
 	                                    period_start: 	resident_property.move_in_date.beginning_of_month
 	        													})
-	        pp "sign_up_reward created ===> #{r.email} ,, SIGNUP_BONUS_date: #{resident_property.move_in_date.beginning_of_month}"
+	        pp "sign_up_reward created ===> #{r.email} ,, property: #{resident_property.property_id} ,, SIGNUP_BONUS_date: #{resident_property.move_in_date.beginning_of_month}"
 	      end
       else
         if sign_up_reward
@@ -321,7 +322,7 @@ module Smartrent
     end
 
     def self.smartrent_properties(r)
-    	smartrent_properties = r.resident_properties.select{|rp| rp.property.is_smartrent }
+    	smartrent_properties = r.resident_properties.select{|rp| rp.property.is_smartrent || rp.property_id == @@seventh_flats_id.last}
     end
 
     def self.fetch_min_move_in_smartrent_property(r)
