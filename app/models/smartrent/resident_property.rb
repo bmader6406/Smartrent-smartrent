@@ -84,8 +84,8 @@ module Smartrent
     end
 
     def create_initial_signup_rewards
-      if self.property.eligible? and self.move_in_date == Date.today
-        if self.resident.rewards.where(:type_ => [Reward::TYPE_INITIAL_REWARD, Reward::TYPE_SIGNUP_BONUS]).count == 0
+      if self.property.is_smartrent and self.move_in_date == Date.today
+        if self.resident.rewards.where(:type_ => Reward::TYPE_SIGNUP_BONUS).count == 0
          Smartrent::Reward.create!({
           :property_id => self.property_id,
           :resident_id => self.resident.id,
