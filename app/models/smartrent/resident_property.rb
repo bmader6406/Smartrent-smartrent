@@ -9,8 +9,9 @@ module Smartrent
     validates :property, :resident, :move_in_date, :presence => true
     #validates :move_in_date, :uniqueness => {:scope => [:resident_id, :property_id]}
     
-    after_create :reset_rewards_table
-    # after_create :create_initial_signup_rewards
+    # after_create :reset_rewards_table
+    after_save :create_initial_signup_rewards
+    after_save :recalculate_rewards_table
     after_create :set_first_move_in
     after_destroy :remove_resident_if_does_not_live
     
@@ -33,7 +34,7 @@ module Smartrent
     def reset_rewards_table
       # pp "Resetting rewards table..."
       self.resident
-      resident.rewards.destroy_all if resident.rewards.count > 0
+      #resident.rewards.destroy_all if resident.rewards.count > 0
       resident.update_attributes(:smartrent_status => Smartrent::Resident::STATUS_ACTIVE)
 
       # To awards initial balance till 29 Feb 2016
@@ -69,7 +70,7 @@ module Smartrent
       # TODO: recheck this for possibility of running this at 1st of every month at first second
       while time <= end_time do 
           pp "award_time:  #{time}"
-          Smartrent::MonthlyStatusUpdater.perform(time,true,nil,resident.id)
+          Smartrent::MonthlyAwardUpdater.perform(time,true,nil,resident.id)
           time = time.advance(:months=>1)
       end
 
@@ -77,24 +78,26 @@ module Smartrent
       return true
     end
 
-    private
+    def recalculate_rewards_table
+      time = Date.today
+      RewardCalculator.perform(time, [self.resident])
+    end
 
-    def create_initial_signup_rewards(time = Time.now,r=resident,time_expiry)
-        # monthly reward is created by MonthlyStatusUpdater
-        
-        # the initial import will create rewards only after the import is done on ResidentCreator
-        return true if disable_rewards
-        
-        # return true if !property.eligible?
-        
-        if r.rewards.where(:type_ => [Reward::TYPE_INITIAL_REWARD, Reward::TYPE_SIGNUP_BONUS]).count == 0
-          # pp "create initial rewards..."
-          Smartrent::ResidentCreator.create_initial_signup_rewards(r, time, time_expiry)
-        else
-          # pp "initial rewards have been created"
+    def create_initial_signup_rewards
+      if self.property.eligible? and self.move_in_date == Date.today
+        if self.resident.rewards.where(:type_ => [Reward::TYPE_INITIAL_REWARD, Reward::TYPE_SIGNUP_BONUS]).count == 0
+         Smartrent::Reward.create!({
+          :property_id => self.property_id,
+          :resident_id => self.resident.id,
+          :amount => Smartrent::Setting.sign_up_bonus,
+          :type_ => Reward::TYPE_SIGNUP_BONUS,
+          :period_start => self.move_in_date.beginning_of_month
+        })
         end
       end
+    end
 
+    private
 
       def set_first_move_in
         first_move_in = resident.resident_properties.order("move_in_date asc").limit(1).first.move_in_date

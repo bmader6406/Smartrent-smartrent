@@ -5,8 +5,9 @@ module Smartrent
       :crm_import
     end
 
-    def self.perform(residents = [])
-      today = Date.today - 1.month
+    def self.perform(time = nil, residents = [])
+      today = time 
+      today = Date.today - 1.month if today.nil?
       @@current_time = today.end_of_month
 
       @@time_seventhth_flats = @@current_time.change(day: 1, month: 02, year: 2018)
@@ -20,10 +21,10 @@ module Smartrent
       @@time_apollo = @@current_time.change(day: 1, month: 02, year: 2018)
       @@apollo_id = [196]
 
-      calculate_rewards(residents)
+      calculate_rewards(residents, time.nil?)
     end
 
-    def self.calculate_rewards(residents = [])
+    def self.calculate_rewards(residents = [], schedule_run = true)
       residents.each do |r|
         pp "taken resident ===> #{r.email}"
 
@@ -43,7 +44,7 @@ module Smartrent
 				Smartrent::MonthlyRewardCalculator.perform(r.id, property_months_map)
 
         pp "calling smartrent status worker ===> #{r.email}"
-        Smartrent::ChangeSmartrentStatus.perform(r.id)
+        Smartrent::ChangeSmartrentStatus.perform(r.id) if schedule_run
 
         r.reload
         pp "calling expiry reward settig method ===> #{r.email} ,, if smartrent_status is EXPIRED"
