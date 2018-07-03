@@ -251,6 +251,7 @@ module Smartrent
       if @@seventh_flats_id.include? rp.property_id
         @@current_time = @@time_seventhth_flats
       else
+        @@today = Date.today - 1.month
         @@current_time = @@today.end_of_month
       end
     	if rp.move_in_date > program_start_time
