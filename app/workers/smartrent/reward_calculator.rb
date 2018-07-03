@@ -6,9 +6,9 @@ module Smartrent
     end
 
     def self.perform(time = nil, residents = [])
-      today = time 
-      today = Date.today - 1.month if today.nil?
-      @@current_time = today.end_of_month
+      @@today = time 
+      @@today = Date.today - 1.month if @@today.nil?
+      @@current_time = @@today.end_of_month
 
       @@time_seventhth_flats = @@current_time.change(day: 1, month: 02, year: 2018)
       @@seventh_flats_id = [12]
@@ -251,7 +251,7 @@ module Smartrent
       if @@seventh_flats_id.include? rp.property_id
         @@current_time = @@time_seventhth_flats
       else
-        @@current_time = today.end_of_month
+        @@current_time = @@today.end_of_month
       end
     	if rp.move_in_date > program_start_time
     		if rp.move_out_date.nil? || rp.move_out_date >= @@current_time
@@ -361,7 +361,7 @@ module Smartrent
         if @@seventh_flats_id.include? rp.property_id
           @@current_time = @@time_seventhth_flats
         else
-          @@current_time = today.end_of_month
+          @@current_time = @@today.end_of_month
         end
         if rp.move_out_date.nil?
           return true
@@ -378,7 +378,7 @@ module Smartrent
         if @@seventh_flats_id.include? rp.property_id
           @@current_time = @@time_seventhth_flats
         else
-          @@current_time = today.end_of_month
+          @@current_time = @@today.end_of_month
         end
         if rp.move_in_date <= @@current_time
           return true
