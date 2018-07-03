@@ -7,7 +7,6 @@ module Smartrent
     def self.perform(resident_id, unit_id)
       resident = ::Resident.find(resident_id)
       unit = resident.units.find(unit_id)
-
       create_smartrent_resident(resident, unit)
     end
     
@@ -36,8 +35,8 @@ module Smartrent
       sr_property = sr.resident_properties.find_or_initialize_by(property_id: unit.property_id, unit_code: unit.unit_code)
       sr_property.status = unit.status
       sr_property.move_in_date = unit.move_in
-      # sr_property.move_out_date = unit.move_out
-      sr_property.move_out_date = (unit.status == "Current" || unit.status == "Notice") ? nil : unit.move_out
+      sr_property.move_out_date = unit.move_out
+      # sr_property.move_out_date = (unit.status == "Current" || unit.status == "Notice") ? nil : unit.move_out
       sr_property.disable_rewards = disable_rewards
       sr_property.save
       
@@ -45,7 +44,7 @@ module Smartrent
         sr.update_attributes(:current_property_id => unit.property_id, :current_unit_id => unit.unit_id, :disable_email_validation => true)
       end
       
-      Smartrent::MonthlyStatusUpdater.set_status(sr) if set_status
+      # Smartrent::MonthlyStatusUpdater.set_status(sr) if set_status
     end
     
     def self.delete_and_create_all_residents(cal_time = Time.now)
