@@ -10,8 +10,8 @@ module Smartrent
     #validates :move_in_date, :uniqueness => {:scope => [:resident_id, :property_id]}
     
     # after_create :reset_rewards_table
-    after_save :create_initial_signup_rewards
-    after_save :recalculate_rewards_table
+    # after_save :create_initial_signup_rewards
+    # after_save :recalculate_rewards_table
     after_create :set_first_move_in
     after_destroy :remove_resident_if_does_not_live
     
