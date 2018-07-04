@@ -13,8 +13,6 @@ module Smartrent
       @@time_seventhth_flats = @@current_time.change(day: 1, month: 02, year: 2018)
       @@seventh_flats_id = [12]
 
-      time = @@current_time.change(day: 1, month: 03, year: 2016)
-
       @@time_monument_central = @@current_time.change(day: 1, month: 04, year: 2018)
       @@monument_central_ids = [394,451]
 
