@@ -76,7 +76,7 @@ module Smartrent
         csv << ["Full Name", "Email", "SmartRent Balance", "SmartRent Status", "Batch"]
         
         Smartrent::Resident.includes(:rewards)
-          .where("smartrent_status IN (?) AND created_at < '#{time.end_of_quarter.to_s(:db)}'", [
+          .where("smartrent_status IN (?) AND created_at < '#{time.end_of_quarter.to_s(:db)}' AND balance > 0", [
             Smartrent::Resident::STATUS_ACTIVE, 
             Smartrent::Resident::STATUS_INACTIVE
           ]).find_in_batches do |residents|
@@ -85,7 +85,7 @@ module Smartrent
       end
       
       # upload ftp
-      #upload(file_name)
+      upload(file_name)
     end
     
     def self.export_monthly_move_in_residents(time)
