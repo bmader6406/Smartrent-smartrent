@@ -79,8 +79,11 @@ module Smartrent
     end
 
     def recalculate_rewards_table
-      time = Date.today
-      RewardCalculator.perform(time, [self.resident])
+      if self.move_in_date_changed? || self.move_out_date_changed? 
+        time = Date.today
+        time = time.in_time_zone('Eastern Time (US & Canada)')
+        RewardCalculator.perform(time, [self.resident])
+      end
     end
 
     def create_initial_signup_rewards
