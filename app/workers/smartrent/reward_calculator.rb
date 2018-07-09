@@ -44,7 +44,7 @@ module Smartrent
 
         r.reload
         pp "calling expiry reward settig method ===> #{r.email} ,, if smartrent_status is EXPIRED"
-        set_expiry_reward(r)
+        set_expiry_reward(r) if schedule_run
 
         r.reload
         pp "updating balance ===> #{r.email} ,, current: #{r.balance}"
