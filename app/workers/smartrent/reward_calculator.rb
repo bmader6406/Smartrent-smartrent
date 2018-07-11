@@ -218,10 +218,13 @@ module Smartrent
         end
       end
 
-      last_two_rps = rps.last(2)
-      if last_two_rps[1].move_in_date && last_two_rps[0].move_out_date
-        if ((last_two_rps[1].move_in_date - last_two_rps[0].move_out_date)/365).to_i >= 2
-          not_expired_rps = []
+      if rps.count > 1
+        last_two_rps = rps.last(2)
+        if last_two_rps[1].move_in_date && last_two_rps[0].move_out_date
+          if ((last_two_rps[1].move_in_date - last_two_rps[0].move_out_date)/365).to_i >= 2
+            not_expired_rps = []
+            pp "Intital reward expired for email: - #{rps[0].resident.email}"
+          end
         end
       end
 
