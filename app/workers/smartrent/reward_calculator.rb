@@ -218,6 +218,13 @@ module Smartrent
         end
       end
 
+      last_two_rps = rps.last(2)
+      if last_two_rps[1].move_in_date && last_two_rps[0].move_out_date
+        if ((last_two_rps[1].move_in_date - last_two_rps[0].move_out_date)/365).to_i >= 2
+          not_expired_rps = []
+        end
+      end
+
       not_expired_rps << rps.last if last_rp_not_expired_with_current_time?(rps.last)
 
       # initial reward is only applicable if move_in_date is before reward_start_time
@@ -247,7 +254,6 @@ module Smartrent
       if @@seventh_flats_id.include? rp.property_id
         @@current_time = @@time_seventhth_flats
       else
-        @@today = Date.today - 1.month
         @@current_time = @@today.end_of_month
       end
     	if rp.move_in_date > program_start_time
