@@ -2,7 +2,7 @@ module Smartrent
   class ChangeSmartrentStatus
 
     def self.perform(resident_id)
-    	today = Date.today - 1.month
+    	today = Date.today
       @@current_time = today.end_of_month
       @@seventh_flats_id = [12]
     	resident = Smartrent::Resident.includes(:rewards, :resident_properties).find_by_id resident_id

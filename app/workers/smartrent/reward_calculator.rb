@@ -7,7 +7,7 @@ module Smartrent
 
     def self.perform(time = nil, residents = [])
       @@today = time 
-      @@today = Date.today - 1.month if @@today.nil?
+      @@today = Date.today if @@today.nil?
       @@current_time = @@today.end_of_month
 
       @@time_seventhth_flats = @@current_time.change(day: 1, month: 02, year: 2018)
