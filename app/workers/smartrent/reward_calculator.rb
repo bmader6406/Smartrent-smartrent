@@ -29,7 +29,7 @@ module Smartrent
         pp "calling signup bonus reward ===> #{r.email}"
         create_sign_up_bonus_reward(r)
 
-        time = @@current_time.change(day: 1, month: 03, year: 2016) #smartrent_program begins
+        time = @@current_time.change(day: 29, month: 02, year: 2016) #smartrent_program begins
         
         pp "calling initial reward ===> #{r.email}"
         create_initial_rewards(r, time)
