@@ -29,12 +29,14 @@ module Smartrent
         pp "calling signup bonus reward ===> #{r.email}"
         create_sign_up_bonus_reward(r)
 
-        time = @@current_time.change(day: 29, month: 02, year: 2016) #smartrent_program begins
+        time = @@current_time.change(day: 29, month: 02, year: 2016)
         
         pp "calling initial reward ===> #{r.email}"
         create_initial_rewards(r, time)
 
-				property_months_map = smartrent_months_to_be_awarded(r, time)
+        smartrent_time = @@current_time.change(day: 01, month: 03, year: 2016)
+
+				property_months_map = smartrent_months_to_be_awarded(r, smartrent_time) #smartrent_program begins
 
 				pp "calling monthly reward calculator ===> #{r.email} ,, property_months_map: #{property_months_map}}"
 				Smartrent::MonthlyRewardCalculator.perform(r.id, property_months_map)
