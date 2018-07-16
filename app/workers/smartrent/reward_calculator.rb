@@ -193,6 +193,20 @@ module Smartrent
     	property_months_map
     end
 
+    def self.rps_not_expired(rps_before_reward_start_time, first_rp_after_reward_start_time)
+      not_expired = []
+      if rps_before_reward_start_time.present? && first_rp_after_reward_start_time
+        not_expired << rps_before_reward_start_time.select{|rp|
+                                      rp.move_out_date.nil?
+                                    }                                 
+        rps_with_move_out_date = rps_before_reward_start_time - not_expired.flatten
+        not_expired << rps_with_move_out_date.select{|rp|
+                                        rp.move_out_date + 2.years > first_rp_after_reward_start_time.move_in_date
+                                      }
+      end
+      return not_expired.flatten
+    end
+
     def self.calculate_start_time_from_property(rp, given_time)
       if @@monument_central_ids.include? rp.property_id
         @@time_monument_central
@@ -207,33 +221,41 @@ module Smartrent
       eligible_months = []
       not_expired_rps = []
       rps = smartrent_properties
+      rps_before_reward_start_time = smartrent_properties.select{|rp| 
+                                                            rp.move_in_date <= reward_start_time
+                                                          }.sort_by {|rp| rp.move_in_date}
+      rps_after_reward_start_time = smartrent_properties.select{|rp| 
+                                                            rp.move_in_date > reward_start_time
+                                                          }.sort_by {|rp| rp.move_in_date}                                                         
 
-      (rps.length-1).times do |i|
-        if rps[i+1].move_in_date && rps[i].move_out_date
-          if ((rps[i+1].move_in_date - rps[i].move_out_date)/365).to_i >= 2
+      (rps_before_reward_start_time.length-1).times do |i|
+        if rps_before_reward_start_time[i+1].move_in_date && rps_before_reward_start_time[i].move_out_date
+          if ((rps_before_reward_start_time[i+1].move_in_date - rps_before_reward_start_time[i].move_out_date)/365).to_i >= 2
             next
           else
-            not_expired_rps << rps[i]
+            not_expired_rps << rps_before_reward_start_time[i]
           end
         else
-          not_expired_rps << rps[i]
+          not_expired_rps << rps_before_reward_start_time[i]
         end
       end
 
-      if rps.count > 1
-        last_two_rps = rps.last(2)
-        if last_two_rps[1].move_in_date && last_two_rps[0].move_out_date
-          if ((last_two_rps[1].move_in_date - last_two_rps[0].move_out_date)/365).to_i >= 2
-            not_expired_rps = []
-            pp "Intital reward expired for email: - #{rps[0].resident.email}"
-          end
+      if rps_before_reward_start_time.present? && rps_after_reward_start_time.present?
+        rps_not_expired = rps_not_expired(rps_before_reward_start_time, rps_after_reward_start_time.first)
+        if rps_not_expired.present?
+          not_expired_rps << rps_not_expired
+        else
+          pp "Initial reward expired for all units"
+          not_expired_rps = [] #last rp is expired - so no unit is eligible for initial reward
+        end
+      else
+        if rps_before_reward_start_time.present?
+          not_expired_rps << rps_before_reward_start_time.last if last_rp_not_expired_with_current_time?(rps_before_reward_start_time.last)
         end
       end
-
-      not_expired_rps << rps.last if last_rp_not_expired_with_current_time?(rps.last)
 
       # initial reward is only applicable if move_in_date is before reward_start_time
-      less_than_reward_start_time = not_expired_rps.select{|rp| 
+      less_than_reward_start_time = not_expired_rps.flatten.select{|rp| 
                                                       rp.move_in_date < reward_start_time
                                                     }
       if less_than_reward_start_time.present?
