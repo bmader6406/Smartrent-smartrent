@@ -4,7 +4,7 @@ module Smartrent
   class MonthlyRewardCalculator
 
     def self.perform(resident_id, property_months_map)
-      today = Date.today
+      today = Date.today - 1.month
       @@current_time = today.end_of_month
 
       @@time_seventhth_flats = @@current_time.change(day: 1, month: 02, year: 2018)
