@@ -35,12 +35,12 @@ module Smartrent
           p "[SmartRent] MonthlyStatusUpdater - FAILURE" if resident_email
           if !resident_email
             ::Notifier.system_message("[Smartrent::MonthlyAwardUpdater] FAILURE", "ERROR DETAILS: #{error_details}",
-              "teena@qburst.com", {"from" => OPS_EMAIL}).deliver_now
+              ADMIN_EMAIL, {"from" => OPS_EMAIL}).deliver_now
           end
         end
       end
 
-      Notifier.system_message("[SmartRent] MonthlyAwardUpdater - SUCCESS", "Executed at #{Time.now}", "teena@qburst.com").deliver_now if scheduled_run && !resident_email
+      Notifier.system_message("[SmartRent] MonthlyAwardUpdater - SUCCESS", "Executed at #{Time.now}", ADMIN_EMAIL).deliver_now if scheduled_run && !resident_email
       
     end 
     
