@@ -11,7 +11,7 @@ module Smartrent
     end
 
     def self.logger
-      @@logger ||= Logger.new('/mnt/exim-data/task_log/yardi-non_yardi.log')
+      @@logger ||= Logger.new("/mnt/exim-data/task_log/yardi-non-yardi_resident_creator_#{Date.today}.log")
     end
     
     def self.create_smartrent_resident(resident, unit, set_status = true, disable_rewards = false)
@@ -29,6 +29,7 @@ module Smartrent
         sr = Smartrent::Resident.find_or_initialize_by(email: resident.email)
       end
 
+      logger.info("Resident Importer running for #{Date.today} - Time : #{Time.now}")
       logger.info("Syncing mysql started - smartrent resident: #{sr.email}")
       
       sr.first_name = resident.first_name
