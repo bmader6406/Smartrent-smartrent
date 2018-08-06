@@ -36,7 +36,7 @@ module Smartrent
 
         smartrent_time = @@current_time.change(day: 01, month: 03, year: 2016)
 
-				property_months_map = smartrent_months_to_be_awarded(r, smartrent_time) #smartrent_program begins
+				property_months_map = smartrent_months_to_be_awarded(r, smartrent_time, schedule_run) #smartrent_program begins
 
 				pp "calling monthly reward calculator ===> #{r.email} ,, property_months_map: #{property_months_map}}"
 				Smartrent::MonthlyRewardCalculator.perform(r.id, property_months_map)
@@ -160,7 +160,7 @@ module Smartrent
     	r.rewards.where(type_: [0,1,2,3]).collect(&:amount).inject(:+)
     end
 
-    def self.smartrent_months_to_be_awarded(r, program_start_time)
+    def self.smartrent_months_to_be_awarded(r, program_start_time, schedule_run)
     	eligible_months = []
     	property_months_map = {}
       not_expired_rps = []
@@ -183,7 +183,7 @@ module Smartrent
 
       not_expired_rps.uniq.each do |rp|
         start_time = calculate_start_time_from_property(rp, program_start_time)
-        eligible_months = get_smartrent_eligible_months(rp, start_time)
+        eligible_months = get_smartrent_eligible_months(rp, start_time, schedule_run)
         pp "Smartrent Eligible months ==== > #{eligible_months}"
         already_added_months = property_months_map.values.flatten & eligible_months rescue []
         eligible_months = eligible_months - already_added_months rescue []
@@ -277,11 +277,14 @@ module Smartrent
       end
     end
 
-    def self.get_smartrent_eligible_months(rp, program_start_time)
+    def self.get_smartrent_eligible_months(rp, program_start_time, schedule_run)
       if @@seventh_flats_id.include? rp.property_id
         @@current_time = @@time_seventhth_flats
       else
         @@current_time = @@today.end_of_month
+        unless schedule_run
+          @@current_time = (@@today - 1.month).end_of_month
+        end
       end
     	if rp.move_in_date > program_start_time
     		if rp.move_out_date.nil? || rp.move_out_date >= @@current_time
