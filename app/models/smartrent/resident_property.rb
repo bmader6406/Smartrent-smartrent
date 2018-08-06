@@ -79,7 +79,7 @@ module Smartrent
     end
 
     def recalculate_rewards_table
-      if self.move_in_date_changed? || self.move_out_date_changed? 
+      if self.move_in_date_changed? || self.move_out_date_changed? || self.status_changed?
         time = Date.today
         RewardCalculator.perform(time, [self.resident])
       end
