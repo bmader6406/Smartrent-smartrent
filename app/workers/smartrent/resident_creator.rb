@@ -9,6 +9,10 @@ module Smartrent
       unit = resident.units.find(unit_id)
       create_smartrent_resident(resident, unit)
     end
+
+    def self.logger
+      @@logger ||= Logger.new("/mnt/exim-data/task_log/yardi-non-yardi_resident_creator_#{Date.today}.log")
+    end
     
     def self.create_smartrent_resident(resident, unit, set_status = true, disable_rewards = false)
       # Initialize by email is better than crm_resident_id
@@ -24,6 +28,9 @@ module Smartrent
       else
         sr = Smartrent::Resident.find_or_initialize_by(email: resident.email)
       end
+
+      logger.info("Resident Importer running for #{Date.today} - Time : #{Time.now}")
+      logger.info("Syncing mysql started - smartrent resident: #{sr.email}")
       
       sr.first_name = resident.first_name
       sr.last_name = resident.last_name
@@ -39,6 +46,10 @@ module Smartrent
       # sr_property.move_out_date = (unit.status == "Current" || unit.status == "Notice") ? nil : unit.move_out
       sr_property.disable_rewards = disable_rewards
       sr_property.save
+
+      logger.info("Resident Property Created / Updated")
+      logger.info("property: #{sr_property.property_id} -- unit_code: #{sr_property.unit_code}")
+      logger.info("status: #{sr_property.status} -- move_in_date: #{sr_property.move_in_date} -- move_out_date: #{sr_property.move_out_date}")
       
       if sr_property.status == Smartrent::ResidentProperty::STATUS_CURRENT
         sr.update_attributes(:current_property_id => unit.property_id, :current_unit_id => unit.unit_id, :disable_email_validation => true)
