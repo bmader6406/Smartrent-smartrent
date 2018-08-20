@@ -7,9 +7,6 @@ module Smartrent
       today = Date.today - 1.month
       @@current_time = today.end_of_month
 
-      @@time_seventhth_flats = @@current_time.change(day: 1, month: 02, year: 2018)
-      @@seventh_flats_id = [12]
-
       resident = Smartrent::Resident.includes(:rewards).find_by_id resident_id
 
       property_months_map.each do |rp_id, months_earned|
@@ -23,32 +20,6 @@ module Smartrent
           create_monthly_rewards(resident, smartrent_resident_property, period_start)
         end
       end
-
-      if property_months_map.values.flatten.empty?
-        destroy_monthly_awards_any_after_current_time(resident, @@current_time)
-      end
-
-      value = property_months_map.values.flatten.sort.first
-      if value
-        str = value + "05"
-        time = DateTime.parse(str)
-        time = time.in_time_zone('Eastern Time (US & Canada)')
-        first_month_earned = time.beginning_of_month
-
-        destroy_monthly_award_present_before_first_period_start(resident, first_month_earned)
-      end
-
-      value = property_months_map.values.flatten.sort.last
-      if value
-        str = value + "05"
-        time = DateTime.parse(str)
-        time = time.in_time_zone('Eastern Time (US & Canada)')
-        last_month_earned = time.beginning_of_month
-
-        destroy_monthly_award_present_after_last_period_start(resident, last_month_earned)
-      end
-
-      recalculate_monthly_rewards_if_any_missing(resident)
     end
 
     def self.create_monthly_rewards(resident, smartrent_resident_property, period_start)

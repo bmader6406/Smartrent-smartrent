@@ -99,7 +99,60 @@ module Smartrent
       end
     end
 
+    def is_not_expired?
+      flag = false
+      move_out_date = self.move_out_date
+      if move_out_date
+        property = self.property
+        property.versions.where('created_at > ?', move_out_date).each do |version|
+          if version.reify && version.reify.is_smartrent == true
+            if move_out_date + 2.years > version.created_at
+              flag = true
+              break
+            end
+          end
+        end
+      else
+        flag = true
+      end
+      flag
+    end
+
+    def eligible_smartrent_months(months)
+      eligible_smartrent_months = []
+      months.each do |month|
+        if eligible_month?(month)
+          eligible_smartrent_months << month
+        end
+      end
+      eligible_smartrent_months
+    end
+
     private
+
+      def eligible_month?(month)
+        property = self.property
+        modified_month = month + "01"
+        parsed_month = DateTime.parse(modified_month).beginning_of_month
+        if property.versions.count > 0
+          version = property.versions.where('created_at > ?', parsed_month).first
+          if version && version.reify
+            if parsed_month.month == version.created_at.month && !version.reify.is_smartrent
+              true
+            else
+              version.reify.is_smartrent
+            end
+          else
+            property.is_smartrent && parsed_month <= DateTime.now
+          end
+        else
+          if parsed_month <= DateTime.now
+            property.is_smartrent
+          else
+            false
+          end
+        end
+      end
 
       def set_first_move_in
         first_move_in = resident.resident_properties.order("move_in_date asc").limit(1).first.move_in_date
