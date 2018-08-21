@@ -54,7 +54,7 @@ module Smartrent
 	      	sign_up_reward.update_attributes(
 	      																		property_id: 		resident_property.property_id,
 				                                    resident_id: 		r.id,
-				                                    period_start: 	resident_property.move_in_date.beginning_of_month
+				                                    period_start: 	resident_property.move_in_date
 	      																	)
           puts "sign_up_reward updated ===> #{r.email} ,,  property: #{resident_property.property_id} ,, SIGNUP_BONUS_date: #{sign_up_reward.period_start}"
 	      else
@@ -63,9 +63,9 @@ module Smartrent
 	                                    resident_id: 		r.id,
 	                                    amount: 				Smartrent::Setting.sign_up_bonus,
 	                                    type_: 					Reward::TYPE_SIGNUP_BONUS,
-	                                    period_start: 	resident_property.move_in_date.beginning_of_month
+	                                    period_start: 	resident_property.move_in_date
 	        													})
-	        pp "sign_up_reward created ===> #{r.email} ,, property: #{resident_property.property_id} ,, SIGNUP_BONUS_date: #{resident_property.move_in_date.beginning_of_month}"
+	        pp "sign_up_reward created ===> #{r.email} ,, property: #{resident_property.property_id} ,, SIGNUP_BONUS_date: #{resident_property.move_in_date}"
 	      end
       end
     end
@@ -92,7 +92,7 @@ module Smartrent
       	first_move_in = sign_up_reward.period_start rescue nil
       	last_earned_month = sign_up_reward.period_end rescue nil
       else
-      	first_move_in = rp.move_in_date
+      	first_move_in = rp.move_in_date.beginning_of_month
       end
 
       intial_reward_exist = r.rewards.where(type_: Reward::TYPE_INITIAL_REWARD).last

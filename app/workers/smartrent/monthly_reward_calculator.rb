@@ -20,6 +20,7 @@ module Smartrent
           create_monthly_rewards(resident, smartrent_resident_property, period_start)
         end
       end
+      recalculate_monthly_rewards_if_any_missing(resident)
     end
 
     def self.create_monthly_rewards(resident, smartrent_resident_property, period_start)
