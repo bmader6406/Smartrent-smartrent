@@ -104,13 +104,20 @@ module Smartrent
       move_out_date = self.move_out_date
       if move_out_date
         property = self.property
-        property.versions.where('created_at > ?', move_out_date).each do |version|
-          if version.reify && version.reify.is_smartrent == true
-            if move_out_date + 2.years > version.created_at
-              flag = true
-              break
+        property_versions = property.versions.where('created_at > ?', move_out_date)
+        if property_versions.present?
+          property_versions.each do |version|
+            if version.reify && version.reify.is_smartrent == true
+              if move_out_date + 2.years > version.created_at
+                flag = true
+                break
+              end
+            else
+              flag = property.is_smartrent
             end
           end
+        else
+          flag = property.is_smartrent
         end
       else
         flag = true
