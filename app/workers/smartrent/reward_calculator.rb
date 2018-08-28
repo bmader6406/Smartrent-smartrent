@@ -87,21 +87,23 @@ module Smartrent
 	    end
 
       rp, sign_up_date = fetch_min_move_in_smartrent_property(r)
-      if (rp.nil? && sign_up_date.nil?)
-      	sign_up_reward = r.rewards.where(type_: 1).last
-      	first_move_in = sign_up_reward.period_start rescue nil
-      	last_earned_month = sign_up_reward.period_end rescue nil
-      else
-      	first_move_in = sign_up_date.beginning_of_month
-      end
+      if sign_up_date
+        if rp.nil?
+        	sign_up_reward = r.rewards.where(type_: 1).last
+        	first_move_in = sign_up_reward.period_start rescue nil
+        	last_earned_month = sign_up_reward.period_end rescue nil
+        else
+        	first_move_in = sign_up_date.beginning_of_month
+        end
 
-      intial_reward_exist = r.rewards.where(type_: Reward::TYPE_INITIAL_REWARD).last
-      create_or_update_initial_reward(
+        intial_reward_exist = r.rewards.where(type_: Reward::TYPE_INITIAL_REWARD).last
+        create_or_update_initial_reward(
       																r, resident_properties,
       																first_move_in, earned_months,
       																last_earned_month, initial_amount,
       																intial_reward_exist
       															)
+      end
     end
 
     def self.set_expiry_reward(r)
