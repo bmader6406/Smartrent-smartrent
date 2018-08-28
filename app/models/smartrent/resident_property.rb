@@ -100,14 +100,18 @@ module Smartrent
     end
 
     def eligible_sign_up_date
+      date = nil
       rp = self
       move_in = rp.move_in_date
       property = rp.property
       move_out_date = rp.move_out_date ? rp.move_out_date : Date.today
       months = (move_in..move_out_date).map{ |m| m.strftime('%Y%m') }.uniq
       month = eligible_smartrent_months(months).first
-      modified_month = month + "01"
-      date = DateTime.parse(modified_month).beginning_of_month
+      if month
+        modified_month = month + "01"
+        date = DateTime.parse(modified_month).beginning_of_month
+      end
+      date
     end
 
     def is_not_expired?
