@@ -87,7 +87,7 @@ module Smartrent
 	    end
 
       rp, sign_up_date = fetch_min_move_in_smartrent_property(r)
-      if rp.nil? && sign_up_date.nil?
+      if (rp.nil? && sign_up_date.nil?)
       	sign_up_reward = r.rewards.where(type_: 1).last
       	first_move_in = sign_up_reward.period_start rescue nil
       	last_earned_month = sign_up_reward.period_end rescue nil
