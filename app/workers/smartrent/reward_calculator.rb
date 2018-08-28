@@ -48,7 +48,7 @@ module Smartrent
     def self.create_sign_up_bonus_reward(r)
       resident_property, sign_up_date = fetch_min_move_in_smartrent_property(r)
       sign_up_reward = r.rewards.where(type_: 1).last
-      if resident_property
+      if resident_property && sign_up_date
 	      if sign_up_reward
 	      	pp "sign_up_reward exist ===> #{r.email} ,, property: #{resident_property.property_id} ,, SIGNUP_BONUS_date: #{sign_up_reward.period_start}"
 	      	sign_up_reward.update_attributes(
@@ -87,7 +87,7 @@ module Smartrent
 	    end
 
       rp, sign_up_date = fetch_min_move_in_smartrent_property(r)
-      if rp.nil?
+      if rp.nil? && sign_up_date.nil?
       	sign_up_reward = r.rewards.where(type_: 1).last
       	first_move_in = sign_up_reward.period_start rescue nil
       	last_earned_month = sign_up_reward.period_end rescue nil
