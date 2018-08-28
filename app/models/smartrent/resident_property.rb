@@ -99,12 +99,25 @@ module Smartrent
       end
     end
 
+    def eligible_sign_up_date
+      rp = self
+      move_in = rp.move_in_date
+      property = rp.property
+      move_out_date = rp.move_out_date ? rp.move_out_date : Date.today
+      months = (move_in..move_out_date).map{ |m| m.strftime('%Y%m') }.uniq
+      month = eligible_smartrent_months(months).first
+      modified_month = month + "01"
+      date = DateTime.parse(modified_month).beginning_of_month
+    end
+
     def is_not_expired?
       flag = false
       move_out_date = self.move_out_date
       if move_out_date
         property = self.property
-        property_versions = property.versions.where('created_at > ?', move_out_date)
+        # need to cross check 
+        #.where('created_at > ?', move_out_date)
+        property_versions = property.versions
         if property_versions.present?
           property_versions.each do |version|
             if version.reify && version.reify.is_smartrent == true
@@ -144,7 +157,7 @@ module Smartrent
         if property.versions.count > 0
           version = property.versions.where('created_at > ?', parsed_month).first
           if version && version.reify
-            if parsed_month.month == version.created_at.month && !version.reify.is_smartrent
+            if parsed_month.month == version.created_at.month && parsed_month.year == version.created_at.year && !version.reify.is_smartrent
               true
             else
               version.reify.is_smartrent
