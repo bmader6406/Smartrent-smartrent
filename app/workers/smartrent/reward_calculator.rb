@@ -142,7 +142,7 @@ module Smartrent
     	property_months_map = {}
       not_expired_rps = []
 
-      rps = smartrent_properties(r).sort_by {|rp| rp.move_in_date}
+      rps = all_resident_properties(r).sort_by {|rp| rp.move_in_date}
 
       (rps.length-1).times do |i|
         if rps[i+1].move_in_date && rps[i].move_out_date
@@ -188,6 +188,8 @@ module Smartrent
     def self.calculate_months_based_on_smartrent_history(rp, months = [])
       if months.present?
         eligible_months = rp.eligible_smartrent_months(months)
+      else
+        []
       end
     end
 
@@ -206,8 +208,8 @@ module Smartrent
                                                           }.sort_by {|rp| rp.move_in_date}
       rps_after_reward_start_time = smartrent_properties.select{|rp| 
                                                             rp.move_in_date > reward_start_time
-                                                          }.sort_by {|rp| rp.move_in_date}                                                         
-
+                                                          }.sort_by {|rp| rp.move_in_date}
+                                                          
       (rps_before_reward_start_time.length-1).times do |i|
         if rps_before_reward_start_time[i+1].move_in_date && rps_before_reward_start_time[i].move_out_date
           if ((rps_before_reward_start_time[i+1].move_in_date - rps_before_reward_start_time[i].move_out_date)/365).to_i >= 2
@@ -242,12 +244,14 @@ module Smartrent
       less_than_reward_start_time = not_expired_eligible_rps.flatten.select{|rp| 
                                                       rp.move_in_date < reward_start_time
                                                     }
+
       if less_than_reward_start_time.present?
         less_than_reward_start_time.uniq.each do |rp|
           eligible_months << get_eligible_months(rp, reward_start_time)
           eligible_months_based_on_history << calculate_months_based_on_smartrent_history(rp, eligible_months.flatten)
         end
       end
+
       eligible_months_based_on_history.flatten.uniq.sort
     end
 
