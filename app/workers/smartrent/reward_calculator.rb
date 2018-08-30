@@ -147,7 +147,6 @@ module Smartrent
       (rps.length-1).times do |i|
         if rps[i+1].move_in_date && rps[i].move_out_date
           if ((rps[i+1].move_in_date - rps[i].move_out_date)/365).to_i >= 2
-            not_expired_rps = []
             next
           else
             not_expired_rps << rps[i]
@@ -356,7 +355,6 @@ module Smartrent
       (rps.length-1).times do |i|
         if rps[i+1].move_in_date && rps[i].move_out_date
           if ((rps[i+1].move_in_date - rps[i].move_out_date)/365).to_i >=2
-            not_expired_rps = []
             next
           else
             not_expired_rps << rps[i]
@@ -365,10 +363,27 @@ module Smartrent
           not_expired_rps << rps[i]
         end
       end
+      
+      not_expired = []
+      not_expired << rps.select{|rp|
+                        rp.move_out_date.nil?
+                      }
+
+      rps_without_last_rp = rps - [rps.last]
+      rps_with_move_out_date = rps_without_last_rp - not_expired.flatten
+      not_expired << rps_with_move_out_date.select{|rp|
+                        rp.move_out_date + 2.years > rps.last.move_in_date
+                      }
+
+      if not_expired.flatten.present?
+        not_expired_rps << not_expired
+      else
+        not_expired_rps = []
+      end
 
       not_expired_rps << rps.last  if last_rp_not_expired_with_current_time?(rps.last)
 
-      min_move_in_based_on_history(not_expired_rps.uniq)
+      min_move_in_based_on_history(not_expired_rps.flatten.uniq)
     end
 
     def self.min_move_in_based_on_history(not_expired_rps)
