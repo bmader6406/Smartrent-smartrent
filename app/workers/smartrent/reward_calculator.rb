@@ -243,6 +243,7 @@ module Smartrent
 
       if less_than_reward_start_time.present?
         less_than_reward_start_time.uniq.each do |rp|
+          eligible_months = []
           eligible_months << get_eligible_months(rp, reward_start_time)
           eligible_months_based_on_history << calculate_months_based_on_smartrent_history(rp, eligible_months.flatten)
         end
@@ -363,7 +364,7 @@ module Smartrent
           not_expired_rps << rps[i]
         end
       end
-      
+
       not_expired = []
       not_expired << rps.select{|rp|
                         rp.move_out_date.nil?
