@@ -17,6 +17,11 @@ module Smartrent
       residents.each do |r|
         pp "taken resident ===> #{r.email}"
 
+        pp "deleting existing rewards if any"
+        if r.rewards.present?
+          r.rewards.delete_all
+        end
+
         pp "calling signup bonus reward ===> #{r.email}"
         create_sign_up_bonus_reward(r)
 
